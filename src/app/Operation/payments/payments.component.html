@@ -1,0 +1,432 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid" #table>
+        <sub-header title="Payments"> 
+            <div role="actions">
+            <button
+            type="button"
+            class="btn btn-success"
+            (click)="ExportTOExcel()"
+        >
+            <i class="far fa-file-excel"></i>
+            {{ "ExportToExcel" | localize }}
+        </button></div> </sub-header>
+
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div
+                    class="card-body"
+                    [busyIf]="primengTableHelperPayment.isLoading"
+                >
+                    <div class="row align-items-center">
+                        
+                        <div
+                            class="primeng-datatable-container"
+                            [busyIf]="primengTableHelperPayment.isLoading"
+                        >
+
+                        <div class="row " style="padding-bottom:10px">
+                            <div class="col-md-3">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                    <div class="card-body text-center">
+                                        <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+                                            <i class="fa fa-hand-holding-usd icon-2x"></i>
+                                           <span class="p-3"> Pending Request  </span>  
+                                    
+                                        </a>
+                                        <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                        <div class="text-info font-weight-bold text-right float-right col-6  ">
+                                        <span >
+                                            {{pendingAmountCounter | number:'1.0'}}
+                                         </span>
+                                        </div>
+                                        <!-- <span class="text-danger font-weight-bold text-left float-left col-6 p-0 ">Amount</span>
+                                        <div class="text-danger font-weight-bold text-right float-right col-6 p-0 ">
+                                            <span  counto [step]="30" [duration]="1" [countFrom]="0"
+                                         >
+                                             {{totalLpoDto.dashbordAmount  | number:'1.2-5'}}
+                                             </span>
+                                            ó
+                                            
+                                      </div> -->
+                                    </div>
+                                </div>  
+                              
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                    <div class="card-body text-center">
+                                        <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+                           
+                                            <i class="fa fa-calculator icon-2x"></i>
+                                            Awaiting Approval
+                                        </a>
+                                        <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                        <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                        <span >
+                                            {{totalCounter | number:'1.0'}}
+                                         </span>
+                                        </div>
+                                      
+                                    </div>
+                                </div>   
+                              
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics bg-light ">
+                                    <div class="card-body text-center">
+                                        <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+                           
+                                            <i class="fa fa-coins icon-2x"></i>
+                                            Approved Request 
+                                        </a>
+                                        <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                        <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                        <span >
+                                            {{authorizedAmountCounter | number:'1.0'}}
+                                         </span>
+                                        </div>
+                                       
+                                    </div>
+                                </div>  
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                    <div class="card-body text-center">
+                                        <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+                           
+                                            <i class="fa fa-money-check-alt icon-2x"></i>
+                                            Declined Request 
+                                        </a>
+                                        <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                        <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                        <span >
+                                            {{declinedAmountCounter | number:'1.0'}}
+                                         </span>
+                                        </div>
+                                      
+                                    </div>
+                                </div>   
+                              
+                            </div>
+                            
+                        </div> 
+                        <br>
+                            <div class="row align-items-center mb-4">
+                               
+                                <div class="col-md-10">
+                                    <input
+                                        id="searchBox"
+                                        type="text"
+                                        name="searchBox"
+                                        class="form-control"
+                                        [(ngModel)]="searchBox"
+                                    />
+                                </div>
+                                <div class="col-md-2 text-right">
+                                    <button
+                                        (click)="getLogs()"
+                                        class="btn btn-primary"
+                                        type="submit"
+                                    >
+                                        <i
+                                            class="flaticon-search-1"
+                                            [attr.aria-label]="l('Search')"
+                                        ></i>
+                                    </button>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="text-right">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <p-table
+                            #dataTablePayment
+                            [value]="primengTableHelperPayment.records"
+                            rows="{{
+                                primengTableHelperPayment.defaultRecordsCountPerPage
+                            }}"
+                            [paginator]="false"
+                            [lazy]="true"
+                            scrollable="true"
+                            ScrollWidth="100%"
+                            responsive="primengTableHelperPayment.isResponsive"
+                            resizableColumns="primengTableHelperPayment.resizableColumns"
+                            [rowHover]="true"
+                            sortMode="multiple"
+                            (onLazyLoad)="getLogs($event)"
+                            id="excel-table"
+                        >
+                           
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    
+                                    <th
+                                        style="width: 70px"
+                                        pSortableColumn="approvedDate"
+                                    >
+                                        {{ l("Approved Date") }}
+                                        <p-sortIcon
+                                            field="approvedDate"
+                                        ></p-sortIcon>
+                                    </th>
+                                    <th
+                                        style="width: 70px"
+                                        pSortableColumn="operationName"
+                                    >
+                                        {{ l("Payment Type") }}
+                                        <p-sortIcon
+                                            field="operationName"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                    <th
+                                        style="width: 70px"
+                                        pSortableColumn="refNo"
+                                    >
+                                        {{ l("Ref No.") }}
+                                        <p-sortIcon
+                                            field="refNo"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                 <th
+                                        style="width: 150px"
+                                        pSortableColumn="narration"
+                                    >
+                                        {{ l("Narration") }}
+                                        <p-sortIcon
+                                            field="narration"
+                                        ></p-sortIcon>
+                                    </th>
+                                    <th
+                                        style="width: 70px"
+                                        pSortableColumn="payeeName"
+                                    >
+                                        {{ l("Payee") }}
+                                        <p-sortIcon
+                                            field="payeeName"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                    <th
+                                        style="width: 50px"
+                                        pSortableColumn="amount"
+                                    >
+                                        {{ l("Amount") }}
+                                        <p-sortIcon
+                                            field="amount"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                    <th style="width: 50px"  pSortableColumn="madeBy">
+                                        {{ l("Initiator") }}
+                                        <p-sortIcon
+                                        field="madeBy"
+                                    ></p-sortIcon>
+                                    </th>
+                                    <th style="width: 20px"
+                                    pSortableColumn="">
+                                        
+                                    </th>
+                                     <th style="width: 20px"
+                                    pSortableColumn="">
+                                        
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template
+                                pTemplate="body"
+                                let-record="$implicit"
+                            >
+                                <tr>
+                                    <td style="width: 70px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{ record.approvedDate  | luxonFormat: "F" }}
+                                    </td>
+                                    <td style="width: 70px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{ record.operationName }}
+                                    </td>
+
+                                 <td style="width: 70px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{
+                                            record.refNo
+                                               
+                                        }}
+                                    </td>
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{ record.narration }}
+                                    </td>
+                                    <td style="width: 70px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{ record.payeeName }}
+                                    </td>
+                                    <td style="width: 50px">
+                                      <span class="ui-column-title">
+                                        </span>
+                                        {{ record.amount | number:'1.2-5' }}
+                                    </td>
+                                    <td style="width: 50px">
+                                        <span class="ui-column-title">
+                                          </span>
+                                          {{ record.madeBy}}
+                                      </td>
+                                      
+                                    <td style="width: 20px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        <div *ngIf="record.isEverDeclined">
+                                            <a href="javascript:;" title="View Justification" (click)="ViewDeclineMessages(record.refNo, record.operationID, record.paymentRef)">
+                                            <i class="fa fa-ban"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td style="width: 20px">
+                                        
+                                        <button class="btn"   title="Process payment" (click)="processItem(record.operationID,record.refNo, record.payeeId)">
+                                            <i class="fa fa-cog"></i>
+                                        </button>
+                                       
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                       
+                            <div
+                                class="primeng-no-data"
+                                *ngIf="
+                                primengTableHelperPayment.totalRecordsCount ==
+                                    0
+                                "
+                            >
+                                {{ "NoData" | localize }}
+                            </div>
+                            <div class="primeng-paging-container">
+                                <p-paginator
+                                    [rows]="
+                                    primengTableHelperPayment.defaultRecordsCountPerPage
+                                    "
+                                    #paginatorPayment
+                                    (onPageChange)="getLogs($event)"
+                                    [totalRecords]="
+                                    primengTableHelperPayment.totalRecordsCount
+                                    "
+                                    [rowsPerPageOptions]="
+                                    primengTableHelperPayment.predefinedRecordsCountPerPage
+                                    "
+                                >
+                                </p-paginator>
+                                <span class="total-records-count">
+                                    {{
+                                        "TotalRecordsCount"
+                                            | localize
+                                                : primengTableHelperPayment.totalRecordsCount
+                                    }}
+                                </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div bsModal bsModal #modalDeclinedMessages="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" (click)="closeDecline()" [attr.aria-label]="l('Close')">
+                    <span aria-hidden="true">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+
+                <div class="row align-items-center">
+                    <!--<Primeng-TurboTable-Start>-->
+                    <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+                        <table class="table table-hover table-light" id="excel-table1">
+                            <thead>
+                                <tr class="uppercase">
+
+
+
+                                    <th>
+                                        Declined By
+                                    </th>
+                                    <th>
+                                    Justification
+                                     </th>
+                                     <th>
+Transaction Date
+                                     </th>
+
+                                </tr>
+                            </thead>
+                            <tr *ngFor="let m of listofDeclinedMessages; let i = index">
+
+
+
+                                <td>
+                                    {{m.name}}
+                                </td>
+                              
+                                <td>
+                                    {{m.justification}}
+                                </td>
+  <td>
+                                    {{m.transactionDate | date :'short'}}
+                                </td>
+
+
+
+
+                            </tr>
+
+
+                        </table>
+
+
+
+
+
+
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button  type="button" class="btn btn-default" (click)="closeDecline()">{{"Cancel" | localize}}</button>
+
+               </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<appcadModal #appcadModal (modalSave)="getLogs()"></appcadModal>
+<appcarModal #appcarModal (modalSaveR)="getLogs()"></appcarModal>
+<appopexModal #appopexModal (modalSaveR)="getLogs()"></appopexModal>
+<modalDeclinedMessages #modalDeclinedMessages></modalDeclinedMessages>

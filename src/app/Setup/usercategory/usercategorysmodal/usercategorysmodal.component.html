@@ -1,0 +1,79 @@
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog" 
+aria-hidden="true" [config]="{backdrop: 'static'}">
+<div class="modal-dialog modal-xl">
+
+
+
+
+    <div class="modal-content">
+
+      
+
+        <div class="modal-header">
+            <h5 class="modal-title"   >
+              User Category  Setup 
+              
+            </h5>
+            <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <!--Design input form for modal add chart of account-->
+            <form #userCategoryForm="ngForm"  (ngSubmit)="save(userCategoryForm)">
+                <div class="row align-items-center mb-2">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="GroupName">{{" Category Description" | localize}}</label>
+                            <input id="Discription" type="text" name="description" [(ngModel)]="usercategory.description" placeholder="Enter Category Name" required pattern="^[^\*\=\<\>]+$"
+                                class="form-control">
+                        </div>
+                    </div>
+                   
+                    <!-- <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="GroupName">{{" Category ID" | localize}}</label>
+                            <input id="Discription" type="text" name="categoryId" [(ngModel)]="usercategory.categoryId" placeholder="Enter Category ID" required pattern="^[^\*\=\<\>]+$"
+                                class="form-control">
+                        </div>
+                    </div> -->
+                </div>
+            </form>
+
+        </div>
+
+
+        <div class="modal-footer">
+         
+            <div class="form-group">
+                <button type="submit" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"  flex="15" class="btn btn-primary "
+                [disabled]="  !userCategoryForm.form.valid" (click)="save(userCategoryForm)"
+                >
+                {{ "Save" | localize }} 
+                </button>
+            </div>
+      
+           <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+         
+      
+       </div>
+    
+
+</div>
+
+
+
+
+
+
+           
+
+
+               
+
+        </div>
+    </div>
+
+
+

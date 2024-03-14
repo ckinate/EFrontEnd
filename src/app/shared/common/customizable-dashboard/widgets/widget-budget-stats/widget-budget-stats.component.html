@@ -1,0 +1,130 @@
+    <div class="row row-no-padding row-col-separator-xl h-100" [perfectScrollbar] [busyIf]="primengTableHelper.isLoading">
+    
+    <div class="col pr-0">
+        <div class="card card-custom bgi-no-repeat card-stretch new-subscription-statistics h-100">
+            <div class="card-body">
+                <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h6 text-hover-state-dark d-block">
+                    Total Budget
+                </a>
+                <span class="text-muted font-weight-bold text-left float-left col-12 p-0 mb-4"></span>
+                <div class="text-left text-primary font-weight-bolder font-size-h2 mr-2">
+                    <span counto [step]="30" [duration]="1"
+                           [countFrom]="0" [countTo]="dashboardTopStats.totalBudget"
+                           (countoChange)="dashboardTopStats.totalBudgetCounter = $event">
+                                {{dashboardTopStats.totalBudgetCounter.toFixed(0) | number:'1.2-2'}}
+                            </span>
+                </div>
+                <div class="progress progress-xs bg-primary-o-60">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 100%;" aria-valuenow="100"
+                         aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted mr-2 font-size-sm font-weight-bold">
+                        Current Month Budget
+                    </span>
+                    <span class="text-muted font-size-sm font-weight-bold">
+                        <!-- <span class="counterup">{{dashboardTopStats.totalBudgetChange}}</span>% -->
+                    </span>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+     <div class="col pr-0">
+        <div class="card card-custom bgi-no-repeat card-stretch new-subscription-statistics h-100">
+            <div class="card-body">
+                <a href="javascript:;"
+                   class="text-left font-weight-bolder text-dark font-size-h6 text-hover-state-dark d-block">
+                    Used Budget
+                </a>
+                <span class="text-muted font-weight-bold text-left float-left col-12 p-0 mb-4"></span>
+                <div class="text-left text-info font-weight-bolder font-size-h2 mr-2">
+                    <span counto [step]="30" [duration]="1" [countFrom]="0"
+                           [countTo]="dashboardTopStats.usedBudget"
+                           (countoChange)="dashboardTopStats.usedBudgetCounter = $event">
+                            {{dashboardTopStats.usedBudgetCounter.toFixed(0) | number:'1.2-2'}}
+                            </span>
+                </div>
+                <div class="progress progress-xs bg-info-o-60">
+                    <div class="progress-bar bg-info" role="progressbar"  [ngStyle]="{ 'width': dashboardTopStats.usedBudgetChange + '%' }" aria-valuenow="85"
+                         aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted mr-2 font-size-sm font-weight-bold">
+                        Used
+                    </span>
+                    <span class="text-muted font-size-sm font-weight-bold">
+                        <span class="counterup">{{dashboardTopStats.usedBudgetChange | number:'1.2-4'}}</span>%
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col pr-0">
+        <div class="card card-custom bgi-no-repeat card-stretch new-subscription-statistics h-100">
+            <div class="card-body">
+                <a href="javascript:;"
+                   class="text-left font-weight-bolder text-dark font-size-h6 text-hover-state-dark d-block">
+                    Budget In Use
+                </a>
+                <span class="text-muted font-weight-bold text-left float-left col-12 p-0 mb-4"></span>
+                <div class="text-left text-danger font-weight-bolder font-size-h2 mr-2">
+                    <span counto [step]="30" [duration]="1"
+                          [countFrom]="0" [countTo]="dashboardTopStats.inUseBudget"
+                          (countoChange)="dashboardTopStats.inUseBudgetCounter = $event">
+                                {{dashboardTopStats.inUseBudgetCounter.toFixed(0) | number:'1.2-2'}}
+                    </span>
+                </div>
+                <div class="progress progress-xs bg-danger-o-60">
+                    <div class="progress-bar bg-danger" role="progressbar" [ngStyle]="{ 'width': dashboardTopStats.inUseBudgetChange + '%' }" aria-valuenow="45"
+                         aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted mr-2 font-size-sm font-weight-bold">
+                        In Use
+                    </span>
+                    <span class="text-muted font-size-sm font-weight-bold">
+                        <span class="counterup">{{dashboardTopStats.inUseBudgetChange | number:'1.2-4'}}</span>%
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card card-custom bgi-no-repeat card-stretch new-subscription-statistics h-100">
+            <div class="card-body">
+                <a href="javascript:;"
+                   class="text-left font-weight-bolder text-dark font-size-h6 text-hover-state-dark d-block">
+                    Available Budget
+                </a>
+                <span class="text-muted font-weight-bold text-left float-left col-12 p-0 mb-4"></span>
+                <div class="text-left text-success font-weight-bolder font-size-h2 mr-2">
+                 <span counto [step]="30" [duration]="1"
+                       [countFrom]="0" [countTo]="dashboardTopStats.availableBudget"
+                       (countoChange)="dashboardTopStats.availableBudgetCounter = $event">
+                            {{dashboardTopStats.availableBudgetCounter.toFixed(0) | number:'1.2-2'}}
+                        </span>
+                </div>
+                <div class="progress progress-xs bg-success-o-60">
+                    <div class="progress-bar bg-success" role="progressbar" [ngStyle]="{ 'width': dashboardTopStats.availableBudgetChange + '%' }" aria-valuenow="57"
+                         aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-muted mr-2 font-size-sm font-weight-bold">
+                        Available
+                    </span>
+                    <span class="text-muted font-size-sm font-weight-bold">
+                        <span >{{dashboardTopStats.availableBudgetChange | number:'1.2-4'}}</span>%
+                        
+                    </span>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

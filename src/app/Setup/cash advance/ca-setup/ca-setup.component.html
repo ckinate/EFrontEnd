@@ -1,0 +1,300 @@
+<div [@routerTransition]></div>
+
+<div class="content d-flex flex-column flex-column-fluid">
+    <sub-header
+        [title]="'Cash Advance Setup' | localize"
+        [description]="'Setup' | localize"
+    >
+        <div role="actions" *ngIf="'Pages.CashAdvanceSetUp.Create'| permission">
+            <div class="btn-group" dropdown></div>
+            <!-- <button
+                flex="15"
+                class="btn btn-primary"
+            >
+                <i class="fa fa-plus"></i>
+                {{ "Create New" | localize }}
+            </button> -->
+            <app-erms-button
+                [title]="'Create New' | localize"
+                (click)="showNewModal()"
+                type="add"
+            ></app-erms-button>
+        </div>
+    </sub-header>
+
+    <div [class]="containerClass">
+        <div class="card card-custom">
+            <div class="card-body">
+                <br>
+                <div class="col-md-12 mt-0 text-right">
+                    <div class="btn-group" >
+                        <button  type="button" class="btn btn-outline-secondary mr-1"
+                        style="border-color: green; border-width: 2px; color:green"
+                              aria-expanded="false" (click)="frontEndExcelExport()">
+                            <i class="far fa-file-excel" style="color:green ;"></i> {{"ExportToExcel" | localize}}
+                        </button>
+
+                    </div>
+                </div>
+                <br>
+                <div class="row align-items-center">
+                    <div
+                        class="primeng-datatable-container"
+                        [busyIf]="primengTableHelper.isLoading"
+                    >
+                        <p-table
+                            #dataTable
+                            [value]="primengTableHelper.records"
+                            rows="{{
+                                primengTableHelper.defaultRecordsCountPerPage
+                            }}"
+                            [paginator]="true"
+                            [rows]="10"
+                            [rowsPerPageOptions]="[5, 10, 15, 20]"
+                            [lazy]="false"
+                            [rowHover]="true"
+                            sortMode="multiple"
+                            [scrollable]="true"
+                            scrollWidth="100%" scrollHeight="400px"
+                            [responsive]="primengTableHelper.isResponsive"
+                            [resizableColumns]="
+                                primengTableHelper.resizableColumns
+                            "
+                            [globalFilterFields]="[
+                                'transactionType',
+                                'numberDays',
+                                'maximumAmount'
+                            ]"
+                            id="excel-table"
+                        >
+                            <ng-template pTemplate="caption">
+                                <div style="text-align: right">
+                                    <i
+                                        class="pi pi-search"
+                                        style="margin: 4px 4px 0 0"
+                                    ></i>
+                                    <input
+                                        type="text"
+                                        pInputText
+                                        size="30"
+                                        placeholder="Search Keyword"
+                                        style="width: auto"
+                                        (input)="
+                                            dataTable.filterGlobal(
+                                                $event.target.value,
+                                                'contains'
+                                            )
+                                        "
+                                    />
+                                </div>
+                            </ng-template>
+
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 100px" *ngIf="('Pages.CashAdvanceSetUp.Edit'| permission)&& ('Pages.CashAdvanceSetUp.Deactivate'| permission)">
+                                        {{ "Actions" | localize }}
+                                    </th>
+                                    <th
+                                        style="width: 130px"
+                                        pSortableColumn="transactionType"
+                                    >
+                                        {{ "Transaction Type" | localize }}
+                                        <p-sortIcon
+                                            field="transactionType"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                    <th
+                                        style="width: 70px"
+
+                                    >
+                                    <i class="fa fa-bell" title="Number of Days" ></i>
+
+                                        <!-- <p-sortIcon
+                                            field="numberDays"
+                                        ></p-sortIcon> -->
+                                    </th>
+
+                                    <th
+                                        style="width: 100px"
+                                        pSortableColumn="maximumAmount"
+                                    >
+                                        {{ "Maximium Amount" | localize }}
+                                        <p-sortIcon
+                                            field="maximumAmount"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                    <th
+                                        style="width: 100px"
+                                        pSortableColumn="creationTime"
+                                    >
+                                        {{ "Creation Time" | localize }}
+                                        <p-sortIcon
+                                            field="creationTime"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                    <th
+                                        style="width: 100px"
+                                        pSortableColumn="userName"
+                                    >
+                                        {{ "Creator Name" | localize }}
+                                        <p-sortIcon
+                                            field="userName"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                    <th
+                                        style="width: 100px"
+                                        pSortableColumn="active"
+                                    >
+                                        {{ "Status" | localize }}><p-sortIcon
+                                            field="active"
+                                        ></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template
+                                pTemplate="body"
+                                let-record="$implicit"
+                            >
+                                <tr>
+                                    <td style="width: 100px"  *ngIf="('Pages.CashAdvanceSetUp.Edit'| permission)&& ('Pages.CashAdvanceSetUp.Deactivate'| permission)">
+                                        <div
+                                            class="btn-group dropdown"
+                                            dropdown
+                                            container="body"
+                                        >
+                                            <button
+                                                dropdownToggle
+                                                class="dropdown-toggle btn btn-sm btn-primary"
+                                            >
+                                                <i class="fa fa-cog"></i
+                                                ><span class="caret"></span>
+                                                {{ "Actions" | localize }}
+                                            </button>
+                                            <ul
+                                                class="dropdown-menu"
+                                                *dropdownMenu
+                                            >
+                                                <li
+                                                    *ngIf="
+                                                        record.active ==
+                                                        'Inactive' && ('Pages.CashAdvanceSetUp.Deactivate'| permission)
+                                                    "
+                                                >
+                                                    <a
+                                                        href="javascript:;"
+                                                        (click)="
+                                                            activate(record)
+                                                        "
+                                                        >{{
+                                                            "Activate"
+                                                                | localize
+                                                        }}</a
+                                                    >
+                                                </li>
+                                                <li *ngIf="'Pages.CashAdvanceSetUp.Edit'| permission">
+                                                    <a
+                                                        href="javascript:;"
+                                                        (click)="
+                                                            showEditModal(
+                                                                record
+                                                            )
+                                                        "
+                                                        >{{
+                                                            "Edit" | localize
+                                                        }}</a
+                                                    >
+                                                </li>
+                                                <li
+                                                    *ngIf="
+                                                        (record.active ==
+                                                        'Active') && ('Pages.CashAdvanceSetUp.Deactivate'| permission)
+                                                    "
+                                                >
+                                                    <a
+                                                        href="javascript:;"
+                                                        (click)="
+                                                            deactivate(record)
+                                                        "
+                                                        >{{
+                                                            "Deactivate"
+                                                                | localize
+                                                        }}</a
+                                                    >
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+
+                                    <td style="width: 130px">
+
+
+
+                                        {{ record.transactionType }}
+                                    </td>
+                                    <td style="width: 70px">
+
+                                        <!-- <i class="fa fa-bell" title="{{ record.numberDays}} day(s) after {{record.applyDaysDescription}} "></i>
+                                         -->
+                                         {{ record.numberDays}}
+
+                                    </td>
+
+                                    <td style="width: 100px">
+
+
+                                        {{ record.maximumAmount  | currency:'':''}}
+                                    </td>
+
+                                    <td style="width: 100px">
+
+
+                                        <span *ngIf="isEdit == false">{{
+                                            record.creationTime
+                                                | luxonFormat: "F"
+                                        }}</span>
+                                        <span *ngIf="isEdit == true">{{
+                                            record.lastModificationTime
+                                                | luxonFormat: "F"
+                                        }}</span>
+                                    </td>
+                                    <td style="width: 100px">
+
+                                        {{ record.userName }}
+                                    </td>
+                                    <td style="width: 100px">
+
+                                        {{ record.active }}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+
+                        <div class="primeng-paging-container">
+                            <p-paginator
+                                [rows]="
+                                    primengTableHelper.defaultRecordsCountPerPage
+                                "
+                                #paginatorAuditLogs
+                                [totalRecords]="
+                                    primengTableHelper.totalRecordsCount
+                                "
+                                [rowsPerPageOptions]="
+                                    primengTableHelper.predefinedRecordsCountPerPage
+                                "
+                            >
+                            </p-paginator>
+                        </div>
+                    </div>
+                    <!--<Primeng-TurboTable-End>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- </div> -->
+<caSetupEdit #caSetupEdit (modalSave)="loadcaSetup()"></caSetupEdit>

@@ -1,0 +1,223 @@
+	<div bsModal #createVendorOpexModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+	aria-labelledby="createVendorOpexModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<form novalidate autocomplete="off" #vendorOpexForm="ngForm" >
+				<div class="modal-header">
+					<h4 class="modal-title">
+						<span>{{l("Create UnRegistered Vendor")}}</span>
+					</h4>
+					<button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+				<tabset>
+					<tab heading="{{'Vendor Data' | localize}}">
+						<div class="modal-body">
+						<div class="form-row">
+							<div class="form-group col-md-4">
+								<label for="Vendor_CompanyName">{{l("Company Name")}}</label>
+								<input type="text" #Vendor_CompanyName="ngModel" id="Vendor_CompanyName"
+									class="form-control" [(ngModel)]="vendorOpexDto.companyName" name="CompanyName"
+									minlength="1" maxlength="100" required />
+							
+							</div>
+
+							<div class="form-group col-md-4">
+								<label for="Vendor_Address">{{l("Address")}}</label>
+								<input type="text" #Vendor_Address="ngModel" id="Vendor_Address"
+									class="form-control" [(ngModel)]="vendorOpexDto.address" name="Address" minlength="1"
+									maxlength="200" required />
+								
+							</div>
+							<div class="form-group col-md-4">
+								<label for="rcNumber">{{l("RC Number")}}</label>
+								<input type="text" #Vendor_Address="ngModel" id="rcNumber"
+									class="form-control" [(ngModel)]="vendorOpexDto.rcNumber" name="Address" minlength="1"
+									maxlength="200" required />									
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="Vendor_OfficePhone">{{l("Office Phone")}}</label>
+								<input type="number" #Vendor_OfficePhone="ngModel" id="Vendor_OfficePhone"
+									class="form-control" [(ngModel)]="vendorOpexDto.officePhone" name="OfficePhone" required (keypress)="keyPressNumbersDecimal($event)" required min="14"  maxlength="14"/>
+								
+							</div>
+
+
+
+
+							<div class="form-group col-md-6">
+								<label for="Vendor_Mobile">{{l("Mobile")}}</label>
+								<input type="text" #Vendor_Mobile="ngModel" id="Vendor_Mobile" class="form-control"
+									[(ngModel)]="vendorOpexDto.mobile" name="Mobile" required (keypress)="keyPressNumbersDecimal($event)" required min="14"  maxlength="14"/>
+							
+							</div>
+
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="Vendor_Email">{{l("Email")}}</label>
+								<input type="text" #Vendor_Email="ngModel" id="Vendor_Email" class="form-control"
+									[(ngModel)]="vendorOpexDto.email" name="Email" minlength="1" maxlength="200"
+									required pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" maxlength="256"  />							
+							</div>
+
+							<div class="form-group col-md-6">
+								<label for="Vendor_DateRegistered">{{l("Company Reg. Date")}}</label>
+								<input required class="form-control m-input" #Vendor_DateRegistered type="datetime"
+									bsDatepicker datePickerMomentModifier [(date)]="vendorOpexDto.dateRegistered"
+									id="Vendor_DateRegistered" name="Vendor_DateRegistered">
+							
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="Vendor_TaxIdentificationNumber">{{l("Tax Identification Number")}}</label>
+								<input type="number" #Vendor_TaxIdentificationNumber="ngModel" required
+									id="Vendor_TaxIdentificationNumber" class="form-control"
+									[(ngModel)]="vendorOpexDto.taxIdentificationNumber" name="TaxIdentificationNumber" />
+							
+							</div>
+
+							<div class="form-group col-md-6">
+								<label for="Vendor_ContactPerson">{{l("Contact Person")}}</label>
+								<input type="text" #Vendor_ContactPerson="ngModel" id="Vendor_ContactPerson" required
+									class="form-control" [(ngModel)]="vendorOpexDto.contactPerson" name="ContactPerson" />
+							
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="Vendor_ContactDesignation">{{l("Contact Designation")}}</label>
+								<input type="text" #Vendor_ContactDesignation="ngModel" required
+									id="Vendor_ContactDesignation" class="form-control"
+									[(ngModel)]="vendorOpexDto.contactDesignation" name="ContactDesignation" />
+								
+							</div>
+
+
+
+
+							<div class="form-group col-md-6">
+								<label for="Vendor_ContactPhone">{{l("Contact Phone")}}</label>
+								<input type="number" #Vendor_ContactPhone="ngModel" id="Vendor_ContactPhone" required (keypress)="keyPressNumbersDecimal($event)" required min="14"  maxlength="14"
+									class="form-control" [(ngModel)]="vendorOpexDto.contactPhone" name="ContactPhone" />
+							
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="Vendor_ContactEmail">{{l("Contact Email")}}</label>
+								<input type="text" #Vendor_ContactEmail="ngModel" id="Vendor_ContactEmail" required
+									class="form-control" [(ngModel)]="vendorOpexDto.contactEmail" name="ContactEmail"
+									minlength="1" required pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" maxlength="256"  maxlength="200" />
+								
+							</div>
+
+							<div class="form-group col-md-6">
+								<label for="Vendor_Fax">{{l("Fax")}}</label>
+								<input type="text" #Vendor_Fax="ngModel" id="Vendor_Fax" class="form-control" required
+									[(ngModel)]="vendorOpexDto.fax" name="Fax" />
+								
+							</div>
+
+						</div>
+						<div class="form-row">
+
+							<div class="form-group col-md-6">
+								<label for="Vendor_website">{{l("website")}}</label>
+								<input type="text" #Vendor_website="ngModel" id="Vendor_website" required
+									class="form-control" minlength="1" required pattern="^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$" 
+									maxlength="256" [(ngModel)]="vendorOpexDto.website" name="website" />
+								
+							</div>
+
+							<div class="form-group col-md-6">
+								<label for="Vendor_CompanyType">{{l("Company Type")}}</label>								
+								<select id="Vendor_CompanyType" class="form-control" #Vendor_CompanyType="ngModel"
+									required [(ngModel)]="vendorOpexDto.companyType" name="CompanyType">
+									<option>Private</option>
+									<option>Partnarship</option>
+									<option>Public Limited Company</option>
+
+								</select>
+
+							</div>
+
+						</div>
+						</div>
+					</tab>
+				<!-- <tab heading="{{'Vendor Category' | localize}}">
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="VendorCategoryId">Category</label>
+								<select placeholder="..Vendor Category.." class="form-control rounded" (ngModelChange)="OnSelectCategory($event)" 
+								[(ngModel)]="vendorOpexDto.VendorCategoryId" name="VendorCategoryId" class="form-control rounded">
+									<option value="0">....Select Values... </option>
+									<option *ngFor="let item of VenCategory" [value]="item.id">
+										{{item.categoryName}}
+									</option>
+								  </select>
+								
+							</div>
+
+							<div class="form-group col-md-6">                                
+									<label for="SubCategory">Sub-Category</label>
+									<select placeholder="..Vendor Sub-Category.." class="form-control rounded"  
+									[(ngModel)]="vendorOpexDto.SubcategoryId" name="SubcategoryId" class="form-control rounded">
+										<option value="0">....Select Values... </option>
+										<option *ngFor="let item of SubCategory" [value]="item.id">
+											{{item.narration}}
+										</option>
+									  </select>
+									
+							</div>
+						</div>
+						
+					
+					</tab> -->
+					<tab heading="{{'Bank Details'| localize}}">
+					
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label for="Vendor_OpexBank">{{l("Bank")}}</label>
+									<select id="Vendor_OpexBank" class="form-control" required [(ngModel)]="Vendor_OpexBank" name="Vendor_OpexBank">
+										<option value="">Select Bank</option>
+										<option *ngFor="let bankItem of bankList" [value]="bankItem.bankCode">{{bankItem.bankName}}</option>
+									</select>
+								</div>							
+								<div class="form-group col-md-6">
+									<label for="Vendor_OpexAccountNumber">{{l("Account Number")}}</label>
+									<input type="text" id="Vendor_OpexAccountNumber" required pattern="[a-zA-Z0-9 ]*" class="form-control" [(ngModel)]="Vendor_OpexAccountNumber" placeholder="Account Number" name="Vendor_OpexAccountNumber" minlength="10" maxlength="10" (keypress)="keyPressNumbersDecimal($event)" />
+								</div>
+								<div class="form-group col-md-6">
+									<label for="Vendor_OpexAccountName">{{l("Account Name")}}</label>
+									<input type="text" id="Vendor_OpexAccountName" required pattern="[a-zA-Z0-9 ]*" class="form-control" [(ngModel)]="Vendor_OpexAccountName"  placeholder="Account Name" name="Vendor_OpexAccountName" minlength="1" maxlength="200" />
+								</div>												  
+							</div>
+											                      
+					</tab>
+				</tabset>
+			</div>	
+				<div class="modal-footer">
+					<button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+				
+					<app-erms-button
+                    type="save"  (click)="saveUnRegisteredVendorOpex()"
+					[disabled]="!Vendor_OpexBank||!Vendor_OpexAccountNumber||!Vendor_OpexAccountName"
+					[buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"
+                       title="Save All" >
+                       <i class="fa fa-save"></i>
+                    </app-erms-button>
+				</div>
+			</form>   
+
+		</div>
+
+	</div>
+</div>

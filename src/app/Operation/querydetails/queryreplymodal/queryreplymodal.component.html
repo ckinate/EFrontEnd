@@ -1,0 +1,263 @@
+<div
+    bsModal
+    bsModal
+    #queryreply="bs-modal"
+    (onShown)="onShown()"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Query Response For Request Number: {{ Refnumber }}
+                </h5>
+                <button
+                    type="button"
+                    class="close"
+                    (click)="close()"
+                    [attr.aria-label]="l('Close')"
+                >
+                    <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+
+
+            <div class="modal-body">
+                <tabset>
+                    <tab heading="Concurrence Response">
+                        <h4>Concurrence Response</h4>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="queryName">
+                                        {{ "Narration of query" }}
+                                    </label>
+                                    <textarea
+                                        class="form-control"
+                                        [readonly]="true"
+                                        name="query"
+                                        [(ngModel)]="createworkflowtrail.query"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="GroupName">{{
+                                    "Enter Comment" | localize
+                                }}</label>
+                                <textarea
+                                    type="text"
+                                    name="amount"
+                                    placeholder="Enter Your Comment Here"
+                                    required
+                                    class="form-control"
+                                    [(ngModel)]="comment"
+                                    value="comment"
+                                ></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a
+                                    href="javascript:;"
+                                    (click)="
+                                        showDocument(
+                                            createworkflowtrail.refNo,
+                                            operationId
+                                        )
+                                    "
+                                    title="Upload supporting documents"
+                                >
+                                    <em class="fa fa-upload"></em>
+                                </a>
+                                <br />
+                                <span>Upload Document</span>
+                            </div>
+                            <div class="col-md-4" *ngIf="((OpexQuery.operationId == 20) || (OpexQuery.operationId == 22) || (OpexQuery.operationId == 64)||(OpexQuery.operationId == 65) || (OpexQuery.operationId == 62))&&  loginUserName != transMadeBy">
+                               <a href="javascript:;"  (click)="createquery()"  title="Send Query to Initiator">
+
+                                <em class="fa fa-share" ></em>
+                               </a>
+                               <br>
+                               <span>Send Query to Initiator</span>
+                            </div>
+                            <!-- <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="GroupName">
+                                        <span (click)="yesResponse()">
+                                            <i class="fas fa-thumbs-up">Yes</i>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div> -->
+                            <!-- <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="GroupName">
+                                        <span (click)="noResponse()">
+                                            <i class="fas fa-thumbs-down">No</i>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-default"
+                                (click)="close()"
+                            >
+                                {{ "Close" | localize }}
+                            </button>
+
+                            <button
+                                type="submit"
+                                flex="15"
+                                [disabled]="!comment"
+                                (click)="save()"
+                                class="btn btn-primary"
+                                [buttonBusy]="saving"
+                            >
+                                {{ "Save" | localize }}
+                            </button>
+                        </div>
+                    </tab>
+                    <tab heading="Query History">
+                        <div class="row align-items-center">
+                            <div
+                                class="primeng-datatable-container"
+                                [busyIf]="primengTableHelper.isLoading"
+                            >
+                                <div *ngFor="let i of querytraillist">
+                                    <div style="padding: 20" class="row">
+                                        <div
+                                            style="width: 45%"
+                                            class="col-md-6"
+                                        >
+                                            <div
+                                                *ngIf="
+                                                    i.queryResponse &&
+                                                    i.queryResponse.length > 1
+                                                "
+                                            >
+                                                <br /><br /><br />
+                                                <div
+                                                    class="customer message__text last"
+                                                >
+                                                    <div>
+                                                        {{
+                                                            i.queryResponse
+                                                                | slice: 0:50
+                                                        }}
+                                                        <a href=":;"></a>
+                                                        <button
+                                                            class="btn"
+                                                            type="button"
+                                                            popover="{{
+                                                                i.queryResponse
+                                                            }}"
+                                                            popoverTitle="Full Message"
+                                                            placement="top"
+                                                        >
+                                                            {{
+                                                                "...show more!"
+                                                            }}
+                                                        </button>
+                                                    </div>
+
+                                                    <div
+                                                        style="
+                                                            font-size: 9px;
+                                                            text-align: left;
+                                                            font-weight: bold;
+                                                        "
+                                                    >
+                                                        {{
+                                                            i.responseDate
+                                                                | luxonFormat
+                                                                    : "F"
+                                                        }}
+                                                    </div>
+                                                    <div
+                                                        style="
+                                                            font-size: 9px;
+                                                            text-align: right;
+                                                            font-weight: bold;
+                                                        "
+                                                    >
+                                                        {{ i.fullNameOfQueryResponder }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-md-6"
+                                            style="width: 45%"
+                                        >
+                                            <div
+                                                class="team message__text last"
+                                            >
+                                                <div>
+                                                    {{ i.query | slice: 0:50 }}
+                                                    <button
+                                                        class="btn"
+                                                        type="button"
+                                                        popover="{{ i.query }}"
+                                                        popoverTitle="Full Message"
+                                                        placement="top"
+                                                    >
+                                                        {{ "...show more!" }}
+                                                    </button>
+                                                </div>
+
+                                                <div
+                                                    style="
+                                                        font-size: 9px;
+                                                        text-align: left;
+                                                        font-weight: bold;
+                                                    "
+                                                >
+                                                    {{
+                                                        i.queryDate
+                                                            | luxonFormat: "F"
+                                                    }}
+                                                </div>
+                                                <div
+                                                    style="
+                                                        font-size: 9px;
+                                                        text-align: right;
+                                                        font-weight: bold;
+                                                    "
+                                                >
+                                                    {{ i.fullNameOfQueryInitiator }}
+                                                </div>
+                                            </div>
+                                            <br /><br /><br />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-default"
+                                (click)="close()"
+                            >
+                                {{ "Close" | localize }}
+                            </button>
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+</div>
+<appfileupload #fileUpload></appfileupload>
+
+<QueryToInitiatormodal #opexquerymodal></QueryToInitiatormodal>
+

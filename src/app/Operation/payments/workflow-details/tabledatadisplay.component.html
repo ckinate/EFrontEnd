@@ -1,0 +1,22 @@
+<div class="card card-vic" style="margin: 0%;">
+    <!-- <div class="card-header card-header-vic" style="color: mediumslateblue;">
+        {{title}}
+    </div> -->
+    <div class="card-body" style="padding-top: 0%;">
+      <table class="table" style="border-radius: 20px; border-collapse: separate !important;">
+        <thead class="" style="background-color: lavender; border-radius: 20px;">
+          <tr>
+            <th *ngFor="let header of headers">{{header}}</th>
+          </tr>
+        </thead>
+    
+        <tbody class="card-item-vic card-value-vic">
+          <tr *ngFor="let item of items">
+            <td *ngFor="let header of headers" >
+              {{item[transform(header) ]}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</div>

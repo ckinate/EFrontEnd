@@ -1,0 +1,109 @@
+<div
+    bsModal
+    #createOrEditModal="bs-modal"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="createOrEditModal"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form
+                *ngIf="active"
+                #bankForm="ngForm"
+                novalidate
+                (ngSubmit)="save()"
+                autocomplete="off"
+            >
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="bank.id">{{ l("Edit Bank Setup ") }}</span>
+                        <span *ngIf="!bank.id">{{ l("New Bank Setup") }}</span>
+                    </h4>
+
+                    <button
+                        type="button"
+                        class="close"
+                        (click)="close()"
+                        [attr.aria-label]="l('Close')"
+                        [disabled]="saving"
+                    >
+                        <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="BankName">{{
+                                    l("Bank Name")
+                                }}</label>
+                                <input
+                                    required
+                                    type="text"
+                                    id="Bank_BankName"
+                                    class="form-control"
+                                    [(ngModel)]="bank.bankName"
+                                    pattern="^[^\*\=\<\>]+$"
+                                    name="BankName"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="BankCode">{{
+                                    l("Bank Code")
+                                }}</label>
+                                <input
+                                    required
+                                    type="text"
+                                    id="Bank_BankCode"
+                                    class="form-control"
+                                    [(ngModel)]="bank.bankCode"
+                                    pattern="^[0-9]{3}$"
+                                    name="BankCode"
+                                />
+                            </div>
+                        </div>
+
+                        <label for="EditBank_IsActive" class="checkbox">
+                            <input
+                                id="EditBank_IsActive"
+                                type="checkbox"
+                                name="IsActive"
+                                [(ngModel)]="bank.isActive"
+                            />
+                            <span></span>
+                            {{ "Active" | localize }}
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="submit" class="btn btn-primary blue" [disabled]="!bankForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                   -->
+
+                    <app-erms-button
+                        [title]="'Save' | localize"
+                        action="submit"
+                        type="others"
+                    ></app-erms-button>
+
+                    <!-- <button [disabled]="saving" type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">{{l("Exit")}}</button>
+                -->
+
+                    <app-erms-button
+                        [title]="'Cancel' | localize"
+                        action="button"
+                        (click)="close()"
+                        type="cancel"
+                    ></app-erms-button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- {{bankGLMappingProfile | json}} -->
+</div>

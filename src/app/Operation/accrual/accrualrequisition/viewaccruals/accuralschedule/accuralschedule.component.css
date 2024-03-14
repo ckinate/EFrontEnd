@@ -1,0 +1,16 @@
+.show{
+    padding: 10px;
+}
+
+
+
+/* .p-autocomplete{
+    width: 100px !important;
+  }
+.ng-invalid .ui-inputtext {
+    width: 100px !important;
+} */
+::ng-deep .ui-inputtext {
+    width: 75% !important;
+  }
+

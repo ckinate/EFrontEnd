@@ -1,0 +1,880 @@
+<div
+    appBsModal
+    #createOrEditModal="bs-modal"
+    (onShown)="onShown()"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="createOrEditModal"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static', keyboard: !saving }"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form
+                *ngIf="active"
+                #userForm="ngForm"
+                novalidate
+                (ngSubmit)="save()"
+            >
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="user.id"
+                            >{{ "EditUser" | localize }}:
+                            {{ user.userName }}</span
+                        >
+                        <span *ngIf="!user.id">{{
+                            "CreateNewUser" | localize
+                        }}</span>
+                    </h4>
+                    <button
+                        type="button"
+                        class="close"
+                        (click)="close()"
+                        [attr.aria-label]="l('Close')"
+                        [disabled]="saving"
+                    >
+                        <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <tabset>
+                        <tab
+                            class="pt-5"
+                            heading="{{ 'UserInformations' | localize }}"
+                        >
+                            <div class="row">
+                                <div class="col-sm-3 text-center mb-5 mt-5">
+                                    <img
+                                        src="{{ profilePicture }}"
+                                        width="128"
+                                        height="128"
+                                        class="img-thumbnail img-rounded"
+                                    />
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        <label for="Name"
+                                            >{{
+                                                "FirstName" | localize
+                                            }}
+                                            *</label
+                                        >
+                                        <input
+                                            id="Name"
+                                            #nameInput="ngModel"
+                                            class="form-control"
+                                            type="text"
+                                            name="Name"
+                                            [(ngModel)]="user.name"
+                                            required
+                                            pattern="[a-zA-Z0-9\.\-\_ \ ]*"
+                                            maxlength="64"
+                                        />
+                                        <validation-messages
+                                            [formCtrl]="nameInput"
+                                        ></validation-messages>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="Surname"
+                                            >{{ "Surname" | localize }} *</label
+                                        >
+                                        <input
+                                            id="Surname"
+                                            #surnameInput="ngModel"
+                                            type="text"
+                                            name="Surname"
+                                            class="form-control"
+                                            [(ngModel)]="user.surname"
+                                            required
+                                            pattern="[a-zA-Z0-9\.\-\_ \ ]*"
+                                            maxlength="64"
+                                        />
+                                        <validation-messages
+                                            [formCtrl]="surnameInput"
+                                        ></validation-messages>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label for="EmailAddress"
+                                            >{{
+                                                "EmailAddress" | localize
+                                            }}
+                                            *</label
+                                        >
+                                        <input
+                                            id="EmailAddress"
+                                            #emailAddressInput="ngModel"
+                                            type="email"
+                                            name="EmailAddress"
+                                            class="form-control"
+                                            [(ngModel)]="user.emailAddress"
+                                            required
+                                            pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
+                                            maxlength="256"
+                                            email
+                                        />
+                                        <validation-messages
+                                            [formCtrl]="emailAddressInput"
+                                        ></validation-messages>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="PhoneNumber">{{
+                                            "PhoneNumber" | localize
+                                        }}</label>
+                                        <input
+                                            id="PhoneNumber"
+                                            type="text"
+                                            name="PhoneNumber"
+                                            class="form-control"
+                                            [(ngModel)]="user.phoneNumber"
+                                            maxlength="32"
+                                            pattern="[a-zA-Z0-9 ]*"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="custCode">MIS Code</label>
+                                        <ng-select
+                                            name="companyStructure"
+                                            placeholder="Company Structure"
+                                            [(ngModel)]="user.misCode"
+                                            required
+                                            #cusCode="ngModel"
+                                            (change)="fetchMis($event)"
+                                        >
+                                            <ng-option
+                                                *ngFor="
+                                                    let x of listCompanyStructure
+                                                "
+                                                [value]="x.customCode"
+                                                >{{
+                                                    x.displayName +
+                                                        " " +
+                                                        "-" +
+                                                        " " +
+                                                        x.customCode
+                                                }}</ng-option
+                                            >
+                                        </ng-select>
+                                        <div
+                                            [hidden]="
+                                                cusCode.valid ||
+                                                cusCode.pristine ||
+                                                cusCode.untouched
+                                            "
+                                            class="alert alert-danger"
+                                        >
+                                            MIS Code is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="categoryName"
+                                            >Staff MIS Code</label
+                                        >
+                                        <ng-select
+                                            name="categoryName"
+                                            placeholder="Staff MIS"
+                                            [(ngModel)]="user.staffMisCode"
+                                            required
+                                            #staffMisName="ngModel"
+                                        >
+                                            <ng-option
+                                                *ngFor="
+                                                    let x of CompanyStructureStaffMisdto
+                                                "
+                                                [value]="x.customCode"
+                                                >{{ x.customCode }}
+                                            </ng-option>
+                                        </ng-select>
+                                        <div
+                                            [hidden]="
+                                                staffMisName.valid ||
+                                                staffMisName.pristine ||
+                                                staffMisName.untouched
+                                            "
+                                            class="alert alert-danger"
+                                        >
+                                            Staff MIS Code is required
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="DepartmentMisCode">
+                                            {{
+                                                "Department MisCode" | localize
+                                            }}
+                                        </label>
+                                        <input
+                                            id="departmentMisCode"
+                                            #DeptMisCode="ngModel"
+                                            type="text"
+                                            name="departmentMisCode"
+                                            class="form-control"
+                                            [(ngModel)]="user.departmentMisCode"
+                                            value="CompanyStructuredto.parentCode"
+                                            required
+                                            pattern="[a-zA-Z0-9 ]*"
+                                            maxlength="64"
+                                            readonly
+                                        />
+                                        <validation-messages
+                                            [formCtrl]="DeptMisCode"
+                                        ></validation-messages>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="Relieve">
+                                            {{
+                                                "RELIEF" | localize
+                                            }}
+                                        </label>
+                                        <ng-select
+                                            required
+                                            name="Relieve"
+                                            placeholder="Relief"
+                                            class="rounded"
+                                            [(ngModel)]="user.relieveName"
+                                        >
+                                            <ng-option
+                                                *ngFor="let us of usersList"
+                                                [value]="us.userName"
+                                            >
+                                                {{ us.name}} {{ us.surname}}
+                                            </ng-option>
+                                        </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-7">
+
+                                    <div class="form-group">
+                                        <label for="UserName"
+                                            >{{ "UserName" | localize }} *</label
+                                        >
+                                        <input
+                                            id="UserName"
+                                            #userNameInput="ngModel"
+                                            type="text"
+                                            [disabled]="!canChangeUserName"
+                                            name="UserName"
+                                            class="form-control"
+                                            [(ngModel)]="user.userName"
+                                            required
+                                            pattern="[a-zA-Z0-9\.\-\_ \]*"
+                                            maxlength="256"
+                                            [disabled]="checkforUserName!= null"
+                                        />
+                                        <span
+                                            class="help-block"
+                                            *ngIf="!canChangeUserName"
+                                            >{{
+                                                "CanNotChangeAdminUserName" | localize
+                                            }}</span
+                                        >
+                                        <validation-messages
+                                            [formCtrl]="userNameInput"
+                                        ></validation-messages>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-5">
+
+                                    <div class="form-group">
+                                        <label for="StaffId"
+                                            >{{ "Staff Unique Id" | localize }} *</label
+                                        >
+                                        <input
+                                            id="StaffId"
+                                            #staffId="ngModel"
+                                            type="text"
+
+                                            name="StaffID"
+                                            class="form-control"
+                                            [(ngModel)]="user.staffId"
+                                            required
+                                            pattern="[a-zA-Z0-9\.\-\_ \]*"
+                                            maxlength="256"
+                                            [disabled]="checkforUserId!= null"
+                                        />
+
+                                        <validation-messages
+                                            [formCtrl]="staffId"
+                                        ></validation-messages>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="+ checkbox-inline" *ngIf="hidePasswordReset==false">
+                                <label
+                                    for="EditUser_SetRandomPassword"
+                                    class="checkbox"
+                                >
+                                    <input
+                                        id="EditUser_SetRandomPassword"
+                                        type="checkbox"
+                                        name="SetRandomPassword"
+                                        [(ngModel)]="setRandomPassword"
+                                    />
+                                    <span></span>
+                                    {{ "SetRandomPassword" | localize }}
+                                </label>
+                            </div>
+                            <div class="form-group" *ngIf="!setRandomPassword && hidePasswordReset==false">
+                                <div class="right">
+                                    <label for="Password">{{
+                                        "Password" | localize
+                                    }}</label>
+                                    <input
+                                        id="Password"
+                                        type="password"
+                                        name="Password"
+                                        #Password="ngModel"
+                                        id="Password"
+                                        class="form-control"
+                                        [(ngModel)]="user.password"
+                                        [required]="
+                                            !user.id && !setRandomPassword
+                                        "
+                                        maxlength="32"
+                                        [requireDigit]="
+                                            passwordComplexitySetting.requireDigit
+                                        "
+                                        [requireLowercase]="
+                                            passwordComplexitySetting.requireLowercase
+                                        "
+                                        [requireUppercase]="
+                                            passwordComplexitySetting.requireUppercase
+                                        "
+                                        [requireNonAlphanumeric]="
+                                            passwordComplexitySetting.requireNonAlphanumeric
+                                        "
+                                        [requiredLength]="
+                                            passwordComplexitySetting.requiredLength
+                                        "
+                                        validateEqual="PasswordRepeat"
+                                        reverse="true"
+                                        autocomplete="new-password"
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                [hidden]="
+                                    setRandomPassword ||
+                                    userForm.form.valid ||
+                                    userForm.form.pristine
+                                "
+                                *ngIf="hidePasswordReset==false"
+                            >
+                                <ul
+                                    class="help-block text-danger"
+                                    *ngIf="
+                                        userForm.controls['Password'] &&
+                                        userForm.controls['Password'].errors
+                                    "
+                                >
+                                    <li
+                                        [hidden]="
+                                            !userForm.controls['Password']
+                                                .errors.requireDigit
+                                        "
+                                    >
+                                        {{
+                                            "PasswordComplexity_RequireDigit_Hint"
+                                                | localize
+                                        }}
+                                    </li>
+                                    <li
+                                        [hidden]="
+                                            !userForm.controls['Password']
+                                                .errors.requireLowercase
+                                        "
+                                    >
+                                        {{
+                                            "PasswordComplexity_RequireLowercase_Hint"
+                                                | localize
+                                        }}
+                                    </li>
+                                    <li
+                                        [hidden]="
+                                            !userForm.controls['Password']
+                                                .errors.requireUppercase
+                                        "
+                                    >
+                                        {{
+                                            "PasswordComplexity_RequireUppercase_Hint"
+                                                | localize
+                                        }}
+                                    </li>
+                                    <li
+                                        [hidden]="
+                                            !userForm.controls['Password']
+                                                .errors.requireNonAlphanumeric
+                                        "
+                                    >
+                                        {{
+                                            "PasswordComplexity_RequireNonAlphanumeric_Hint"
+                                                | localize
+                                        }}
+                                    </li>
+                                    <li
+                                        [hidden]="
+                                            !userForm.controls['Password']
+                                                .errors.requiredLength
+                                        "
+                                    >
+                                        {{
+                                            "PasswordComplexity_RequiredLength_Hint"
+                                                | localize
+                                                    : passwordComplexitySetting.requiredLength
+                                        }}
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="form-group" *ngIf="!setRandomPassword && hidePasswordReset==false">
+                                <div class="right">
+                                    <label for="PasswordRepeat">{{
+                                        "PasswordRepeat" | localize
+                                    }}</label>
+                                    <input
+                                        id="PasswordRepeat"
+                                        type="password"
+                                        name="PasswordRepeat"
+                                        #PasswordRepeat="ngModel"
+                                        class="form-control"
+                                        [(ngModel)]="userPasswordRepeat"
+                                        [required]="
+                                            !user.id && !setRandomPassword
+                                        "
+                                        maxlength="32"
+                                        [requireDigit]="
+                                            passwordComplexitySetting.requireDigit
+                                        "
+                                        [requireLowercase]="
+                                            passwordComplexitySetting.requireLowercase
+                                        "
+                                        [requireUppercase]="
+                                            passwordComplexitySetting.requireUppercase
+                                        "
+                                        [requireNonAlphanumeric]="
+                                            passwordComplexitySetting.requireNonAlphanumeric
+                                        "
+                                        [requiredLength]="
+                                            passwordComplexitySetting.requiredLength
+                                        "
+                                        validateEqual="Password"
+                                        reverse="false"
+                                        autocomplete="new-password"
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                [hidden]="
+                                    setRandomPassword ||
+                                    userForm.form.valid ||
+                                    userForm.form.pristine
+                                "
+                                *ngIf="hidePasswordReset==false"
+
+                            >
+                                <ul
+                                    class="help-block text-danger"
+                                    *ngIf="
+                                        userForm.controls['PasswordRepeat'] &&
+                                        userForm.controls['PasswordRepeat']
+                                            .errors
+                                    "
+                                >
+                                    <li
+                                        [hidden]="
+                                            !userForm.controls['PasswordRepeat']
+                                                .errors.requireDigit
+                                        "
+                                    >
+                                        {{
+                                            "PasswordComplexity_RequireDigit_Hint"
+                                                | localize
+                                        }}
+                                    </li>
+                                    <li
+                                        [hidden]="
+                                            !userForm.controls['PasswordRepeat']
+                                                .errors.requireLowercase
+                                        "
+                                    >
+                                        {{
+                                            "PasswordComplexity_RequireLowercase_Hint"
+                                                | localize
+                                        }}
+                                    </li>
+                                    <li
+                                        [hidden]="
+                                            !userForm.controls['PasswordRepeat']
+                                                .errors.requireUppercase
+                                        "
+                                    >
+                                        {{
+                                            "PasswordComplexity_RequireUppercase_Hint"
+                                                | localize
+                                        }}
+                                    </li>
+                                    <li
+                                        [hidden]="
+                                            !userForm.controls['PasswordRepeat']
+                                                .errors.requireNonAlphanumeric
+                                        "
+                                    >
+                                        {{
+                                            "PasswordComplexity_RequireNonAlphanumeric_Hint"
+                                                | localize
+                                        }}
+                                    </li>
+                                    <li
+                                        [hidden]="
+                                            !userForm.controls['PasswordRepeat']
+                                                .errors.requiredLength
+                                        "
+                                    >
+                                        {{
+                                            "PasswordComplexity_RequiredLength_Hint"
+                                                | localize
+                                                    : passwordComplexitySetting.requiredLength
+                                        }}
+                                    </li>
+                                    <li
+                                        [hidden]="
+                                            userForm.controls['PasswordRepeat']
+                                                .valid
+                                        "
+                                    >
+                                        {{ "PasswordsDontMatch" | localize }}
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="checkbox-list"  *ngIf="hidePasswordReset==false" >
+                                <label
+                                    for="EditUser_ShouldChangePasswordOnNextLogin"
+                                    class="checkbox"
+                                >
+                                    <input
+                                        id="EditUser_ShouldChangePasswordOnNextLogin"
+                                        type="checkbox"
+                                        name="ShouldChangePasswordOnNextLogin"
+                                        [(ngModel)]="
+                                            user.shouldChangePasswordOnNextLogin
+                                        "
+                                    />
+                                    <span></span>
+                                    {{
+                                        "ShouldChangePasswordOnNextLogin"
+                                            | localize
+                                    }}
+                                </label>
+
+                                <span
+                                    class="form-text text-muted"
+                                    *ngIf="!isSMTPSettingsProvided()"
+                                    >{{
+                                        "SMTPSettingsNotProvidedWarningText"
+                                            | localize
+                                    }}</span
+                                >
+                                <label
+                                    for="EditUser_SendActivationEmail"
+                                    class="checkbox"
+                                    [class.checkbox-disabled]="
+                                        !isSMTPSettingsProvided()
+                                    "
+                                >
+                                    <input
+                                        id="EditUser_SendActivationEmail"
+                                        type="checkbox"
+                                        name="SendActivationEmail"
+                                        [disabled]="!isSMTPSettingsProvided()"
+                                        [(ngModel)]="sendActivationEmail"
+                                    />
+                                    <span></span>
+                                    {{ "SendActivationEmail" | localize }}
+                                </label>
+
+                                <label for="EditUser_IsActive" class="checkbox">
+                                    <input
+                                        id="EditUser_IsActive"
+                                        type="checkbox"
+                                        name="IsActive"
+                                        [(ngModel)]="user.isActive"
+                                    />
+                                    <span></span>
+                                    {{ "Active" | localize }}
+                                </label>
+
+                                <label
+                                    *ngIf="isTwoFactorEnabled"
+                                    for="EditUser_IsTwoFactorEnabled"
+                                    class="checkbox"
+                                >
+                                    <input
+                                        id="EditUser_IsTwoFactorEnabled"
+                                        type="checkbox"
+                                        name="IsTwoFactorEnabled"
+                                        [(ngModel)]="user.isTwoFactorEnabled"
+                                    />
+                                    <span></span>
+                                    {{ "IsTwoFactorEnabled" | localize }}
+                                </label>
+
+                                <label
+                                    *ngIf="isLockoutEnabled"
+                                    for="EditUser_IsLockoutEnabled"
+                                    class="checkbox"
+                                >
+                                    <input
+                                        id="EditUser_IsLockoutEnabled"
+                                        type="checkbox"
+                                        name="IsLockoutEnabled"
+                                        [(ngModel)]="user.isLockoutEnabled"
+                                    />
+                                    <span></span>
+                                    {{ "IsLockoutEnabled" | localize }}
+                                </label>
+                            </div>
+                        </tab>
+                        <tab class="pt-5" heading="{{ 'Roles' | localize }}">
+                            <ng-template tabHeading>
+                                <span
+                                    class="label label-success label-inline assigned-role-count"
+                                    >{{ getAssignedRoleCount() }}</span
+                                >
+                            </ng-template>
+                            <div class="row align-items-center mb-2">
+                                <div class="col-md-6 row">
+                                    <div
+                                        class="radio-inline"
+                                        *ngFor="
+                                            let role of roles;
+                                            let i = index
+                                        "
+                                    >
+                                      <div class="col">
+
+                                        <div class="form-group">
+                                            <label
+                                            attr.for="EditUser_{{
+                                                role.roleName
+                                            }}"
+                                        >
+                                            {{ role.roleDisplayName }}
+                                        </label>
+                                            <input
+                                            id="EditUser_{{ role.roleName }}"
+                                                type="radio"
+                                                name="RoleName"
+                                                [(ngModel)]="RoleName"
+
+                                                [value]="role.roleName"
+                                                required
+                                                class="form-control"
+                                                [disabled]="
+                                                role.inheritedFromOrganizationUnit
+                                            "
+
+                                            />
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </tab>
+
+                        <!-- <tab class="pt-5" heading="{{'OrganizationUnits' | localize}}">
+                            <organization-unit-tree [cascadeSelectEnabled]="false" #organizationUnitTree></organization-unit-tree>
+                        </tab>
+
+                        <tab class="pt-5" heading="{{'Company Structure' | localize}}">
+
+                            <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="form-group">                                                                                          <select name="categoryName" id="categoryName" (change)="getCompanyStructure($event.target.value)" class="form-control">
+                                        <option value="undefined" selected = "selected">Select Company Category</option>
+                                        <option *ngFor="let x of categoryList" [value]="x.id">{{x.categoryName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select name="companyStructure" id="compStructure" (change) = "getCustCode($event.target.value)" class="form-control">
+                                        <option value="undefined">Select Company Structure--</option>
+                                        <option *ngFor="let x of listCompanyStructure" [value]="x.unitTypeId">{{x.displayName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select name="custCode" id="custCode"  class="form-control">
+                                        <option value="undefined">Select Custom Code--</option>
+                                        <option *ngFor="let item of custCodeList" [value]="item.id">{{item.customCode}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        </tab> -->
+
+                        <!-- beneficiaryCode -->
+
+                        <tab
+                            class="pt-5"
+                            heading="{{ 'Beneficiary Bank' | localize }}"
+                        >
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="bankName"
+                                            >{{
+                                                "Select Bank Name" | localize
+                                            }}
+                                            *</label
+                                        >
+                                        <select
+                                            name="bankNames"
+                                            id="bankNames"
+                                            [(ngModel)]="
+                                                userBankProfile.bankCode
+                                            "
+                                            required
+                                            ngModel
+                                            class="form-control"
+                                        >
+                                            <option
+                                                value="undefined"
+                                                selected="selected"
+                                            >
+                                                Select Bank Name
+                                            </option>
+                                            <option
+                                                *ngFor="let x of Banks"
+                                                [ngValue]="x.bankCode"
+                                            >
+                                                {{ x.bankName }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="bankName">{{"Select Bank Name" | localize}} </label>
+                                 <ng-select   name="bankName"  placeholder="Select Bank Name" [(ngModel)] = "userBankProfile.bankCode"  required  #BankNam = "ngModel">
+                                     <ng-option *ngFor="let x of Banks" [value]="x.bankCode">{{x.bankName}} </ng-option>
+                                  </ng-select>
+                                   <div [hidden]="BankNam.valid || BankNam.pristine || BankNam.untouched"
+                                    class="alert alert-danger">
+                                    Bank Name is required
+                                   </div>
+                                </div>
+                             </div> -->
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="accNo"
+                                            >{{
+                                                "Account Number" | localize
+                                            }}
+                                            *</label
+                                        >
+                                        <input
+                                            id="accNo"
+                                            #accNoInput="ngModel"
+                                            type="text"
+                                            name="accNo"
+                                            class="form-control"
+                                            [(ngModel)]="
+                                                userBankProfile.beneficiaryAccountNumber
+                                            "
+                                            required
+                                            pattern="[a-zA-Z0-9 ]*"
+                                            maxlength="10"
+                                            onkeyup="this.value=this.value.replace(/[^\d]/,'')"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="accName"
+                                            >{{
+                                                "Account Name" | localize
+                                            }}
+                                            *</label
+                                        >
+                                        <input
+                                            id="accName"
+                                            #accnameInput="ngModel"
+                                            class="form-control"
+                                            type="text"
+                                            name="accName"
+                                            [(ngModel)]="
+                                                userBankProfile.beneficiaryName
+                                            "
+                                            required
+                                            pattern="[a-zA-Z0-9 ]*"
+                                            maxlength="64"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </tab>
+                    </tabset>
+                </div>
+                <div class="modal-footer">
+                    <span *ngIf ="!userForm.form.valid" class="alert alert-danger">Please fill all the Required field(s) in Red</span>
+                        <br>
+                    <button
+                        [disabled]="saving"
+                        type="button"
+                        class="btn btn-light-primary font-weight-bold"
+                        (click)="close()"
+                    >
+                        {{ "Cancel" | localize }}
+                    </button>
+                    <button
+                        type="submit"
+                        class="btn btn-primary font-weight-bold"
+                        [disabled]="!userForm.form.valid"
+                        [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')"
+                    >
+                        <i class="fa fa-save"></i>
+
+                        <span>{{ "Save" | localize }}</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

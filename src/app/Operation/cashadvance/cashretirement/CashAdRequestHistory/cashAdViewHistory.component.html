@@ -1,0 +1,300 @@
+<div
+    bsModal
+    bsModal
+    #viewCashAdHistory="bs-modal"
+    (onShown)="onShown()"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+>
+<div class="modal-dialog modal-lg">
+    <div class="modal-content" [busyIf]="isDataLoading">
+        <div class="modal-header">
+            <button
+                type="button"
+                class="close"
+                (click)="close()"
+                [attr.aria-label]="l('Close')"
+            >
+                <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <tabset>
+                <tab heading="Enquiry History">
+                    <div class="row align-items-center">
+                        <div
+                            class="primeng-datatable-container"
+                            [busyIf]="primengTableHelper.isLoading"
+                        >
+                            <div *ngFor="let i of querytraillist">
+                                <div style="padding: 20" class="row">
+                                    <div
+                                        style="width: 45%"
+                                        class="col-md-6"
+                                    >
+                                        <div
+                                            *ngIf="
+                                                i.queryResponse &&
+                                                i.queryResponse.length > 1
+                                            "
+                                        >
+                                            <br /><br /><br />
+                                            <div
+                                                class="customer message__text last"
+                                            >
+                                                <div>
+                                                    {{
+                                                        i.queryResponse
+                                                            | slice: 0:50
+                                                    }}
+                                                    <a href=":;"></a>
+                                                    <button
+                                                        class="btn"
+                                                        type="button"
+                                                        popover="{{
+                                                            i.queryResponse
+                                                        }}"
+                                                        popoverTitle="Full Message"
+                                                        placement="top"
+                                                    >
+                                                        {{
+                                                            "...show more!"
+                                                        }}
+                                                    </button>
+                                                </div>
+
+                                                <div
+                                                    style="
+                                                        font-size: 9px;
+                                                        text-align: left;
+                                                        font-weight: bold;
+                                                    "
+                                                >
+                                                    {{
+                                                        i.responseDate
+                                                            | luxonFormat
+                                                                : "F"
+                                                    }}
+                                                </div>
+                                                <div
+                                                    style="
+                                                        font-size: 9px;
+                                                        text-align: right;
+                                                        font-weight: bold;
+                                                    "
+                                                >
+                                                    {{ i.fullNameOfQueryResponder }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-md-6"
+                                        style="width: 45%"
+                                    >
+                                        <div
+                                            class="team message__text last"
+                                        >
+                                            <div>
+                                                {{ i.query | slice: 0:50 }}
+                                                <button
+                                                    class="btn"
+                                                    type="button"
+                                                    popover="{{ i.query }}"
+                                                    popoverTitle="Full Message"
+                                                    placement="top"
+                                                >
+                                                    {{ "...show more!" }}
+                                                </button>
+                                            </div>
+
+                                            <div
+                                                style="
+                                                    font-size: 9px;
+                                                    text-align: left;
+                                                    font-weight: bold;
+                                                "
+                                            >
+                                                {{
+                                                    i.queryDate
+                                                        | luxonFormat: "F"
+                                                }}
+                                            </div>
+                                            <div
+                                                style="
+                                                    font-size: 9px;
+                                                    text-align: right;
+                                                    font-weight: bold;
+                                                "
+                                            >
+                                                {{ i.fullNameOfQueryInitiator }}
+                                            </div>
+                                        </div>
+                                        <br /><br /><br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-default"
+                            (click)="close()"
+                        >
+                            {{ "Close" | localize }}
+                        </button>
+                    </div>
+                </tab>
+                <tab heading="Approval Trail">
+                 <br>
+                 
+                <div class="row align-items-center">
+                    <!--<Primeng-TurboTable-Start>-->
+                    <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable sortMode="multiple" [value]="primengTableHelper.records"
+                            rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="false" [lazy]="true"
+                            scrollable="true" ScrollWidth="100%" responsive="primengTableHelper.isResponsive"
+                            resizableColumns="primengTableHelper.resizableColumns">
+
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 150px" pSortableColumn="actionBy">
+                                        {{'Action ' | localize}}
+                                        <p-sortIcon field="actionBy"></p-sortIcon>
+                                    </th>
+
+                                    <th style="width: 150px" pSortableColumn="actionBy">
+                                        {{'Action By' | localize}}
+                                        <p-sortIcon field="actionBy"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="actionBy">
+                                        {{'Level Name' | localize}}
+                                        <p-sortIcon field="actionBy"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="dateTime">
+                                        {{'Action Date ' | localize}}
+                                        <p-sortIcon field="dateTime"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="status">
+                                        {{'Action Status' | localize}}
+                                        <p-sortIcon field="status"></p-sortIcon>
+                                    </th>
+
+
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">{{'UserName' | localize}}</span>
+                                        {{record.action}}
+                                    </td>
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">{{'UserName' | localize}}</span>
+                                        {{record.actionBy}}
+                                    </td>
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">{{'UserName' | localize}}</span>
+                                        {{record.approvalDepartment}}
+                                    </td>
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">{{'UserName' | localize}}</span>
+                                        {{record.dateTime | luxonFormat:'yyyy-LL-dd HH:mm:ss'}}
+                                    </td>
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">{{'UserName' | localize}}</span>
+                                        {{record.status}}
+                                    </td>
+
+                                </tr>
+                            </ng-template>
+                        </p-table>
+
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-default"
+                        (click)="close()"
+                    >
+                        {{ "Close" | localize }}
+                    </button>
+                </div>
+                </tab>
+
+                <tab heading="Beneficiary(s) Detail">
+                    <div class="row align-items-center">
+                        <!--<Primeng-TurboTable-Start>-->
+                        <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+                            <table class="table table-hover table-light" id="excel-table1">
+                                <thead>
+                                    <tr class="uppercase">
+
+
+
+                                        <th>
+                                            Beneficiary Name
+                                        </th>
+                                        <th>
+                                            Beneficiary Account
+                                         </th>
+                                         <th>
+                                           Bank
+                                         </th>
+                                         <th>
+                                            Amount
+                                          </th>
+
+                                    </tr>
+                                </thead>
+                                <tr *ngFor="let m of getCashAdDetail; let i = index">
+                                    <td>
+                                        {{m.beneficiaryName}}
+                                    </td>
+                                    <td>
+                                        {{m.bankAccount }}
+                                    </td>
+                                    <td>
+                                        {{m.bankName}}
+                                    </td>
+                                    <td>
+                                        {{m.amount}}
+                                    </td>
+                                </tr>
+
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-default"
+                            (click)="close()"
+                        >
+                            {{ "Close" | localize }}
+                        </button>
+                    </div>
+                </tab>
+
+
+            </tabset>
+        </div>
+
+    </div>
+</div>
+</div>
+
+

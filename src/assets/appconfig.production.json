@@ -1,0 +1,61 @@
+{
+  "remoteServiceBaseUrl": "https://localhost:44301",
+  "appBaseUrl": "http://localhost:4200",
+  "isIdentityServer": true,
+  "identityServerURL": "https://localhost:44301/ui",
+  "documentUrl":"http://localhost:4500",
+  "ClientId" : "ERP.Expense",
+  "cashADUrl" : "https://localhost:44345/CashADReport.aspx",
+  "reportUrl" : "https://localhost:44345/Report.aspx",
+  "OpexReqreportUrl": "https://localhost:44345/OpexReqReport.aspx",
+  "AccrualReport": "https://localhost:44345/AccrualReport.aspx",
+  "AmortReport": "https://localhost:44345/AmortizationReport.aspx",
+  "localeMappings": {
+    "angular": [
+      {
+        "from": "pt-BR",
+        "to": "pt"
+      },
+      {
+        "from": "zh-CN",
+        "to": "zh"
+      },
+      {
+        "from": "he-IL",
+        "to": "he"
+      },
+      {
+        "from": "es-MX",
+        "to": "es"
+      },
+      {
+        "from": "vi",
+        "to": "en"
+      }
+    ],
+    "luxon": [
+      {
+        "from": "es-MX",
+        "to": "es"
+      },
+      {
+        "from": "zh-Hans",
+        "to": "zh-cn"
+      },
+      {
+        "from": "vi",
+        "to": "en-gb"
+      }
+    ],
+    "recaptcha": [
+      {
+        "from": "zh-Hans",
+        "to": "zh-cn"
+      },
+      {
+        "from": "es-MX",
+        "to": "es"
+      }
+    ]
+  }
+}

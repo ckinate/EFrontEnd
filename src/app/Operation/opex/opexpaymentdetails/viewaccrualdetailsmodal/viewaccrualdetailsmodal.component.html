@@ -1,0 +1,119 @@
+
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog" 
+aria-hidden="true" [config]="{backdrop: 'static'}">
+<div class="modal-dialog modal-lg">
+
+   <div class="modal-content">
+
+      
+
+           <div class="modal-header">
+                <h5 class="modal-title"   >
+                    Accrual Details
+                 
+               </h5> 
+               <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                   <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+               </button>
+           </div>
+
+           <div class="modal-body">
+            <div class="row align-items-center">
+                <!--<Primeng-TurboTable-Start>-->
+              
+                    <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+                        <table class="table table-hover table-light" >
+                            <thead>
+                                <tr class="uppercase">
+                                 
+                                    <th >
+                                   MIS Accrued For
+                                </th>
+                                <th >
+                                    Benefiting MIS
+                                 </th>
+                                
+                                <th >
+                                    Amount Accrued
+                                </th>
+                               
+                                <th >
+                                   Current Expense
+                                </th>
+                                <th >
+                                    Debit
+                                </th>
+                                <th >
+                                    Credit
+                                </th>
+                                <!-- <th >
+                                   Variance
+                                </th> -->
+                                </tr>
+                            </thead>
+                            <tr *ngFor="let m of accrualutilizationrecord; let i = index">
+        
+                               
+                                <td>
+                                     {{m.misAccruedFor}}
+                                </td>
+                                  
+                                <td>
+                                    {{m.benefitingMIS}}
+                               </td>
+                                
+                                <td>
+                                   {{m.amountAccrued | number:'1.2-2'}}
+                                </td>
+                                <td>
+                                    {{m.amountUtilizing | number:'1.2-2'}}
+                                </td>
+                                <td>
+                                    {{m.debit | number:'1.2-2'}}
+                                </td>
+                               
+                                <td>
+                                    {{m.credit | number:'1.2-2'}}
+        
+                                </td>
+                                <!-- <td>
+                                    {{m.variance | number:'1.2-2'}}
+        
+                                </td> -->
+                               
+                               
+                              
+        
+                            </tr>
+                            
+        
+                        </table>
+        
+        
+        
+                      </div>
+                <!--<Primeng-TurboTable-End>-->
+                  
+            </div>
+
+
+              
+              
+       
+           </div>
+
+
+           <div class="modal-footer">
+               <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+             
+               <!-- <button type="submit" class="btn btn-primary" [disabled]="!roleuserForm.form.valid"  [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{"Save" | localize}}</span></button> -->
+
+           </div>
+           <!-- {{splitcostForm.value | json}} -->
+
+   </div>
+</div>
+</div>
+
+
+

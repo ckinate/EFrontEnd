@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Righteous&display=swap');
+.card-vic{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    /* background: rgba(123,76,243, 0.6); */
+    margin-top: 20px;
+    color: #FFF;
+    /* border: 1px solid rgba(255,255,255, 0.18); */
+}
+
+.card-item-vic {
+    background-color: #FFFFFF;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    /* background: rgba(0, 0, 0, 0.253); */
+    box-shadow: 0 0 10px #ccc;
+    color: #000;
+    margin: 2px;
+    margin-bottom: 20px;
+    margin-right: 1%;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255, 0.18);
+}
+
+.card-header-vic {
+    border-width: 0px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 20px;
+    font-family: 'Bebas Neue', cursive;
+    color: #000;
+    padding: 20px;
+}
+
+.card-title-vic {
+    font-weight: bold;
+    font-size: 14px;
+    font-family: 'Bebas Neue', cursive;
+}
+
+.card-value-vic {
+    font-size: 12px;
+    font-family: 'Righteous', cursive;
+}

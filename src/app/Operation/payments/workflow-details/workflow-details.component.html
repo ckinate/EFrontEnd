@@ -1,0 +1,53 @@
+<div appBsModal   #modalDetails="bs-modal" (onShown)="onShown()"  class="modal fade" tabindex="-1" role="dialog" 
+aria-hidden="true" [config]="{backdrop: 'static'}">
+<div class="modal-dialog modal-xl">
+   <div class="modal-content">    
+       <div>
+           
+            <div class="modal-header modal-header-vic">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                <i aria-hidden="true" class="ki ki-close" style="color: #000;"></i>
+            </button>
+            </div>
+
+            <div class="modal-body" style="padding:0%; margin: 0%; padding: 2%;">
+                
+               
+
+                <tabset id="tablet" class="card-header-vic" style="box-shadow: 0 0 5px #ccc;">
+                    <tab *ngFor="let item of itemList"
+                        [heading]="item.title"
+                        [active]="item.active || item.isTable"
+                        (selectTab)="item.active = true"
+                        (deselect)="item.active = false"
+                        [disabled]="item.disabled"
+                        >
+                    <div style="margin-top: 30px;">
+                        <div *ngIf="!item.isTable" style="margin-top: 0%; padding-top: 0%;">
+                            <notabledatadisplay *ngIf="!item.isTable" [items]="item.requestItem" [title]="item.title"></notabledatadisplay>
+                        </div>
+                        <div *ngIf="item.isTable" style="margin-top: 0%; padding-top: 0%;">
+                            <tabledatadisplay *ngIf="item.isTable" [items]="item.requestItem" [title]="item.title"></tabledatadisplay>
+                        </div>
+                    </div>
+                    </tab>
+                </tabset>
+
+                
+            
+            
+        
+            </div>
+            <div class="modal-footer modal-header-vic">
+                <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+            
+            </div>
+
+       </div>
+   </div>
+</div>
+</div>
+
+
+

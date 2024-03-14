@@ -1,0 +1,183 @@
+
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog" 
+aria-hidden="true" [config]="{backdrop: 'static'}">
+<div class="modal-dialog modal-lg">
+
+   <div class="modal-content">
+
+      
+
+           <div class="modal-header">
+               <h5 class="modal-title"   >
+                  Tax 
+                 
+               </h5>
+               <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                   <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+               </button>
+           </div>
+
+           <div class="modal-body" [busyIf]="saving">
+               <!--Design input form for modal add chart of account-->
+               <form #taxtransactForm="ngForm"  (ngSubmit)="save(taxtransactForm)">
+                <div class="row align-items-center mb-2">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="small mb-1" for="inputFirstName">Taxation</label>
+                            <select name="acct" required class="form-control rounded" [(ngModel)]="taxtrans.taxId" (change)="getRate(taxtrans.taxId)"
+                                >
+                                <option  *ngFor="let item of taxList" [value]="item.id" >
+                                    {{item.description}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="GroupName">{{"Rate" | localize}}</label>
+                            <input id="Discription"  name="rate" [(ngModel)]="taxtrans.rate" placeholder="Enter  Rate" required value="{{rate}}"
+                                class="form-control" type="number" oninput="this.value = Math.abs(this.value)"  (ngModelChange)="calculate(taxtrans.rate,taxtrans.taxableAmount)" >
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="GroupName">{{"Taxable Amount" | localize}}</label>
+                            <input id="Discription" type="text" name="taxableAmount" [(ngModel)]="taxtrans.taxableAmount" placeholder="Enter Taxable Amount" required
+                            (ngModelChange)="calculate(taxtrans.rate,taxtrans.taxableAmount)"   class="form-control" usd-only>
+                        </div>
+                    </div> 
+                 
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="GroupName">{{"Amount" | localize}}</label>
+                            <input id="Discription" type="number" name="amount"  [(ngModel)]="taxtrans.amount" required readonly
+                            pattern="[a-zA-Z0-9 ]*"
+                                class="form-control" value="{{amount}}">
+                                
+                        </div>
+                    </div> 
+
+                   
+                    
+                    <div class="col-md-12 mt-2 text-right">
+                        <div class="form-group">
+                          
+                            
+                            <app-erms-button
+                            type="save" [disabled]="!taxtransactForm.form.valid" 
+                            flex="15" [buttonBusy]="saving"
+                               title="Save" >
+                            </app-erms-button>
+                        </div>
+                    </div>
+                </div>
+               </form>
+
+
+
+               <!--table goes here-->
+               <div class="row align-items-center">
+                <!--<Primeng-TurboTable-Start>-->
+              <div class="primeng-datatable-container"
+                  [busyIf]="taxtransprimengTableHelper.isLoading">
+
+                  <p-table #dataTable
+                  [value]="taxtransprimengTableHelper.records"
+
+rows="{{taxtransprimengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20]" [lazy]="false" [rowHover]="true" sortMode="multiple" [scrollable]="true"
+ScrollWidth="100%" [responsive]="taxtransprimengTableHelper.isResponsive" [resizableColumns]="taxtransprimengTableHelper.resizableColumns"
+[globalFilterFields]="['taxDescription','taxableAmount','rate','amount']">
+                    <ng-template pTemplate="caption">
+                    <div style="text-align: right">
+                    <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                    <input type="text" pInputText size="30" placeholder="Search Keyword" style="width:auto" (input)="dataTable.filterGlobal($event.target.value, 'contains')">
+                    </div>
+                     </ng-template>
+
+
+                      <ng-template pTemplate="header">
+                          <tr>
+                              <!-- <th style="width:75px"></th> -->
+                              <th style="width: 100px" pSortableColumn="taxDescription"> {{'Taxation' | localize}} <p-sortIcon field="taxDescription"></p-sortIcon></th>
+                            <th style="width: 100px" pSortableColumn="taxableAmount">{{'Taxable Amount' | localize}} <p-sortIcon field="taxableAmount"></p-sortIcon></th>
+                            <th style="width: 100px" pSortableColumn="rate">  {{'Rate' | localize}} <p-sortIcon field="rate"></p-sortIcon></th>
+                            <th style="width: 100px" pSortableColumn="amount"> {{'Amount' | localize}} <p-sortIcon field="amount"></p-sortIcon></th>
+                          
+                          
+                          
+                            <th style="width: 100px">
+                                {{'Edit' | localize}}
+                            </th>
+                          
+                            
+                            <th style="width: 100px">
+                                {{'Delete' | localize}}
+                            </th>
+                             
+                          </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-record="$implicit">
+                        <tr >
+                           
+                            <td style="width: 100px">
+                                <span class="ui-column-title"> {{'Description' | localize}}</span>
+                                {{record.taxDescription}}
+                            </td>
+                            <td style="width: 100px" >
+                                <span class="ui-column-title"> {{'Account Name' | localize}}</span>
+                                {{record.taxableAmount}}
+                            </td>
+                            <td style="width: 100px" >
+                              <span class="ui-column-title"> {{'Rate' | localize}}</span>
+                              {{record.rate}}
+                          </td>
+                         
+                          <td  style="width: 100px">
+                              <span class="ui-column-title"> {{'Amount' | localize}}</span>
+                              {{record.amount}}
+                          </td>
+                            <td  style="width: 100px">
+                                <div class="btn-group dropdown" dropdown container="body">
+                                    <button type="button" class="btn " (click)="edit(record)" ><i class="fas fa-edit"></i></button>
+                                   
+                            
+                                </div>
+                            
+                            </td>
+                            <td  style="width: 100px">
+                                <button type="button" class="btn" (click)="DeleteItem(record.id)" ><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr> 
+                        
+                        
+                       
+                      </ng-template>
+                  </p-table>
+
+                    
+              </div>
+                <!--<Primeng-TurboTable-End>-->
+
+            </div>
+
+              
+
+              
+       
+           </div>
+
+
+           <div class="modal-footer">
+               <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+             
+               <!-- <button type="submit" class="btn btn-primary" [disabled]="!roleuserForm.form.valid"  [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{"Save" | localize}}</span></button> -->
+
+           </div>
+
+   </div>
+</div>
+</div>
+
+

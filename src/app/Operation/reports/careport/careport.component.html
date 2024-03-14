@@ -1,0 +1,146 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Cash Advance Report' | localize"></sub-header>
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="CaReport">{{
+                                    "Report Type" | localize
+                                }}</label>
+                                <select
+                                    id="CaReport"
+                                    name="CaReport"
+                                    class="form-control"
+                                    placeholder="Select Status "
+                                    [(ngModel)]="CaStatus"
+                                >
+                                    <option value="1">
+                                        {{ "CA Requisition AWF" | localize }}
+                                    </option>
+                                    <option value="2">
+                                        {{ "CA Requisition Payment" | localize }}
+                                    </option>
+                                    <option value="4" >
+                                        {{ "Outstanding CA" | localize }}
+                                    </option>
+                                    <option value="5">
+                                        {{ "CA Retirement" | localize }}
+                                    </option>
+                                    <option value="3" *ngIf="isAdmin">
+                                        {{ "Extended CA Requisition" | localize }}
+                                    </option>
+                                    <option value="0" *ngIf="isAdmin">
+                                        {{ "Extended CA Retirement" | localize }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="usersName">Made By</label>
+                                <ng-select
+                                        [(ngModel)]="madeBy"
+                                        name="payeeName"
+                                        [disabled]="!isAdmin"
+                                    >
+                                    <ng-option [value]="0" >All</ng-option
+                                        >
+                                    
+                                        <ng-option
+                                            *ngFor="
+                                                let payeename of payeenamelist
+                                            "
+                                            [value]="payeename.username"
+                                            >{{ payeename.username }}</ng-option
+                                        >
+                                    </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="categoryName">Request Type</label>
+                                <ng-select
+                                    name="categoryName"
+                                    placeholder="Expense Type"
+                                    [(ngModel)]="transTypeId"
+                                >
+                                <ng-option [value]="0"> All </ng-option>
+                                    <ng-option
+                                        *ngFor="let x of RequestType"
+                                        [value]="x.id"
+                                        >{{ x.transactionType }}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="custCode">MIS Code</label>
+                                <ng-select
+                                    name="companyStructure"
+                                    placeholder="Mis Code"
+                                    [(ngModel)]="miscode"
+                                >
+                                    <ng-option [value]="'0'"> All </ng-option>
+                                    <ng-option
+                                        *ngFor="let x of custCodeList"
+                                        [value]="x.customCode"
+                                        >{{
+                                            x.displayName +
+                                                " " +
+                                                "-" +
+                                                " " +
+                                                x.customCode
+                                        }}</ng-option
+                                    >
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="SampleDateRangePicker" class="col-md-12"
+                            >Select Date Range</label
+                        >
+                        <div class="col-lg-4 col-md-4 col-sm-4 input-group">
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="sampleDateTimePicker"
+                                name="sampleDateTimePicker"
+                                #drp="bsDaterangepicker"
+                                readonly="readonly"
+                                bsDaterangepicker
+                                dateRangePickerLuxonModifier
+                                [(date)]="dateRange"
+                            />
+                            <div class="input-group-append">
+                                <button
+                                    class="input-group-append btn btn-outline-secondary"
+                                    (click)="drp.toggle()"
+                                    type="button"
+                                >
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <button
+                                class="btn btn-primary"
+                                type="button"
+                                (click)="ViewReport(link)"
+                                title="View report" 
+                            >
+                                View Report
+                            </button>
+                        </div>
+                    </div>
+           
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,304 @@
+<div [@routerTransition]  >
+
+    <div class="content d-flex flex-column flex-column-fluid">
+
+        <sub-header [title]="'Default Currency' | localize">
+
+        </sub-header>
+
+
+
+
+
+      <div [class]="containerClass">
+        <div class="card card-custom ">
+            <div class="card-body">
+
+
+                <tabset>
+                    <tab heading="Create Default Currency">
+<br>
+<br>
+<form #defaultCurrencyForm="ngForm" (ngSubmit)="save(defaultCurrencyForm)" class="form" *ngIf="'Pages.DefaultCurrencySetUp.Create'| permission">
+    <div class="row align-items-center mb-2">
+
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="GroupName">{{"Currency" | localize}}</label>
+                <ng-select  [(ngModel)]="defautcurrencydto.currencyId" required name="currency" placeholder="Currency" class="rounded" >
+
+                    <ng-option *ngFor="let t of currencyList" [value]="t.id">
+                    {{t.currencyName}}
+                    </ng-option>
+                </ng-select>
+
+            </div>
+        </div>
+
+
+
+
+
+                <div class="col-md-12  text-right">
+                    <div class="form-group">
+                        <button type="submit"   flex="15" class="btn btn-primary " [disabled]="!defaultCurrencyForm.form.valid"
+                        >
+                        {{ "Save" | localize }}
+                        </button>
+                    </div>
+                </div>
+     </div>
+</form>
+
+
+                        <br>
+                        <br>
+
+
+                        <!-- <div class="row align-items-center">
+
+                        <div class="primeng-datatable-container"
+                            [busyIf]="primengTableHelper.isLoading">
+
+                            <p-table #dataTable
+
+        rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20]" [lazy]="false" [rowHover]="true" sortMode="multiple" [scrollable]="true"
+        ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive" [resizableColumns]="primengTableHelper.resizableColumns">
+
+
+                                <ng-template pTemplate="header">
+                                    <tr>
+
+                                        <th  style="width: 100px">
+                                            {{'Actions' | localize}}
+                                        </th>
+                                        <th style="width: 100px" >
+                                            {{'Currency Code' | localize}}
+                                        </th>
+
+
+
+
+
+
+
+
+
+
+
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" >
+                                    <tr>
+                                            <td style="width: 100px">
+                                                <div class="btn-group dropdown" dropdown container="body">
+                                                    <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                                                    <i class="fa fa-cog"></i><span class="caret"></span>
+                                                    {{"Actions" | localize}}
+                                                </button>
+                                                    <ul class="dropdown-menu" *dropdownMenu>
+
+                                                        <li>
+                                                            <a href="javascript:;" (click)="edit(record)">{{'Edit' | localize}}</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                            <td style="width: 100px">
+                                                <span class="ui-column-title"> {{'Description' | localize}}</span>
+                                                {{record.currencyCode    }}
+                                            </td>
+
+
+
+
+
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+
+
+                        </div>
+
+
+                        </div> -->
+
+
+
+
+                    </tab>
+                    <tab  heading="Create Exchange Rate">
+                      <div  *ngIf="'Pages.DefaultCurrencySetUp.Create'| permission">
+
+                        <form #currencyExchangeRateForm="ngForm" (ngSubmit)="saveExchangeRate(currencyExchangeRateForm)" class="form" *ngIf="'Pages.DefaultCurrencySetUp.Create'| permission">
+                            <div class="row align-items-center mb-2">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="inputFirstName">Default Currency Code</label>
+                                      <br>
+                                        <label   class="small mb-1" >   {{record.currencyCode}}</label>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="GroupName">{{"Currency" | localize}}</label>
+                                        <ng-select  [(ngModel)]="createExchangeRatelist.exchangeCurrencyCode" required name="exchangeCurrencyCode" placeholder="Currency" class="rounded" >
+                                            <!-- <ng-option [value]="1"> Select Payee Type</ng-option> -->
+                                            <ng-option *ngFor="let itemv of getCurrencyExceptDefault" [value]="itemv.currencyCode">
+                                            {{itemv.currencyName}}
+                                            </ng-option>
+                                        </ng-select>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="inputFirstName">Rate</label>
+
+
+                                        <input id="Discription" type="number" name="exchangeRate" oninput="this.value = Math.abs(this.value)" [(ngModel)]="createExchangeRatelist.exchangeRate" placeholder="Enter Rate" required
+                                        class="form-control rounded">
+                                    </div>
+                                </div>
+
+
+
+
+                                        <div class="col-md-12  text-right">
+                                            <div class="form-group">
+                                                <button type="submit"   flex="15" class="btn btn-primary " [disabled]="!currencyExchangeRateForm.form.valid"
+                                                >
+                                                {{ "Save" | localize }}
+                                                </button>
+                                            </div>
+                                        </div>
+                             </div>
+                        </form>
+                    </div>
+
+
+                                                <br>
+                                                <div class="col-md-12 mt-0 text-right">
+                                                    <div class="btn-group" >
+                                                        <button  type="button" class="btn btn-outline-secondary mr-1"
+                                                        style="border-color: green; border-width: 2px; color:green"
+                                                              aria-expanded="false" (click)="frontEndExcelExport()">
+                                                            <i class="far fa-file-excel" style="color:green ;"></i> {{"ExportToExcel" | localize}}
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+                                                <br>
+
+
+                                                <div class="row align-items-center">
+                                                    <!--<Primeng-TurboTable-Start>-->
+                                                <div class="primeng-datatable-container"
+                                                    [busyIf]="primengTableHelper.isLoading">
+
+                                                    <p-table #dataTable
+                                                    [value]="currencyExchangeRatelist"
+
+                                rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20]" [lazy]="false" [rowHover]="true" sortMode="multiple" [scrollable]="true"
+                                scrollWidth="100%" [responsive]="primengTableHelper.isResponsive" [resizableColumns]="primengTableHelper.resizableColumns"
+                                [globalFilterFields]="['defaultCurrencyCode ','exchangeCurrencyCode','exchangeRate']" id="excel-table">
+
+                                <ng-template pTemplate="caption">
+                                    <div style="text-align: right">
+                                        <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                                        <input type="text" pInputText size="30" placeholder="Search Keyword" style="width:auto" (input)="dataTable.filterGlobal($event.target.value, 'contains')">
+                                    </div>
+                                </ng-template>
+
+                                                        <ng-template pTemplate="header">
+                                                            <tr>
+
+
+                                                                <th  style="width: 100px" *ngIf="('Pages.DefaultCurrencySetUp.Edit'| permission) && ('Pages.DefaultCurrencySetUp.Deactivate'| permission)">
+                                                                    {{'Actions' | localize}}
+                                                                </th>
+                                                                <th style="width: 100px" pSortableColumn="defaultCurrencyCode">{{"Default Currency Code"|localize}} <p-sortIcon field="defaultCurrencyCode"></p-sortIcon></th>
+                                                                <th style="width: 100px" pSortableColumn="exchangeCurrencyCode">{{"Exchange Currency Code"|localize}} <p-sortIcon field="exchangeCurrencyCode"></p-sortIcon></th>
+
+                                                                <th style="width: 100px" pSortableColumn="exchangeRate">{{"Rate"|localize}} <p-sortIcon field="exchangeRate"></p-sortIcon></th>
+
+                                                                <th style="width: 100px" pSortableColumn="active">{{"Status"|localize}} <p-sortIcon field="active"></p-sortIcon></th>
+
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-record="$implicit" >
+                                                            <tr>
+                                                                    <td style="width: 100px" *ngIf="('Pages.DefaultCurrencySetUp.Edit'| permission) && ('Pages.DefaultCurrencySetUp.Deactivate'| permission)">
+                                                                        <div class="btn-group dropdown" dropdown container="body">
+                                                                            <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                                                                            <i class="fa fa-cog"></i><span class="caret"></span>
+                                                                            {{"Actions" | localize}}
+                                                                        </button>
+                                                                            <ul class="dropdown-menu" *dropdownMenu>
+                                                                                <!-- <li>
+                                                                                    <a href="javascript:;" (click)="edit(record)">{{'Edit' | localize}}</a>
+                                                                                </li> -->
+                                                                                <li *ngIf="record.active=='Inactive' && 'Pages.DefaultCurrencySetUp.Deactivate'| permission">
+                                                                                    <a href="javascript:;" (click)="activateCurrencyExchangeRate(record)">{{'Activate' | localize}}</a>
+                                                                                </li>
+                                                                                <li    *ngIf="'Pages.DefaultCurrencySetUp.Edit'| permission">
+                                                                                    <a href="javascript:;" (click)="editCurrencyExchangeRate(record)">{{'Edit' | localize}}</a>
+                                                                                </li>
+                                                                                <li *ngIf="record.active=='Active'  && 'Pages.DefaultCurrencySetUp.Deactivate'| permission">
+                                                                                    <a href="javascript:;" (click)="deactivateCurrencyExchangeRate(record)">{{'Deactivate' | localize}}</a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td style="width: 100px">
+
+                                                                        {{record.defaultCurrencyCode   }}
+                                                                    </td>
+                                                                    <td style="width: 100px">
+
+                                                                        {{record.exchangeCurrencyCode   }}
+                                                                    </td>
+                                                                    <td style="width: 100px">
+
+                                                                        {{record.exchangeRate   }}
+                                                                    </td>
+
+
+
+                                                                    <td style="width: 100px">
+
+                                                                        {{record.active   }}
+                                                                    </td>
+
+
+
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+
+                                                        <!-- <div class="primeng-paging-container">
+                                                            <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                                                #paginatorAuditLogs
+                                                                [totalRecords]="primengTableHelper.totalRecordsCount"
+                                                                [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                                                            </p-paginator>
+
+                                                        </div> -->
+                                                </div>
+                                                    <!--<Primeng-TurboTable-End>-->
+
+                                                </div>
+                    </tab>
+
+                </tabset>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

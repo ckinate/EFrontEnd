@@ -1,0 +1,48 @@
+
+<div class="kt-portlet">
+    <!-- <div class="kt-portlet__head">
+        <div class="kt-portlet__head-label">
+            <h3 class="kt-portlet__head-title">
+                    {{"OrganizationTree" | localize}}
+            </h3>
+        </div>
+        <div class="kt-portlet__head-toolbar">
+            <div *ngIf="!totalUnitCount" class="text-muted">
+            <button *ngIf="'Pages.Administration.OrganizationUnits.ManageOrganizationTree' | permission" (click)="addUnit(null)" class="btn btn-primary">
+                <i class="fa fa-plus"></i> {{"AddRootUnit" | localize}}
+            </button>
+            </div>
+        </div>
+    </div> -->
+    <div class="kt-portlet__body">
+        <p-tree [value]="treeData"
+                selectionMode="single"
+                [(selection)]="selectedOu"
+                [contextMenu]="ouContextMenu">
+
+
+            <ng-template let-node pTemplate="default">
+                <div>
+
+                        <h5>
+                            {{node.label}} <span class="badge badge-pill badge-primary"  >{{node.customCode}}></span><span class="badge badge-pill badge-primary" >{{node.headUser}}</span>
+                    </h5>
+
+<!--
+                    <span>
+
+                        {{node.unitTypeId}}
+                    </span> -->
+
+                </div>
+            </ng-template>
+        </p-tree>
+        <p-contextMenu #ouContextMenu [model]="ouContextMenuItems" appendTo="body" baseZIndex="99999"></p-contextMenu>
+        <div *ngIf="!totalUnitCount" class="text-muted">
+            {{"NoOrganizationUnitDefinedYet" | localize}}
+        </div>
+    </div>
+</div>
+
+<createOrEditCompanyModalComponent #createOrEditCompanyModalComponent (unitCreated)="unitCreated($event)" (unitUpdated)="unitUpdated($event)"></createOrEditCompanyModalComponent>
+

@@ -1,0 +1,224 @@
+<div [@routerTransition]>
+
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Bank Transfer ' | localize" >
+
+        </sub-header>
+
+
+        <div [class]="containerClass " [busyIf]="primengTableHelper.isLoading">
+            <div class="card card-custom">
+                <div class="card-body">
+
+                    <form #currencyForm="ngForm" (ngSubmit)="save(currencyForm)">
+                        <div class="row align-items-center mb-2">
+                            <div class="col-md-12">
+                                <div style="font-weight: bold;font-size: 15px;margin-bottom: 10px;">
+                                    Choose A Debit Account
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div *ngIf="checkIfDebitAccSelected()" class="col-md-5">
+                                            <div class="form-group">
+                                                <label for="DefaultCode">{{"Select Account" | localize}}</label>
+
+                                                <ng-select [(ngModel)]="selectedDebitAccount" (change)='changeDebitAccount($event)' name="debitAccount"  >
+                                                    <ng-option *ngFor="let item of debitAccountListing" [value]="item">{{item.beneficiaryName}}</ng-option>
+                                                 </ng-select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="margin-top: 20px;">
+                                        <div class="col-md-6">
+
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="selectedDebitAccount != null" class="row show-details">
+                                        <div class="col-md-3">
+                                            <div class="bold">Account Number</div>
+                                            <div>{{selectedDebitAccount.beneficiaryAccountNumber}}</div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="bold">Bank Code</div>
+                                            <div>{{selectedDebitAccount.bankCode}}</div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="bold">Name</div>
+                                            <div>{{selectedDebitAccount.beneficiaryName}}</div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="bold">Currency</div>
+                                            <div>{{selectedDebitAccount.beneficiaryCurrencyCode}}</div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="bold">Beneficiary Code</div>
+                                            <div>{{selectedDebitAccount.beneficiaryCode}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                         </div>
+
+                         <div *ngIf="selectedDebitAccount != null" class="row align-items-center mb-2">
+                            <div class="col-md-12">
+                                <div style="font-weight: bold;font-size: 15px;margin-bottom: 10px;">
+                                    Choose A Credit Account
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="DefaultCode">{{"Choose Beneficiary Type" | localize}}</label>
+
+                                    <div class="row" style="margin-top: 20px;">
+                                        <div class="col-md-2 align-items-center mb-2" *ngFor="let beneficiary of creditTypeList" style="flex-direction: row;">
+                                            <div style="background-color: lightgray; align-items: center; justify-content: center; border-radius: 5px; padding: 5px;">
+                                                <div class="custom-control custom-checkbox form-group">
+                                                    <input type="checkbox" [checked]="checkIfEqualCredit(beneficiary)" class="custom-control-input" id="{{beneficiary.toLowerCase()}}credit" (ngModelChange)="addValueCredit(beneficiary)" [(ngModel)]="creditType[beneficiary]" name="{{beneficiary}}credit">
+                                                    <label class="custom-control-label" for="{{beneficiary.toLowerCase()}}credit">{{beneficiary | localize}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="checkIfCreditTypeIsSelected()" class="row" style="margin-top:  20px;">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <label for="DefaultCode">{{"Enter Amount" | localize}}</label>
+                                                <input id="amount" type="number" name="amount" [(ngModel)]="amount" pattern="[a-zA-Z0-9 ]*" placeholder="Enter Amount To Credit" class="form-control rounded">
+                                            </div>
+                                        </div>
+                                        <div *ngIf="checkIfCreditAccSelected()" class="col-md-5">
+                                            <div class="form-group">
+                                                <label for="DefaultCode">{{"Select Account" | localize}}</label>
+
+                                                 <ng-multiselect-dropdown
+                                                    aria-placeholder="Select Account"
+                                                    [(ngModel)]="selectedCreditHolder"
+                                                    [ngModelOptions]="{
+                                                        standalone: true
+                                                    }"
+                                                    [settings]="dropdownSettings"
+                                                    [data]="creditAccountListing"
+                                                    (onSelect)="changeCreditAccount($event)"
+                                                    (onSelectAll)="changeCreditAccountAll($event)"
+                                                    (onDeSelect)="unCheckCreditAccount($event)"
+                                                >
+                                                </ng-multiselect-dropdown>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                         </div>
+
+                         <div class="row align-items-center">
+                          <div class="primeng-datatable-container"
+                              [busyIf]="primengTableHelper.isLoading">
+
+                              <p-table #dataTable
+                                [value]="primengTableHelper.records"
+                                rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20]" [lazy]="false" [rowHover]="true" sortMode="multiple" [scrollable]="true"
+                                ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive" [resizableColumns]="primengTableHelper.resizableColumns">
+
+
+                                  <ng-template pTemplate="header">
+                                      <tr>
+                                        <th style="width: 100px">
+                                        {{'Actions' | localize}}
+                                        </th>
+
+                                        <th style="width: 100px">
+                                            {{'Account Number' | localize}}
+                                        </th>
+                                        <th style="width: 100px">
+                                        {{'Name' | localize}}
+                                        </th>
+                                        <th style="width: 100px">
+                                        {{'Bank Code' | localize}}
+                                        </th>
+
+                                        <th style="width: 100px">
+                                            {{'Amount' | localize}}
+                                        </th>
+
+                                        <th style="width: 100px">
+                                            {{'Currency' | localize}}
+                                        </th>
+
+                                        <th style="width: 100px">
+                                            {{'Beneficiary Code' | localize}}
+                                          </th>
+                                      </tr>
+                                  </ng-template>
+                                  <ng-template pTemplate="body" let-record="$implicit">
+                                       <tr>
+
+                                            <td style="width: 100px">
+                                                <i (click)="removeCreditAccount(record)" class="flaticon-delete"></i>'
+                                            </td>
+                                              <td style="width: 100px">
+                                                  <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                  {{record.beneficiaryAccountProfileDto.beneficiaryAccountNumber}}
+                                              </td>
+                                              <td style="width: 100px">
+                                                <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                {{record.beneficiaryAccountProfileDto.beneficiaryName}}
+                                              </td>
+                                              <td style="width: 100px">
+                                                <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                {{record.beneficiaryAccountProfileDto.bankCode}} kb
+                                              </td>
+                                              <td style="width: 100px">
+                                                <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                {{record.amount}}
+                                              </td>
+                                              <td style="width: 100px">
+                                                <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                {{record.beneficiaryAccountProfileDto.beneficiaryCurrencyCode || 'NO REF'}}
+                                              </td>
+                                              <td style="width: 100px">
+                                                <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                {{record.beneficiaryAccountProfileDto.beneficiaryCode}}
+                                              </td>
+                                       </tr>
+                                  </ng-template>
+                              </p-table>
+
+                                  
+                          </div>
+                            <!--<Primeng-TurboTable-End>-->
+
+                        </div>
+
+
+
+                        <div class="col-md-12  text-right" style="margin-top: 20px;">
+                            <!-- <button type="submit" class="btn btn-primary " [disabled]="!checkIfValid()">
+                                {{ "Save" | localize }}
+                            </button> -->
+                            <app-erms-button 
+                            [title]="'Save' | localize"
+                            [isLoading]="saving"
+                            [disabled]="!checkIfValid()" (click)="save(currencyForm)"
+                            action="submit"
+                            appNoDoubleClick
+                            type="others"
+                            icon="<i class='fa fa-plus'></i>"
+                        ></app-erms-button> 
+
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

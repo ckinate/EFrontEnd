@@ -1,0 +1,302 @@
+<div class="content d-flex flex-column flex-column-fluid">
+    <div [busyIf]="LoadPostingData">
+
+
+
+
+        <div class="row">
+
+
+            <div class="form-group col-md-10">
+                <label class="small" for="EndDate">Select Date Range(Start-End
+                    Date)</label>
+                <input name="SampleDateRangePicker" type="text" class="form-control" id="SampleDateRangePicker"
+                    bsDaterangepicker [(date)]="PostedDateRange" dateRangePickerLuxonModifier [maxDate]="maxDate" />
+            </div>
+            <div class="form-group col-md-2 mt-7">
+                <app-erms-button [title]="'Refresh' | localize" (click)="loadPostedTransaction()" type="others">
+                </app-erms-button>
+            </div>
+
+
+        </div>
+
+
+        <div class="row align-items-center">
+
+
+
+            <div class="col-md-12">
+                <!--<Primeng-TurboTable-Start>-->
+                <div class="primeng-datatable-container">
+
+                    <p-table #dataTable [value]="selectedItems"
+                        rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [lazy]="false" scrollable="true"
+                        ScrollWidth="100%" responsive="primengTableHelper.isResponsive"
+                        resizableColumns="primengTableHelper.resizableColumns" dataKey="refNo"
+                        [(selection)]="selectedItems" selectionMode="multiple" [filterDelay]="0"
+                        [globalFilterFields]="['transactionref','narration','amount','status']" [rowHover]="true"
+                        styleClass="p-datatable-sm" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20]"
+                        sortMode="multiple">
+
+
+                        <ng-template pTemplate="caption">
+                            <div style="text-align: right">
+                                <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                                <input type="text" size="50" id="search-text" aria-describedby="search-text" pInputText
+                                    (input)="dataTable.filterGlobal($event.target.value, 'contains')" style="width:auto"
+                                    placeholder="Enter text to search" autofocus>
+
+
+                            </div>
+                        </ng-template>
+
+                        <ng-template pTemplate="header">
+                            <tr>
+                                
+                                <th style="width: 15%" pSortableColumn="refNo">{{"Request Ref"|localize}}
+                                    <p-sortIcon field="refNo"></p-sortIcon>
+                                </th>
+                                <th style="width: 15%" pSortableColumn="narration">{{"Error Description"|localize}} <p-sortIcon
+                                        field="narration"></p-sortIcon>
+                                </th>
+                                <!-- <th style="width: 15%" pSortableColumn="amount">{{"Amount"|localize}} <p-sortIcon
+                                        field="amount"></p-sortIcon>
+                                </th>
+                                <th style="width: 15%">{{"View Status"|localize}}</th>
+                                <th></th> -->
+                                <th></th>
+
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record="$implicit">
+                            <tr>
+                               
+                                <td>
+                                    {{record.refNo}}
+                                </td>
+                                <td>
+                                    {{record.narration}}
+                                </td>
+                                <!-- <td>
+
+                                    {{record.amount | number:'1.2-2'}}
+                                </td>
+                                
+                                <td>
+                                    <div *ngIf="record.status.includes('Cancelled')">
+                                        <button class="btn" >
+                                        {{record.status}}  
+                                    </button>  
+                                    </div>
+                                    <div *ngIf="!record.status.includes('Cancelled')">
+                                        <button class="btn" (click)="viewBeneficiaryStatus(record.refNo)">
+                                            {{record.status}}    
+                                            </button>
+                                    </div>
+                                
+                                </td> -->
+                                <td style="width: 10%">
+                                    <div *ngIf="record.status.includes('progress')">
+                                    <a href="javascript:;"
+                                    (click)="approveTransaction(record.refNo)"
+                                    title="Retry">
+                                    <i class="fa fa-redo"></i>
+                                </a>
+                            </div>
+                                </td>
+
+                                <td style="width: 10%">
+                                    <div *ngIf="record.status.includes('progress')">
+                                    <a href="javascript:;"
+                                    (click)="viewDelineModal(record.refNo)"
+                                    title="Decline transaction">
+                                    <i class="fa fa-times-circle"></i>
+                                </a>
+                            </div>
+                                </td>
+
+
+                            </tr>
+                        </ng-template>
+
+                    </p-table>
+
+
+
+
+                    <div class="primeng-paging-container">
+
+                        <span class="total-records-count">
+                            {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                        </span>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div bsModal bsModal #modaldecline="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+               
+                <button type="button" class="close" (click)="closeDecline()" [attr.aria-label]="l('Close')">
+                    <span aria-hidden="true">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+<div class="row form-group">
+    <div class="col-md-8">
+        <label class="small" for="inputFirstName">Remarks</label>
+        <textarea class="form-control rounded" name="r"  [(ngModel)]="rmks" pattern="[a-zA-Z0-9 ]*" placeholder="Justification for declining">
+
+        </textarea>
+
+
+    </div>
+   
+        <div class="col-md-4 text-right">
+            <div class="mt-7">
+        <app-erms-button 
+        [title]="'Reject' | localize"       
+        (click)="declineTransaction()"
+        [disabled]="!rmks"
+        type="decline"
+    ></app-erms-button>
+            </div>
+    
+    </div>
+    
+</div>
+
+            </div>
+            <div class="modal-footer">
+                <button  type="button" class="btn btn-default" (click)="closeDecline()">{{"Cancel" | localize}}</button>
+               </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+               
+                <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                    <span aria-hidden="true">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="col-md-12">
+                    <!--<Primeng-TurboTable-Start>-->
+                    <div class="primeng-datatable-container">
+    
+                        <p-table #dataTable [value]="postedbankBeneficiary"
+                            rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [lazy]="false" scrollable="true"
+                            ScrollWidth="100%" responsive="primengTableHelper.isResponsive"
+                            resizableColumns="primengTableHelper.resizableColumns" dataKey="refNo"
+                            [(selection)]="selectedItems" selectionMode="multiple" [filterDelay]="0"
+                            [globalFilterFields]="['transactionref','narration','amount']" [rowHover]="true"
+                            styleClass="p-datatable-sm" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20]"
+                            sortMode="multiple">
+    
+    
+                            <ng-template pTemplate="caption">
+                                <div style="text-align: right">
+                                    <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                                    <input type="text" size="50" id="search-text" aria-describedby="search-text" pInputText
+                                        (input)="dataTable.filterGlobal($event.target.value, 'contains')" style="width:auto"
+                                        placeholder="Enter text to search" autofocus>
+    
+    
+                                </div>
+                            </ng-template>
+    
+                            <ng-template pTemplate="header">
+                                <tr>
+                                 
+                                    <th style="width: 15%" pSortableColumn="AccountName">{{"Account Name"|localize}}
+                                        
+                                    </th>
+                                    <th style="width: 15%" pSortableColumn="AccountNumber">{{"Account Number"|localize}} 
+                                    </th>
+                                    <th style="width: 15%" pSortableColumn="BankCode">{{"Bank Code"|localize}} 
+                                    </th>
+                                    <th style="width: 15%" pSortableColumn="BankCode">{{"Amount"|localize}} 
+                                    </th>
+                                    <th style="width: 15%" pSortableColumn="status">{{"Status"|localize}}</th>
+                                    <th style="width: 20%">{{"Status Narration"|localize}}</th>
+                                    
+                                    
+    
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                   
+                                    <td style="width: 15%">
+                                        {{record.accountName}}
+                                    </td>
+                                    <td style="width: 15%">
+                                        {{record.accountNumber}}
+                                    </td>
+                                    <td style="width: 15%">
+                                        {{record.bankCode}}
+                                    </td>
+                                    <td  style="width: 15%">
+    
+                                        {{record.amount | number:'1.2-2' }}
+                                    </td>
+                                    <td  style="width: 15%">
+    
+                                        {{record.status}}
+                                    </td>
+                                    <td style="width: 20%"> 
+                                        {{record.statusNarration}}
+                                    </td>
+                                   
+    
+    
+                                </tr>
+                            </ng-template>
+    
+                        </p-table>
+    
+    
+    
+    
+                        <div class="primeng-paging-container">
+    
+                            <!-- <span class="total-records-count">
+                                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+                            </span> -->
+    
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+
+            
+           <div class="modal-footer">
+            <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+           </div>
+        </div>
+    </div>
+</div>

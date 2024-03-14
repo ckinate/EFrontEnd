@@ -1,0 +1,510 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+
+        <sub-header [title]="'Notification' | localize">
+
+        </sub-header>
+
+
+        <div [class]="containerClass " [busyIf]="primengTableHelper.isLoading">
+            <div class="card card-custom">
+                <div class="card-body">
+
+                    <tabset class="card-header-vic" style="box-shadow: 0 0 5px #ccc;">
+                        <tab heading="{{'Set Up' | localize}}" style="padding:20px">
+
+
+
+
+                            <form #currencyForm="ngForm">
+                                <div class="row align-items-center mb-2">
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="DefaultCode">{{"Select Operation" | localize}}</label>
+
+                                            <ng-select [(ngModel)]="operationId" (change)='changeOperationID($event)'
+                                                name="operationID">
+                                                <ng-option *ngFor="let item of operationList" [value]="item.id">
+                                                    {{item.description}}</ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="checkIfOpId()" class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="DefaultCode">{{"Select Event" | localize}}</label>
+
+                                            <ng-select [(ngModel)]="action" (change)='changeActionName($event)'
+                                                name="actionName">
+                                                <ng-option *ngFor="let item of actionList" [value]="item">
+                                                    {{revampActionName(item.actionName)}}</ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="checkIfActionId()" class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row" *ngIf="'Pages.NotificationSetUp.Create'| permission ">
+                                                <div class="col-md-8">
+                                                    <label for="DefaultCode">{{"Add Bcc" | localize}}</label>
+
+                                                    <input id="BlindCopy" type="email" name="blindcopy"
+                                                        [(ngModel)]="blindCopyEmail" placeholder="Add Emails" pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
+
+                                                        class="form-control rounded">
+                                                </div>
+                                                <div class="col-md-4" style="margin-top: 25px" *ngIf="'Pages.NotificationSetUp.Create'| permission ">
+                                                    <span class="form-group">
+                                                        <app-erms-button [title]="'Add' | localize"
+            style="font-size: 10px;padding-right: 5px;padding-left: 3px;"                                                            (click)="addBlindCopy()" type="add"></app-erms-button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span *ngFor="let item of blindCopy">
+                                            <span
+                                                style="white-space: nowrap;background-color: lightgray; padding: 10px; border-radius: 5px; margin: 4px; color: white;">
+                                                {{item}} <i class="flaticon-cancel" style="color: red;cursor: pointer;"
+                                                    (click)="removeBlindCopy(item)"></i>
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row" *ngIf="'Pages.NotificationSetUp.Create'| permission ">
+                                                <div class="col-md-8">
+                                                    <label for="DefaultCode">{{"Add Cc" | localize}}</label>
+
+                                                    <input id="Copy" type="email" name="copy" [(ngModel)]="copyEmail"
+                                                        placeholder="Add Emails" pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
+                                                        class="form-control rounded">
+                                                </div>
+                                                <div class="col-md-4" style="margin-top: 25px">
+                                                    <span class="form-group">
+                                                        <app-erms-button [title]="'Add' | localize" (click)="addCopy()"
+            style="font-size: 10px;padding-right: 5px;padding-left: 3px;"                                                            type="add"></app-erms-button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span *ngFor="let item of cc" class="col-md-4">
+                                            <span
+                                                style="white-space: nowrap;background-color: lightgray; padding: 10px; border-radius: 5px; margin: 4px; color: white;">
+                                                {{item}}<i class="flaticon-cancel" style="color: red;cursor: pointer;"
+                                                    (click)="removeCopy(item)"></i>
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row"  *ngIf="'Pages.NotificationSetUp.Create'| permission ">
+                                                <div class="col-md-8">
+                                                    <label for="DefaultCode">{{"Add Reciever Mails" | localize}}</label>
+
+                                                    <input id="Reciever" type="email" name="reciever"
+                                                        [(ngModel)]="recieveEmail" placeholder="Add Emails" pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
+
+                                                        class="form-control rounded">
+                                                </div>
+                                                <div class="col-md-4" style="margin-top: 25px">
+                                                    <span class="form-group">
+                                                        <app-erms-button [title]="'Add' | localize"
+            style="font-size: 10px;padding-right: 5px;padding-left: 3px;"                                                            (click)="addReciever()" type="add"></app-erms-button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span *ngFor="let item of recieverEmail" class="col-md-4">
+                                            <span
+                                                style="white-space: nowrap;background-color: lightgray; padding: 10px; border-radius: 5px; margin: 4px; color: white;">
+                                                {{item}}<i class="flaticon-cancel" style="color: red;cursor: pointer;"
+                                                    (click)="removeReceiver(item)"></i>
+                                            </span>
+                                        </span>
+                                    </div>
+
+                                    <div class="row" style="margin-left: 10px;"
+                                        *ngIf="action.actionName.includes(escalation)">
+                                        <div class="col-md-12" style="margin-top: 20px;">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label style="font-weight: bold;font-size: medium;"
+                                                            for="DefaultCode">{{"Escalation Frequency" |
+                                                            localize}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12" style="margin-top: 20px;">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label for="DefaultCode">{{"Add Number between intervals" |
+                                                            localize}}</label>
+                                                        <input id="NumOfPeriod" type="number" name="numofperiod"
+                                                            [(ngModel)]="numOfPeriod" pattern="[0-9]" placeholder="Add Number of times"
+                                                            class="form-control rounded" (change)="makeSureItsValid()" >
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="DefaultCode">{{"Select Interval" |
+                                                            localize}}</label>
+                                                        <ng-select [(ngModel)]="interval" name="interval">
+                                                            <ng-option *ngFor="let item of intervals" [value]="item">
+                                                                {{item}}</ng-option>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12" style="margin-top: 20px;">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label style="font-weight: bold;font-size: medium;"
+                                                        for="DefaultCode">{{"Properties" | localize}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12" >
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label for="DefaultCode">{{"Mail Subject" | localize}}</label>
+
+                                                    <input id="SubjectOfMail" type="text" name="subjectOfMail"
+                                                        [(ngModel)]="subjectOfMail" placeholder="Enter subject of mail" pattern="^[^\*\=\<\>]+$"
+                                                        class="form-control rounded">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12" >
+                                        <div class="form-group">
+                                            <span *ngFor="let item of actionProperties" class="col-md-4"
+                                                style="border-width: 1px; border-color: blue;">
+                                                <button (click)="appendParametersHeader(item)" class="btn btn-default"
+                                                    style="white-space: nowrap;background-color: white;border-color: blue; border-width: 1px; padding: 5px; padding-left: 10px; padding-right: 10px; border-radius: 5px; margin: 2px; color: black;">
+                                                    {{clean(item)}}
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+
+
+
+                                    <label for="DefaultCode">{{"Body" | localize}}</label>
+                                    <ckeditor name="editor" [editor]="Editor" [(ngModel)]="model.editorData"></ckeditor>
+                                    <div class="col-md-12" style="margin-top: 20px;">
+                                        <div class="form-group">
+                                            <span *ngFor="let item of actionProperties" class="col-md-4"
+                                                style="border-width: 1px; border-color: blue;">
+                                                <button (click)="appendParameters(item)" class="btn btn-default"
+                                                    style="white-space: nowrap;background-color: white;border-color: blue; border-width: 1px; padding: 5px; padding-left: 10px; padding-right: 10px; border-radius: 5px; margin: 2px; color: black;">
+                                                    {{clean(item)}}
+                                                </button>
+                                            </span>
+                                            <span class="col-md-4" style="border-width: 1px; border-color: blue;">
+                                                <button (click)="appendSystemGeneratedMessage()" class="btn btn-default"
+                                                    style="white-space: nowrap;background-color: white;border-color: blue; border-width: 1px; padding: 5px; padding-left: 10px; padding-right: 10px; border-radius: 5px; margin: 2px; color: black;">
+                                                    System Generated Message
+                                                </button>
+                                                <!--
+                                                    <app-erms-button
+                                                        title="System Generated Message"
+                                                        (click)="appendSystemGeneratedMessage()"
+                                                        type="others"
+                                                    ></app-erms-button> -->
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-11  text-right" style="margin-top: 20px;">
+                                        <span class="form-group">
+                                            <app-erms-button title="Preview" (click)="preview()" type="others">
+                                            </app-erms-button>
+                                        </span>
+                                        <span class="form-group" style="margin-left: 10px;" *ngIf="'Pages.NotificationSetUp.Create'| permission ">
+                                            <app-erms-button title="Save" (click)="save()" type="save">
+                                            </app-erms-button>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </form>
+
+
+
+                            <div bsModal #docModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+                                (onShown)="onShown()" aria-labelledby="docModal" aria-hidden="true"
+                                [config]="{backdrop: 'static'}">
+                                <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+                                        <div class="row">
+                                            <div class="col-sm-12 btn btn-primary">
+                                                <div class="col-sm-10">
+                                                    Preview
+                                                </div>
+                                                <div class="col-sm-2 text-right">
+                                                    <button type="button" class="close" (click)="CloseModal()"
+                                                        aria-label="Close">
+                                                        <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="padding: 20px;">
+                                            <div class="col-md-3">
+                                                <span style="font-size: 15px; font-weight: bold;">To :</span>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <span *ngFor="let item of recieverEmail">
+                                                    <span
+                                                        style="white-space: nowrap;background-color: lightgray; padding: 10px; border-radius: 5px; margin: 4px; color: white;">
+                                                        {{item}}<i class="flaticon-cancel"
+                                                            style="color: red;cursor: pointer;"
+                                                            (click)="removeReceiver(item)"></i>
+                                                    </span>
+                                                </span>
+                                                <span>
+                                                    <span
+                                                        style="white-space: nowrap;background-color: lightgray; padding: 10px; border-radius: 5px; margin: 4px; color: white;">
+                                                        System generated reciever mail
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="padding: 20px;">
+                                            <div class="col-md-3">
+                                                <span style="font-size: 15px; font-weight: bold;">Cc :</span>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <span *ngFor="let item of cc">
+                                                    <span
+                                                        style="white-space: nowrap;background-color: lightgray; padding: 10px; border-radius: 5px; margin: 4px; color: white;">
+                                                        {{item}}<i class="flaticon-cancel"
+                                                            style="color: red;cursor: pointer;"
+                                                            (click)="removeReceiver(item)"></i>
+                                                    </span>
+                                                </span>
+                                                <span>
+                                                    <span
+                                                        style="white-space: nowrap;background-color: lightgray; padding: 10px; border-radius: 5px; margin: 4px; color: white;">
+                                                        System generated cc mail
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="padding: 20px;">
+                                            <div class="col-md-3">
+                                                <span style="font-size: 15px; font-weight: bold;">Bcc :</span>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <span *ngFor="let item of blindCopy">
+                                                    <span
+                                                        style="white-space: nowrap;background-color: lightgray; padding: 10px; border-radius: 5px; margin: 4px; color: white;">
+                                                        {{item}}<i class="flaticon-cancel"
+                                                            style="color: red;cursor: pointer;"
+                                                            (click)="removeReceiver(item)"></i>
+                                                    </span>
+                                                </span>
+                                                <span>
+                                                    <span
+                                                        style="white-space: nowrap;background-color: lightgray; padding: 10px; border-radius: 5px; margin: 4px; color: white;">
+                                                        System generated bcc mail
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="padding: 20px;">
+                                            <div class="col-md-3">
+                                                <span style="font-size: 15px; font-weight: bold;">Subject :</span>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <span
+                                                    style="white-space: nowrap;padding: 10px; border-radius: 5px; margin: 4px; color: black; font-size: 15px;">
+                                                    {{subjectOfMail}}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="padding: 20px;">
+                                            <div class="col-md-7">
+                                                <p id="wipe">
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </tab>
+                        <tab heading="{{'Emails' | localize}}" style="padding:20px">
+
+
+                            <form #currencyForm="ngForm" (ngSubmit)="search()">
+                                <div class="row align-items-center mb-2">
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="DefaultCode">{{"Subject" | localize}}</label>
+
+                                            <input id="Subject" type="text" name="subject"
+                                                [(ngModel)]="emailMgt.subject" placeholder="Enter Email Subject" pattern="^[^\*\=\<\>]+$"
+                                                class="form-control rounded">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="DefaultCode">{{"Message" | localize}}</label>
+
+                                            <input id="Message" type="text" name="message"
+                                                [(ngModel)]="emailMgt.message" pattern="^[^\*\=\<\>]+$" placeholder="Enter Message Bits"
+                                                class="form-control rounded">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="DefaultCode">{{"Copied Mail" | localize}}</label>
+
+                                            <input id="CopyMail" type="text" name="CopyMail"
+                                                [(ngModel)]="emailMgt.copyMail" placeholder="Enter Copied Emails" pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$"
+                                                class="form-control rounded">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="DefaultCode">{{"Blind Copied Mail" | localize}}</label>
+
+                                            <input id="BlindCopy" type="text" name="BlindCopy"
+                                                [(ngModel)]="emailMgt.blindCopyMail"
+                                                placeholder="Enter Blind Copied Emails" pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" class="form-control rounded">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12  text-right">
+                                        <span class="form-group">
+                                            <app-erms-button [title]="'Reset Filter' | localize" (click)="resetForm()"
+                                                style="font-size: 10px;padding-right: 10px;padding-left: 10px;"
+                                                type="add"></app-erms-button>
+                                        </span>
+                                        <span class="form-group">
+                                            <app-erms-button [disabled]="!currencyForm.form.valid"
+                                                [title]="'Apply Filter' | localize" action="submit"
+                                                style="font-size: 10px;padding-right: 10px;padding-left: 10px;"
+                                                type="save"></app-erms-button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="row align-items-center">
+                                <!--<Primeng-TurboTable-Start>-->
+                                <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+
+                                    <p-table #dataTable [value]="primengTableHelper.records"
+                                        rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true"
+                                        [rows]="10" [rowsPerPageOptions]="[5,10,15,20]" [lazy]="false" [rowHover]="true"
+                                        sortMode="multiple" [scrollable]="true" ScrollWidth="100%"
+                                        [responsive]="primengTableHelper.isResponsive"
+                                        [resizableColumns]="primengTableHelper.resizableColumns">
+
+
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <!-- <th style="width:75px"></th> -->
+
+                                                <th style="width: 100px">
+                                                    {{'Subject' | localize}}
+                                                </th>
+                                                <th style="width: 100px">
+                                                    {{'Message' | localize}}
+                                                </th>
+                                                <th style="width: 100px">
+                                                    {{'Receiever' | localize}}
+                                                </th>
+
+                                                <th style="width: 100px">
+                                                    {{'Blind Copied Mails' | localize}}
+                                                </th>
+
+                                                <th style="width: 100px">
+                                                    {{'Copied Mails' | localize}}
+                                                </th>
+
+                                                <th style="width: 100px">
+                                                    {{'Sent' | localize}}
+                                                </th>
+                                                <th style="width: 100px">
+                                                    {{'Date Sent' | localize}}
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-record="$implicit">
+                                            <tr style="font-size: 10px;">
+
+                                                <td style="width: 100px">
+                                                    <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                    {{record.mailSubject}}
+                                                </td>
+                                                <td style="width: 100px">
+                                                    <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                    {{record.mailBody}}
+                                                </td>
+                                                <td style="width: 100px; font-weight: 400;">
+                                                    <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                    {{record.mailTo || 'NONE'}}
+                                                </td>
+                                                <td style="width: 100px; font-weight: 400;">
+                                                    <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                    {{record.bcc || 'NONE'}}
+                                                </td>
+                                                <td style="width: 100px; font-weight: 400;">
+                                                    <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                    {{record.cc || 'NONE'}}
+                                                </td>
+                                                <td style="width: 100px">
+                                                    <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                    <div *ngIf="!record.mailSent"
+                                                        style="width: 50px;text-align: center; background-color: pink; padding: 2px; padding-right: 10px; padding-left: 10px; border-radius: 10px; color: #FFF;">
+                                                        {{record.mailSent}}
+                                                    </div>
+                                                    <div *ngIf="record.mailSent"
+                                                        style="width: 50px; text-align: center; background-color: rgb(107, 242, 114); padding: 2px; padding-right: 10px; padding-left: 10px; border-radius: 10px; color: #FFF;">
+                                                        {{record.mailSent}}
+                                                    </div>
+                                                </td>
+                                                <td style="width: 100px">
+                                                    <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                                    {{record.dateSent}}
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+
+                            </div>
+
+
+
+
+                        </tab>
+                    </tabset>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

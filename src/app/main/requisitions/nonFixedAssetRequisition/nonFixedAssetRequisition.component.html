@@ -1,0 +1,183 @@
+<div [@routerTransition]>
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+        <div class="kt-subheader kt-grid__item">
+            <div [class]="containerClass">
+                <div class="kt-subheader__main">
+                    <h3 class="kt-subheader__title">
+                        <span>{{"Requisitions" | localize}}</span>
+                    </h3>
+                    <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                    <span class="kt-subheader__desc">
+                        {{"Non Fixed Asset " | localize}}
+                    </span>
+                    <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                    <span class="kt-subheader__desc">
+                        {{"Please Click on the " | localize}}
+                    </span>
+                    <button >{{l("Link")}}</button>
+                    <span class="kt-subheader__desc">
+                        {{"to route request" | localize}}
+                    </span>
+                </div>
+                <div class="kt-subheader__toolbar">
+                    <div class="kt-subheader__wrapper"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div [class]="containerClass + ' kt-grid__item kt-grid__item--fluid '">
+        <div class="kt-portlet">
+            <div class="kt-portlet__body">
+                <form #addItem = "ngForm"  (ngSubmit) = "saveItem(addItem)">
+                    <div class="row align-items-center mb-2">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="SampleDatePicker">{{"Transaction Date" | localize}}</label>
+                                <input class="form-control rounded" 
+                                    name="SampleDatePicker"  bsDatepicker datePickerMomentModifier type="date"
+                                     [(date)]="startdate" [bsConfig]="{ adaptivePosition: true }" [disabled]="hasDate" [minDate]="mindate" 
+                                     [(ngModel)] = "requsitionValue.transactionDate" > 
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="form-group">
+                            <label class="small mb-1" for="store">Store</label>
+                            <ng-select   name="store"  placeholder="Select store" [(ngModel)] = "storeId" (change) = "selectStore($event)" required  #StoreLoc = "ngModel">
+                                <ng-option *ngFor="let StId of storeLocat" [value]="StId.id">{{StId.storeLocation}}-{{StId.storeName}} </ng-option>
+                             </ng-select>
+                              <div [hidden]="StoreLoc.valid || StoreLoc.pristine || StoreLoc.untouched"
+                               class="alert alert-danger">
+                               Store Location is required
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                             <label class="small mb-1" for="selectItem">Select Item</label>
+                             <ng-select   name="selectItem"  placeholder="Select item"  [(ngModel)] = "requsitionValue.description" (change) = "selectedItem($event)" required  #Item = "ngModel" >
+                                 <ng-option *ngFor="let item of productItems" [value]="item.name">{{item.name}} </ng-option>
+                              </ng-select>
+                              <div [hidden]="Item.valid || Item.pristine || Item.untouched"
+                              class="alert alert-danger">
+                                Item is required
+                               </div>
+                            </div>
+                         </div>
+                         <div class="col-md-4">
+                            <div class="form-group">
+                             <label class="small mb-1" for="InventoryType">Inventory Type</label>
+                             <ng-select   name="InventoryType"   placeholder="Select InventoryType"  [(ngModel)] = "inventoryId"  (change) = "selectedInvType($event)" required  #InvField= "ngModel">
+                                 <ng-option *ngFor="let Inv of inventoryItems" [value]="Inv.id">{{Inv.description}} </ng-option>
+                              </ng-select>
+                              <div [hidden]="InvField.valid || InvField.pristine || InvField.untouched"
+                              class="alert alert-danger">
+                                InventoryType is required
+                               </div>
+                            </div>
+                         </div>
+                         <div class="col-md-4">
+                            <div class="form-group">
+                             <label class="small mb-1" for="ItemCode">Item Code</label>
+                             <ng-select   name="ItemCode"  placeholder="Select itemCode"  [(ngModel)] = "requsitionValue.itemCode" [disabled] = "true">
+                                 <ng-option *ngFor="let Itemcode of productCode" [value]="Itemcode.code"> {{Itemcode.code}}</ng-option>
+                              </ng-select>
+                                
+                            </div>
+                         </div>
+                         <div class="col-md-4">
+                            <div class="form-group">
+                             <label class="small mb-1" for="Quantity">Quantity</label>
+                             <input type ="text"  placeholder="Enter Quantity" name="Quantity" required pattern="[a-zA-Z0-9 ]*"  class="form-control"  [(ngModel)] = "requsitionValue.quantity" required #qtyField = "ngModel">
+                              <div [hidden]="qtyField.valid || qtyField.pristine || qtyField.untouched"
+                              class="alert alert-danger">
+                                Quantity is required
+                               </div>
+                            </div>
+                         </div>
+                         <div class="col-md-4">
+                            <div class="form-group">
+                             <label class="small mb-1" for="Remark">Remark</label>
+                             <textarea placeholder="Enter remark" name="Remark" class="form-control" pattern="[a-zA-Z0-9 ]*" [(ngModel)] = "requsitionValue.remark"></textarea>
+                            </div>
+                         </div>
+
+                         <div class="col-md-12 mt-20 text-right">
+                            <div class="form-group">
+                                <!-- <button type="submit" flex ="15" class="btn btn-primary mt-10"  [disabled] = "!addItem.form.valid"  [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
+                                 {{"Save" | localize}}
+                                </button> -->
+                                <app-erms-button 
+                                [title]="'Save' | localize"
+                                [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"
+                                [disabled]="!addItem.form.valid" (click)="saveItem(addItem)"
+                                action="submit"
+                                type="others"
+                                icon="<i class='fa fa-plus'></i>"
+                            ></app-erms-button>  
+                            </div>
+                         </div>
+                    </div>
+                </form>
+                <article class="row align-items-center">
+                    <div class="primeng-datatable-container"
+                    [busyIf]="primengTableHelperRequisition.isLoading">
+                     <p-table #RequisitionTable
+                     [value]="primengTableHelperRequisition.records"
+                     rows="{{
+                        primengTableHelperRequisition.defaultRecordsCountPerPage
+                     }}"
+                     [paginator]="true"
+                     [lazy]="true"
+                     [scrollable]="true"
+                     scrollHeight="200px"
+                     [rowsPerPageOptions]="[10, 25, 50, 100]"
+                     responsive="primengTableHelperRequisition.isResponsive"
+                     resizableColumns="primengTableHelperRequisition.resizableColumns">
+                     <ng-template pTemplate="header">
+                        <tr>                                           
+                            
+                            <th style="width: 100px;">{{"InventoryType" | localize}}</th>                         
+                            <th style="width: 100px;">{{ "Item" | localize }}</th>
+                            <th style="width: 100px;">{{ "Quantity" | localize }}</th>
+                            <th style="width: 50px;">{{ "Unit Cost" | localize }}</th>
+                                                                    
+                            <th style="width: 100px;">{{ "Remark" | localize }}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-record="$implicit" >
+                        <tr class="ui-selectable-row">
+                            <td style="width: 100px;">{{ record.inventoryType }}</td>                                      
+                            <td style="width: 100px;">{{ record.description}}</td>
+                            <td style="width: 100px;">{{ record.quantity  }}</td>
+                            <td style="width: 50px;">{{ record.unitCost }}</td>
+                           
+                           <td style="width: 100px;">{{ record.remark}}</td>
+                        </tr>
+                            
+                           
+                
+                    </ng-template>
+
+                     </p-table>
+                     <div class="primeng-no-data" 
+                     *ngIf="primengTableHelperRequisition.totalRecordsCount == 0">
+                      {{'NoData' | localize}}
+                    </div>
+                    <div class="primeng-paging-container">
+                        <p-paginator [rows]="primengTableHelperRequisition.defaultRecordsCountPerPage" 
+                          #paginatorRequisition (onPageChange)="RequisitionData($event)" 
+                          [totalRecords]="primengTableHelperRequisition.totalRecordsCount"
+                          [rowsPerPageOptions]="primengTableHelperRequisition.predefinedRecordsCountPerPage">  
+                        </p-paginator>
+                        <span class="total-records-count">
+                          {{'TotalRecordsCount' | localize:primengTableHelperRequisition.totalRecordsCount}}
+                        </span>
+                    </div>
+                    </div>
+
+                </article>
+               
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,131 @@
+
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog" 
+aria-hidden="true" [config]="{backdrop: 'static'}">
+<div class="modal-dialog modal-xl">
+
+   <div class="modal-content">
+
+      
+
+           <div class="modal-header">
+               <!-- <h5 class="modal-title"   >
+                  Map Staff with role: {{valueFromChild}}
+                 
+               </h5> -->
+               <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                   <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+               </button>
+           </div>
+
+           <div class="modal-body">
+               <!--Design input form for modal add chart of account-->
+               <form #splitcostForm="ngForm"  (ngSubmit)="save(splitcostForm)">
+                <div class="row align-items-center mb-2">
+                  
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="GroupName">{{"MIS" | localize}}</label>
+
+                            <ng-select   name="department"  placeholder="Search or Select Report Code" [(ngModel)] = "bensplitcost.department"  (change) = "selectcaDepartment($event)" required  #StoreLoc = "ngModel">
+                            
+                                <ng-option *ngFor="let d of departList" [value]="d?.customCode">{{d.customCode}}-{{d.displayName}} </ng-option>
+                             </ng-select>
+
+                            <!-- <input id="Discription" type="text" name="department"  placeholder="Enter  Name" required
+                                class="form-control" [(ngModel)]="bensplitcost.department"> -->
+                        </div>
+                    </div> 
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="GroupName">{{"Amount" | localize}}</label>
+                            <input type="number" name="amount" placeholder="Enter  Amount" required pattern="[a-zA-Z0-9 ]*" min="0"
+                                class="form-control" [(ngModel)]="bensplitcost.amount">
+                        </div>
+                    </div>
+                   
+                    
+                  
+
+                   
+                    
+                    <div class="col-md-12 mt-20 text-right">
+                        <div class="form-group">
+                         
+                            <app-erms-button  type="submit"  flex="15" class="btn btn-primary mt-10" title="Save" >
+                            </app-erms-button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+
+               <!--table goes here-->
+
+               <div class="row align-items-center"> 
+                   <!--<Primeng-TurboTable-Start>-->
+                 <div        class="primeng-datatable-container"            [busyIf]="splitcostprimengTableHelper.isLoading">
+                     
+                   
+
+                     
+                <div class="table-scrollable table-scrollable-borderless border border-primary">
+                    <table class="table table-hover table-light">
+                        <thead>
+                            
+                            <th >
+                                {{'MIS' | localize}}
+                            </th>
+                            <th>
+                                {{'Amount' | localize}}
+                            </th>
+                            <th>
+                                
+                            </th>
+                        </thead>
+                        <tr *ngFor="let record of splitcostprimengTableHelper.records; let index = index">
+                            <td >
+                                {{record.department}}
+                            </td>
+                            <td >
+                                {{record.amount  | number:'1.2-5'}}
+                            </td>
+                            <td >
+                                <button type="button" class="btn"   title="delete" (click)="DeleteItem(record.id)" ><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                    
+                     <div class="primeng-paging-container">
+                        <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                            #paginatorAuditLogs 
+                            [totalRecords]="primengTableHelper.totalRecordsCount"
+                            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                        </p-paginator>
+                        
+                    </div>
+                 </div>
+                   <!--<Primeng-TurboTable-End>-->
+                     
+               </div>
+
+              
+       
+           </div>
+
+
+           <div class="modal-footer">
+               <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+             
+               <!-- <button type="submit" class="btn btn-primary" [disabled]="!roleuserForm.form.valid"  [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{"Save" | localize}}</span></button> -->
+
+           </div>
+       
+
+   </div>
+</div>
+</div>
+
+
+

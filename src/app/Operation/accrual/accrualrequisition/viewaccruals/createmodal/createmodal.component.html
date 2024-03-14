@@ -1,0 +1,138 @@
+<div
+    appBsModal
+    #Createmodal="bs-modal"
+    (onShown)="onShown()"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ViewSchedule"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static', keyboard: !saving }"
+>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    {{ "Create Accrual Requistion" | localize }}
+                </h4>
+                <button
+                    type="button"
+                    class="close"
+                    (click)="close()"
+                    [attr.aria-label]="l('Close')"
+                    [disabled]="saving"
+                >
+                    <i aria-hidden="true" s class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <br>
+                <form #accrualForm="ngForm" (ngSubmit)="save(accrualForm)" class="form">
+                    <div class="row align-items-center mb-2">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName">Accrual GL</label>
+                                <ng-select [(ngModel)]="accrualrequisition.accuralGL" name="refno" required>
+                                    <ng-option *ngFor="let acc of chartOfAcct" [value]="acc.accountName +'-'+ acc.accountCode">
+                                        {{acc.accountName +'-'+ acc.accountCode}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName">Transaction
+                                    Type</label>
+                                <ng-select name="acct" [(ngModel)]="accrualrequisition.transactiontype"
+                                    required>
+                                    <ng-option *ngFor="let item of transactionType"
+                                        [value]="item.narration +'-'+ item.chartOfAccountCode">
+                                        {{item.narration +'-'+ item.chartOfAccountCode}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="small mb-1" for="EndDate">Select Date Range(Start-End
+                                    Date)</label>
+                                <input name="SampleDateRangePicker" type="text" class="form-control"
+                                    id="SampleDateRangePicker" [minDate]="mindate" bsDaterangepicker [(date)]="sampleDateRange"
+                                    dateRangePickerLuxonModifier />
+                            </div>
+                        </div>
+                        <!-- [(ngModel)]="amortizationduration  [minDate]="newmindate" [maxDate]="maxDate"-->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="small mb-1" for="AnniversaryDate">Anniversary Date</label>
+                                <input name="Anniversarydate" type="text" class="form-control" required
+                                [(ngModel)]="sampleDate" bsDatepicker [(date)]="sampleDate" [maxDate]="maxdate"
+                                    datePickerMomentModifier />
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group" >
+                                <label for="GroupName">{{"Amount to be posted(Monthly)" | localize}}</label>
+                                <br/>
+                                <p-inputNumber  min="0" [style]="{'width':'75%'}" [inputStyle]="{'width':'75%'}" class="p-autocomplete" max="9999999999999"[minFractionDigits]="2" [maxFractionDigits]="2" name="amout" [(ngModel)]="amounttoposted"  mode="decimal"></p-inputNumber>
+                           
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="GroupName">{{"MIS" | localize}}</label>
+
+                                <ng-select name="department" placeholder="Search or Select Report Code"
+                                    [(ngModel)]="accrualrequisition.mis" required>
+
+                                    <ng-option *ngFor="let d of departList" [value]="d.customCode">
+                                        {{d.customCode}}-{{d.displayName}} </ng-option>
+                                </ng-select>
+
+                            </div>
+
+                        </div>
+
+                        <!--  [(ngModel)]="RemarkNarration" | [value]="RemarkNarration"-->
+                        <div class="col-md-6">
+                            <label>{{'Remarks' | localize}}</label>
+                            <textarea class="form-control rounded" name="remark"
+                            pattern="[a-zA-Z0-9 ]*"
+                                [(ngModel)]="accrualrequisition.remark"
+                                placeholder="{{'Remarks' | localize}}"> </textarea>
+                        </div>
+
+                    </div>
+
+
+                    <!-- [disabled]="!accrualForm.form.valid" -->
+                    <div class="col-md-12 mt-2 text-right">
+                        <div class="form-group">
+                            <button type="submit" flex="15" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')" [disabled]="!accrualForm.form.valid" class="btn btn-primary ">
+                                {{'Save' | localize}}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+          <!--   <div class="modal-footer">
+                <button
+                    [disabled]="saving"
+                    type="button"
+                    class="btn btn-light-primary font-weight-bold"
+                    (click)="close()"
+                >
+                    {{ "Cancel" | localize }}
+                </button>
+               <button type="button" class="btn btn-primary"
+                (click)="saveSchedule()"><i
+                    class="fa fa-save"></i>
+                <span>{{"Save Schedule" | localize}}</span>
+                </button>
+            </div> -->
+        </div>
+    </div>
+</div>
+

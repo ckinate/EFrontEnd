@@ -1,0 +1,93 @@
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog" 
+aria-hidden="true" [config]="{backdrop: 'static'}">
+<div class="modal-dialog modal-xl">
+
+
+
+
+    <div class="modal-content">
+
+      
+
+        <div class="modal-header">
+            <h5 class="modal-title"   >
+                Default Ledger Details  Setup 
+              
+            </h5>
+            <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <!--Design input form for modal add chart of account-->
+            <form #defaultaccForm="ngForm" (ngSubmit)="save(defaultaccForm)">
+                <div class="row align-items-center mb-2">
+
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="DefaultCode">{{"Default Ledger Type" | localize}}</label>
+                            <ng-select   [(ngModel)]="defaultaccdetails.defaultCode" name="defaultcode"  required
+                            ngDefaultControl >
+                            <ng-option >Select Default Ledger Type</ng-option>
+                                <ng-option *ngFor="let item of defaultcode" [value]="item.defaultCode" >
+                                    {{item.description}}</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="small mb-1" for="inputFirstName">Account</label>
+
+
+                            <ng-select   [(ngModel)]="defaultaccdetails.accountId" name="accountId" required
+                            ngDefaultControl >
+                            <ng-option value="">Select Ledger</ng-option>
+                                <ng-option *ngFor="let item of chartOfAcct" [value]="item.id" >
+                                    {{item.accountName}} {{' '}} {{item.accountCode}}</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+
+
+             
+                </div>
+            </form>
+
+    
+        </div>
+
+
+        <div class="modal-footer">
+         
+             <div class="form-group">
+                 <button type="submit" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"  flex="15" class="btn btn-primary "
+                 [disabled]="  !defaultaccForm.form.valid" (click)="save(defaultaccForm)"
+                 >
+                 {{ "Save" | localize }} 
+                 </button>
+             </div>
+       
+            <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel"}}</button>
+          
+       
+        </div>
+    
+
+</div>
+
+
+
+
+
+
+           
+
+
+               
+
+        </div>
+    </div>
+
+
+

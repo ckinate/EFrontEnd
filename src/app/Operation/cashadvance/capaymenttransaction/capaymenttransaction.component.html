@@ -1,0 +1,351 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="operationNarration | localize">
+        </sub-header>
+
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body" [busyIf]="primengTableHelper.isLoading">
+                    
+                    <div class="row " style="padding-bottom:10px">
+                        <div class="col-md-3">
+                            <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                <div class="card-body text-center">
+                                    <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+                                        <i class="fa fa-hand-holding-usd icon-2x"></i>
+                                       <span class="p-3"> Awaiting Approval  </span>  
+                                
+                                    </a>
+                                    <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                    <div class="text-info font-weight-bold text-right float-right col-6  ">
+                                    <span >
+                                        {{pendingAmountCounter | number:'1.0'}}
+                                     </span>
+                                    </div>
+                                    <!-- <span class="text-danger font-weight-bold text-left float-left col-6 p-0 ">Amount</span>
+                                    <div class="text-danger font-weight-bold text-right float-right col-6 p-0 ">
+                                        <span  counto [step]="30" [duration]="1" [countFrom]="0"
+                                     >
+                                         {{totalLpoDto.dashbordAmount  | number:'1.2-5'}}
+                                         </span>
+                                        
+                                        
+                                  </div> -->
+                                </div>
+                            </div>  
+                          
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-custom bgi-no-repeat  new-subscription-statistics bg-light ">
+                                <div class="card-body text-center">
+                                    <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+                       
+                                        <i class="fa fa-coins icon-2x"></i>
+                                        Approved Request 
+                                    </a>
+                                    <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                    <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                    <span >
+                                        {{authorizedAmountCounter | number:'1.0'}}
+                                     </span>
+                                    </div>
+                                   
+                                </div>
+                            </div>  
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                <div class="card-body text-center">
+                                    <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+                       
+                                        <i class="fa fa-money-check-alt icon-2x"></i>
+                                        Declined Request
+                                    </a>
+                                    <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                    <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                    <span >
+                                        {{declinedAmountCounter | number:'1.0'}}
+                                     </span>
+                                    </div>
+                                  
+                                </div>
+                            </div>   
+                          
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                <div class="card-body text-center">
+                                    <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+                       
+                                        <i class="fa fa-calculator icon-2x"></i>
+                                        Total Request
+                                    </a>
+                                    <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                    <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                    <span >
+                                        {{totalCounter | number:'1.0'}}
+                                     </span>
+                                    </div>
+                                  
+                                </div>
+                            </div>   
+                          
+                        </div>
+                    </div> 
+                    
+                    
+                    <form
+                        #paytransForm="ngForm"
+                        (ngSubmit)="save(paytransForm)"
+                    >
+                        <div class="row align-items-center mb-2">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label
+                                        class="small mb-1"
+                                        for="inputFirstName"
+                                        >Beneficiary</label
+                                    >
+
+                                    <ng-select
+                                        [(ngModel)]="paytrans.payeeName"
+                                        name="payeeName"
+                                        [disabled]="!isAdmin">
+                                        <ng-option
+                                            *ngFor="
+                                                let payeename of payeenamelist
+                                            "
+                                            [value]="payeename.username"
+                                            >{{ payeename.username }}</ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="form-group">
+                                    <label
+                                        class="small mb-1"
+                                        for="inputFirstName"
+                                        >Request Type</label
+                                    >
+
+                                    <ng-select
+                                        [(ngModel)]="paytrans.caTransactionType"
+                                        name="requestType"
+                                        (change)="getNumandMax()"
+                                    >
+                                        <ng-option
+                                            *ngFor="
+                                                let item of casetrequesttypeList
+                                            "
+                                            [value]="item.transactionType"
+                                        >
+                                            {{
+                                                item.transactionType
+                                            }}</ng-option
+                                        >
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="small mb-1" for="GroupName">{{
+                                        "Amount" | localize
+                                    }}</label>
+
+                                    <br />
+                                    <p-inputNumber
+                                        min="0"
+                                        max="9999999999999"
+                                        [minFractionDigits]="2"
+                                        [maxFractionDigits]="2"
+                                        name="amout"
+                                        [(ngModel)]="paytrans.amount"
+                                        mode="decimal"
+                                    ></p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col"  *ngIf="isCardTransaction">
+                                <div class="form-group">
+
+                                    <div>
+                                        <input   *ngIf="false"
+                                        id="EditBank_IsActive"
+                                        type="checkbox"
+                                        name="IsActive"
+                                        [(ngModel)]="isCardTransaction"
+                                    />
+                                    </div>
+                                    <label
+                                        for="EditBank_IsActive"
+                                        class="checkbox small mb-1" 
+                                       
+                                    >
+                                      
+                                        
+                                    
+                                        {{
+                                            "Select Card"
+                                                | localize
+                                        }}
+                                    </label>
+
+                                    <ng-select 
+                                        [(ngModel)]="accountNumber"
+                                        name="cardList"
+                                        *ngIf="isCardTransaction"
+                                        placeholder="Select Card Name"
+                                        (change)="GetCurrency()"
+                                    >
+                                        <ng-option
+                                            *ngFor="let item of cardList"
+                                            [value]="
+                                                item.beneficiaryAccountNumber
+                                            "
+                                        >
+                                            {{ item.beneficiaryAccountNumber
+                                            }}{{ "-" }}
+                                            {{
+                                                item.beneficiaryName
+                                            }}</ng-option
+                                        >
+                                    </ng-select>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                            <div  class="row">
+
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="GroupName" class="text-left">{{
+                                        "Currency" | localize
+                                    }}</label>
+                                    <span class="pull-right"
+                                        >{{ RateDescription }}
+                                        {{
+                                            currencyRate | number: "1.2-2"
+                                        }}</span
+                                    >
+                                    <ng-select
+                                        [(ngModel)]="paytrans.currency"
+                                        required
+                                        name="currency"
+                                        [disabled]="true"
+                                        placeholder="Currency"
+                                        class="rounded"
+                                        (change)="CheckRate()"
+                                    >
+                                        <ng-option
+                                            *ngFor="let t of currencyList"
+                                            [value]="t.currencyCode"
+                                        >
+                                            {{ t.currencyName }}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="GroupName">{{
+                                        "Narration" | localize
+                                    }}</label>
+
+                                    <textarea
+                                        id="narration"
+                                        name="narration"
+                                        [(ngModel)]="paytrans.narration"
+                                        placeholder="Narration"
+                                        required
+                                     appInputSanitzation
+                                        class="form-control"
+                                    >
+                                    </textarea>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="row">
+                            <div class="col-md-3 text-left">
+                                <div class="form-group">
+                                    <label for="GroupName">{{
+                                        "Start Date" | localize
+                                    }}</label>
+                                    <br />
+                                    <span class="ui-column-title"
+                                        >{{ sdate }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-left">
+                                <div class="form-group">
+                                    <label for="GroupName">{{
+                                        "Validity Period" | localize
+                                    }}</label>
+                                    <br />
+                                    <span class="ui-column-title">
+                                        {{ "You have" | localize }}</span
+                                    >
+                                    {{ cashadvanceSetupDto.numberDays }}
+                                    {{
+                                        "day(s) to retire this cash advance after"
+                                            | localize
+                                    }}
+                                    {{
+                                        cashadvanceSetupDto.applyDaysDescription
+                                    }}
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <label for="GroupName">{{
+                                    "Attach Document(optional)" | localize
+                                }}</label>
+                                <br />
+                                <span> 
+                                     <a
+                                    href="javascript:;"
+                                    (click)="fileDocument(attachId)"
+                                    title="Upload supporting documents"
+                                >
+                                    <i class="fa fa-upload"></i>
+                                </a>
+
+                                    <span class="badge badge-light">{{uploadCount}}</span>
+                                </span>
+                              
+                            </div>
+                            <div class="form-group">
+                                <app-erms-button
+                                    [title]="'Initiate Request' | localize"
+                                    [isLoading]="saving"
+                                    action="submit"
+                                    [disabled]="
+                                        saveButtonDisabled ||
+                                        !paytransForm.form.valid
+                                    "
+                                    style="
+                                        font-size: 10px;
+                                        padding-right: 10px;
+                                        padding-left: 10px;
+                                    "
+                                    type="save"
+                                ></app-erms-button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<splitCostModal #splitCostModal></splitCostModal>
+<cashadvanceWorkflowRouteModal
+    #cashadvanceWorkflowRouteModal
+></cashadvanceWorkflowRouteModal>
+
+<!-- <appdocuments #appdocuments></appdocuments> -->
+<appfileupload #fileUpload (modalSave)="totalCount($event)"></appfileupload>

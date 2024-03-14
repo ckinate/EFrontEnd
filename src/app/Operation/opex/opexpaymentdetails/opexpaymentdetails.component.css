@@ -1,0 +1,46 @@
+/* :host ::ng-deep p-listbox .ui-listbox-list{
+    width: 20rem;
+    border: black;
+} */
+.list-group-item {
+    border: red;
+    background-color:transparent;
+    overflow: visible;
+}
+
+.pl {
+
+
+    overflow: scroll;
+    background-color:transparent;
+   
+}
+
+.btn-decline{
+    color: #ffffff;
+    background-color: #F64E60;
+    border-color: #F64E60;
+}
+
+.btn.btn-decline:hover:not(.btn-text):not(:disabled):not(.disabled), .btn.btn-decline:focus:not(.btn-text), .btn.btn-primary.focus:not(.btn-text) {
+    color: #ffffff;
+    background-color: #EE2D41;
+    border-color: #EE2D41;
+}
+
+.dialogsetting{
+    margin: 0 auto;
+}
+
+div.sticky {
+  
+    position: fixed;
+    right:60%;
+    width: 200px;
+    
+ 
+   
+  }
+  /* .pp{
+      position: absolute;
+  } */

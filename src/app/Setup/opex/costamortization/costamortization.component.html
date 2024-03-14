@@ -1,0 +1,187 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="' Cost Amortization Setup' | localize">
+        </sub-header>
+
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <form
+                        #amortizationForm="ngForm"
+                        (ngSubmit)="save(amortizationForm)"
+                    >
+                        <div class="row align-items-center mb-2" *ngIf="'Pages.AmortisationSetUp'| permission">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="GroupName">{{
+                                        " Anniversary Date In Month" | localize
+                                    }}</label>
+
+                                    <input
+                                        id="Discription"
+                                        min="1"
+                                        max="28"
+                                        type="number"
+                                        name="cost"
+                                        [(ngModel)]="cost"
+                                        [value]="cost"
+                                        required
+                                        oninput="validity.valid||(value=value.replace(/\D+/g, ''))"
+                                        onKeyPress="if(this.value.length==2) return false;"
+                                        class="form-control"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="GroupName">{{
+                                        "Amortization Threshold (N)" | localize
+                                    }}</label>
+                                    &nbsp;
+                                    <p-inputNumber
+                                        min="0"
+                                        [style]="{ width: '100%' }"
+                                        [inputStyle]="{ width: '100%' }"
+                                        class="p-autocomplete"
+                                        max="99999999999999"
+                                        [minFractionDigits]="2"
+                                        [maxFractionDigits]="2"
+                                        [(ngModel)]="
+                                            costamortization.minimumAmount
+                                        "
+                                        name="minimumAmount"
+                                        mode="decimal"
+                                        maxlength="20"
+                                    ></p-inputNumber>
+                                    <!-- <input id="Discription" type="text" finCurrency [(ngModel)]="costamortization.minimumAmount" name="minimumAmount" placeholder="Enter  Amount" required pattern="^[^\*\=\<\>]+$"
+                                    class="form-control" > -->
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 mt-2 text-right" *ngIf="'Pages.AmortisationSetUp.Create'| permission ">
+                                <div class="form-group">
+                                    <button
+                                        *ngIf="!update"
+                                        type="submit"
+                                        [buttonBusy]="saving"
+                                        [busyText]="l('SavingWithThreeDot')"
+                                        [disabled]="
+                                            !amortizationForm.form.valid
+                                        "
+                                        flex="15"
+                                        class="btn btn-primary"
+                                    >
+                                        {{ "Save" | localize }}
+                                    </button>
+
+                                    <button
+                                        *ngIf="update"
+                                        type="submit"
+                                        [buttonBusy]="saving"
+                                        [busyText]="l('SavingWithThreeDot')"
+                                        [disabled]="
+                                            !amortizationForm.form.valid
+                                        "
+                                        flex="15"
+                                        class="btn btn-primary"
+                                    >
+                                        {{ "Update" | localize }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- <div class="row align-items-center">
+                  <div class="primeng-datatable-container"
+                      [busyIf]="primengTableHelper.isLoading">
+
+                      <p-table #dataTable
+                      [value]="primengTableHelper.records"
+
+   rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20]" [lazy]="false" [rowHover]="true" sortMode="multiple" [scrollable]="true"
+                      ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive" [resizableColumns]="primengTableHelper.resizableColumns"
+                      [globalFilterFields]="['anniversaryDate','minimumAmount']" >
+
+                      <ng-template pTemplate="caption">
+                        <div style="text-align: right">
+                        <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                        <input type="text" pInputText size="30" placeholder="Search Keyword" style="width:auto" (input)="dataTable.filterGlobal($event.target.value, 'contains')">
+                        </div>
+                        </ng-template>
+                          <ng-template pTemplate="header">
+                              <tr>
+
+                                  <th  style="width: 100px">
+                                    {{'Actions' | localize}}
+                                </th>
+                                    <th style="width: 100px" pSortableColumn="anniversaryDate">{{"Anniversay Date"|localize}} <p-sortIcon field="anniversaryDate"></p-sortIcon></th>
+                                    <th style="width: 100px" pSortableColumn="minimumAmount">{{"Amortization Threshold"|localize}} <p-sortIcon field="minimumAmount"></p-sortIcon></th>
+                                    <th style="width: 100px" pSortableColumn="creationTime">{{"Creation Time"|localize}} <p-sortIcon field="creationTime"></p-sortIcon></th>
+                                    <th style="width: 100px" pSortableColumn="userName">{{"Creator Name"|localize}} <p-sortIcon field="userName"></p-sortIcon></th>
+                                    <th style="width: 100px" pSortableColumn="status">{{"Status"|localize}} <p-sortIcon field="minimumAmount"></p-sortIcon></th>
+
+                              </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-record="$implicit">
+                               <tr>
+                                    <td style="width: 100px">
+                                        <div class="btn-group dropdown" dropdown container="body">
+                                            <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                                            <i class="fa fa-cog"></i><span class="caret"></span>
+                                            {{"Actions" | localize}}
+                                        </button>
+                                            <ul class="dropdown-menu" *dropdownMenu>
+                                                <li *ngIf="record.active=='Inactive'">
+                                                    <a href="javascript:;" (click)="activate(record)">{{'Activate' | localize}}</a>
+                                                </li>
+                                                 <li>
+                                                    <a href="javascript:;" (click)="edit(record)">{{'Edit' | localize}}</a>
+                                                </li>
+                                                <li *ngIf="record.active=='Active'">
+                                                    <a href="javascript:;" (click)="delete(record)">{{'Deactivate' | localize}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                      <td style="width: 100px">
+                                          <span class="ui-column-title"> {{'Description' | localize}}</span>
+                                          {{record.anniversaryDate}}
+                                      </td>
+
+                                      <td style="width: 100px">
+                                        <span class="ui-column-title"> {{'Rate' | localize}}</span>
+                                        {{record.minimumAmount}}
+                                    </td>
+
+                                    <td style="width: 100px">
+                                        <span class="ui-column-title"> {{'Creation Time' | localize}}</span>
+                                            <span
+                                                  *ngIf="isEdit == false">{{record.creationTime  |  luxonFormat:'yyyy-LL-dd HH:mm:ss' }}</span>
+                                         <span
+                                          *ngIf="isEdit == true">{{record.lastModificationTime  |  luxonFormat:'yyyy-LL-dd HH:mm:ss'}}</span>
+                                      </td>
+
+                                      <td style="width: 100px">
+                                        <span class="ui-column-title"> {{'Status' | localize}}</span>
+                                        {{record.userName}}
+                                    </td>
+
+                                    <td style="width: 100px">
+                                        <span class="ui-column-title"> {{'Status' | localize}}</span>
+                                        {{record.active}}
+                                    </td>
+
+                               </tr>
+                          </ng-template>
+                      </p-table>
+
+
+                  </div>
+
+                </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

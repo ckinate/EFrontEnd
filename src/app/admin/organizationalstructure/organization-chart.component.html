@@ -1,0 +1,23 @@
+<div class="kt-portlet__body overflow-auto">
+
+
+
+                    <p-organizationChart [value]="treeData" 
+                    selectionMode="single" 
+                    [(selection)]="selectedOu">
+
+
+                        <ng-template let-node pTemplate="default">
+                            <div>
+
+                                <h5>
+                                    {{node.label}} 
+                                    <br/>
+                                    <span class="badge badge-pill badge-primary">{{node.customCode}}</span>
+                                </h5>
+
+                            </div>
+                        </ng-template>
+                    </p-organizationChart>
+                   
+                </div>                

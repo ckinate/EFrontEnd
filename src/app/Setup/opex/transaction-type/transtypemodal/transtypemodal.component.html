@@ -1,0 +1,87 @@
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog" 
+aria-hidden="true" [config]="{backdrop: 'static'}">
+<div class="modal-dialog modal-xl">
+
+
+
+
+    <div class="modal-content">
+
+      
+
+        <div class="modal-header">
+            <h5 class="modal-title"  >
+              Transaction Type  Setup 
+              
+            </h5>
+            <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <!--Design input form for modal add chart of account-->
+            <form #payTransForm="ngForm"  class="form" (ngSubmit)="save(payTransForm)" >
+                <div class="row align-items-center mb-2">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="GroupName">{{"Transaction Type" | localize}}</label>
+                            <input id="Discription" type="text" [(ngModel)]="transType.narration" name="narration" placeholder="Enter  Name" required pattern="^[^\*\=\<\>]+$"
+                                class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="small mb-1" for="inputFirstName">GL</label>
+                            <ng-select name="acct" required class=" rounded" [(ngModel)]="transType.chartOfAccountId"
+                                >
+                                <ng-option  *ngFor="let acc of chartOfAcct" [value]="acc.id" >
+                                    {{acc.accountName}} {{' '}} {{acc.accountCode}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </form>
+
+           
+    
+        </div>
+
+
+        <div class="modal-footer">
+         
+             <div class="form-group">
+                 <button type="submit" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"  flex="15" class="btn btn-primary "
+                 [disabled]="  !payTransForm.form.valid" (click)="save(payTransForm)"
+                 >
+                 {{ "Save" | localize }} 
+                 </button>
+             </div>
+       
+            <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+          
+       
+        </div>
+    
+
+</div>
+
+
+
+
+
+
+           
+
+
+               
+
+        </div>
+    </div>
+
+
+

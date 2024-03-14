@@ -1,0 +1,237 @@
+<div
+    appBsModal
+    #createOrEditModal="bs-modal"
+    (onShown)="onShown()"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="createOrEditModal"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static', keyboard: !saving }"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ "Disable Users" | localize }}:</h4>
+                <button
+                    type="button"
+                    class="close"
+                    (click)="close()"
+                    [attr.aria-label]="l('Close')"
+                    [disabled]="saving"
+                >
+                    <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12 mt-0 text-right">
+
+                    <div class="btn-group" dropdown>
+                        <button
+                            dropdownToggle
+                            type="button"
+                            class="btn btn-outline-success dropdown-toggle mr-1"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                            <i class="far fa-file-excel"></i>
+                            {{ "ExcelOperations" | localize }}
+                        </button>
+                        <div
+                            class="dropdown-menu dropdown-menu-right dropdown-excel-operations"
+                            *dropdownMenu
+                        >
+                            <a
+                                class="dropdown-item"
+                                id="ExportAccrualToExcelButton"
+                                (click)="exportToExcel()"
+                                href="javascript:;"
+                            >
+                                <i
+                                    class="fa fa-download mr-2 mt-1"
+                                    style="font-size: 1rem"
+                                ></i>
+                                {{ "ExportToExcel" | localize }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row align-items-center">
+                    <!--<Primeng-TurboTable-Start>-->
+                    <div
+                        class="primeng-datatable-container"
+                        [busyIf]="primengTableHelper.isLoading"
+                    >
+                        <p-table
+                            #dataTable
+                            [value]="userList"
+                            rows="{{
+                                primengTableHelper.defaultRecordsCountPerPage
+                            }}"
+                            [paginator]="true"
+                            [rows]="10"
+                            [rowsPerPageOptions]="[5, 10, 15, 20]"
+                            [lazy]="false"
+                            [rowHover]="true"
+                            sortMode="multiple"
+                            [scrollable]="true"
+                            ScrollWidth="100%"
+                            [responsive]="primengTableHelper.isResponsive"
+                            [resizableColumns]="
+                                primengTableHelper.resizableColumns
+                            "
+                            [globalFilterFields]="[
+                                'name',
+                                'surname',
+                                'userName',
+                                'emailAddress',
+                                'phoneNumber',
+                                'middleName'
+                            ]"
+                            id="excel-table"
+                        >
+                            <ng-template pTemplate="caption">
+                                <div style="text-align: right">
+                                    <i
+                                        class="pi pi-search"
+                                        style="margin: 4px 4px 0 0"
+                                    ></i>
+                                    <input
+                                        type="text"
+                                        pInputText
+                                        size="30"
+                                        placeholder="Search Keyword"
+                                        style="width: auto"
+                                        (input)="
+                                            dataTable.filterGlobal(
+                                                $event.target.value,
+                                                'contains'
+                                            )
+                                        "
+                                    />
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th id="quot" style="width: 100px" class="excludeExport">
+                                        {{ l("Actions") }}
+                                    </th>
+
+                                    <th
+                                        id="quot"
+                                        style="width: 100px"
+                                        pSortableColumn="name"
+                                    >
+                                        {{ l("Name") }}
+                                        <p-sortIcon field="name"></p-sortIcon>
+                                    </th>
+                                    <th
+                                        id="quot"
+                                        style="width: 100px"
+                                        pSortableColumn="surname"
+                                    >
+                                        {{ l("Surname") }}
+                                        <p-sortIcon
+                                            field="surname"
+                                        ></p-sortIcon>
+                                    </th>
+                                    <th
+                                        id="quot"
+                                        style="width: 100px"
+                                        pSortableColumn="userName"
+                                    >
+                                        {{ l("UserName") }}
+                                        <p-sortIcon
+                                            field="userName"
+                                        ></p-sortIcon>
+                                    </th>
+                                    <th
+                                    id="quot"
+                                    style="width: 100px"
+                                    pSortableColumn="deleterUserName"
+                                >
+                                    {{ l("Modified by") }}
+                                    <p-sortIcon
+                                        field="deleterUserName"
+                                    ></p-sortIcon>
+                                </th>
+                                <th
+                                id="quot"
+                                style="width: 100px"
+                                pSortableColumn="deletedTime"
+                            >
+                                {{ l("Disable Date") }}
+                                <p-sortIcon
+                                    field="deletedTime"
+                                ></p-sortIcon>
+                            </th>
+                                    <th
+                                        id="quot"
+                                        style="width: 100px"
+                                        pSortableColumn="emailAddress"
+                                    >
+                                        {{ l("EmailAddress") }}
+                                        <p-sortIcon
+                                            field="emailAddress"
+                                        ></p-sortIcon>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template
+                                pTemplate="body"
+                                let-record="$implicit"
+                            >
+                                <tr>
+                                    <td style="width: 100px" class="excludeExport">
+                                        <button
+                                            class="btn btn-sm btn-primary"
+                                            (click)="
+                                                activateDeletedUser(record.id)
+                                            "
+                                            *ngIf="
+                                                'Pages.Administration.Users.ActivateDeleted'
+                                                    | permission
+                                            "
+                                        >
+                                            {{ "Activate" }}
+                                        </button>
+                                    </td>
+                                    <td style="width: 100px">
+                                        {{ record.name }}
+                                    </td>
+                                    <td style="width: 100px">
+                                        {{ record.surname }}
+                                    </td>
+                                    <td style="width: 100px">
+                                        {{ record.userName }}
+                                    </td>
+                                    <td style="width: 100px">
+                                        {{ record.deleterUserName }}
+                                    </td>
+                                    <td style="width: 100px">
+                                        {{ record.deletedTime  | luxonFormat: "F"}}
+                                    </td>
+                                    <td style="width: 100px">
+                                        {{ record.emailAddress }}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    [disabled]="saving"
+                    type="button"
+                    class="btn btn-light-primary font-weight-bold"
+                    (click)="close()"
+                >
+                    {{ l("Exit") }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

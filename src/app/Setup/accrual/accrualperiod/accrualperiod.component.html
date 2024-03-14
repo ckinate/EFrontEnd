@@ -1,0 +1,440 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Accrual Period' | localize"> </sub-header>
+
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <form
+                        #accrualperiodForm="ngForm"
+                        (ngSubmit)="save(accrualperiodForm)"
+                        class="form"
+                    >
+                        <div class="row align-items-center mb-2">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="GroupName">Period Name</label>
+                                    <input
+                                        id="Discription"
+                                        type="text"
+                                        name="invoicenumber"
+                                        placeholder=""
+                                        required pattern="^[^\*\=\<\>]+$"
+                                        class="form-control m-input"
+                                        [(ngModel)]="accrualperiod.periodName"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small mb-1" for="inputLastName"
+                                    >Period Start Date</label
+                                >
+                                <div class="input-group">
+                                    <input
+                                        id="SampleDatePicker"
+                                        required
+                                        name="date"
+                                        type="text"
+                                        #SampleDatePicker
+                                        name="SampleDatePicker"
+                                        #ed="bsDatepicker"
+                                        class="form-control m-input rounded"
+                                        bsDatepicker
+                                        datePickerMomentModifier
+                                        [(date)]="sampleDate"
+                                        [bsConfig]="{ adaptivePosition: true }"
+                                        [disabled]="hasDate"
+                                        [minDate]="mindate"
+                                        [(ngModel)]="
+                                            accrualperiod.startPeriodDate
+                                        "
+                                    />
+
+                                    <div class="input-group-append">
+                                        <button
+                                            class="input-group-append btn btn-secondary"
+                                            (click)="ed.toggle()"
+                                            type="button"
+                                        >
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="small mb-1" for="inputLastName"
+                                    >Period End Date</label
+                                >
+                                <div class="input-group">
+                                    <input
+                                        id="SampleDatePicker"
+                                        required
+                                        name="date"
+                                        type="text"
+                                        #SampleDatePicker
+                                        name="SampleDatePicker"
+                                        #es="bsDatepicker"
+                                        class="form-control"
+                                        bsDatepicker
+                                        datePickerMomentModifier
+                                        [(date)]="periodendDate"
+                                        [bsConfig]="{ adaptivePosition: true }"
+                                        [disabled]="hasDate"
+                                        [minDate]="mindate"
+                                        [(ngModel)]="
+                                            accrualperiod.endPeriodDate
+                                        "
+                                    />
+
+                                    <div class="input-group-append">
+                                        <button
+                                            class="input-group-append btn btn-secondary"
+                                            (click)="es.toggle()"
+                                            type="button"
+                                        >
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small mb-1" for="inputLastName"
+                                    >Request Start Date</label
+                                >
+                                <div class="input-group">
+                                    <input
+                                        id="SampleDatePicker"
+                                        required
+                                        name="date"
+                                        type="text"
+                                        #SampleDatePicker
+                                        name="SampleDatePicker"
+                                        #ey="bsDatepicker"
+                                        class="form-control"
+                                        bsDatepicker
+                                        datePickerMomentModifier
+                                        [(date)]="requestendDate"
+                                        [bsConfig]="{ adaptivePosition: true }"
+                                        [disabled]="hasDate"
+                                        [minDate]="mindate"
+                                        [(ngModel)]="
+                                            accrualperiod.requestStartDate
+                                        "
+                                    />
+
+                                    <div class="input-group-append">
+                                        <button
+                                            class="input-group-append btn btn-secondary"
+                                            (click)="ey.toggle()"
+                                            type="button"
+                                        >
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="small mb-1" for="inputLastName"
+                                    >Request End Date</label
+                                >
+                                <div class="input-group">
+                                    <input
+                                        id="SampleDatePicker"
+                                        required
+                                        name="date"
+                                        type="text"
+                                        #SampleDatePicker
+                                        name="SampleDatePicker"
+                                        #ex="bsDatepicker"
+                                        class="form-control"
+                                        bsDatepicker
+                                        datePickerMomentModifier
+                                        [(date)]="requeststartDate"
+                                        [bsConfig]="{ adaptivePosition: true }"
+                                        [disabled]="hasDate"
+                                        [minDate]="mindate"
+                                        [(ngModel)]="
+                                            accrualperiod.requestEndDate
+                                        "
+                                    />
+
+                                    <div class="input-group-append">
+                                        <button
+                                            class="input-group-append btn btn-secondary"
+                                            (click)="ex.toggle()"
+                                            type="button"
+                                        >
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <div class="form-group">
+                                    <button
+                                        type="submit"
+                                        flex="15"
+                                        class="btn btn-primary mt-10"
+                                        [disabled]="
+                                            !accrualperiodForm.form.valid
+                                        "
+                                    >
+                                        {{ "Save" | localize }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="row align-items-center">
+                        <!--<Primeng-TurboTable-Start>-->
+                        <div
+                            class="primeng-datatable-container"
+                            [busyIf]="primengTableHelper.isLoading"
+                        >
+                            <p-table
+                                #dataTable
+                                [value]="primengTableHelper.records"
+                                rows="{{
+                                    primengTableHelper.defaultRecordsCountPerPage
+                                }}"
+                                [paginator]="true"
+                                [rows]="10"
+                                [rowsPerPageOptions]="[5, 10, 15, 20]"
+                                [lazy]="false"
+                                [rowHover]="true"
+                                sortMode="multiple"
+                                [scrollable]="true"
+                                ScrollWidth="100%"
+                                [responsive]="primengTableHelper.isResponsive"
+                                [resizableColumns]="
+                                    primengTableHelper.resizableColumns
+                                "
+                                [globalFilterFields]="[
+                                    'periodName',
+                                    'startPeriodDate',
+                                    'endPeriodDate',
+                                    'requestStartDate ',
+                                    'requestEndDate',
+                                    'transactionStatus'
+                                ]"
+                            >
+                                <ng-template pTemplate="caption">
+                                    <div style="text-align: right">
+                                        <i
+                                            class="pi pi-search"
+                                            style="margin: 4px 4px 0 0"
+                                        ></i>
+                                        <input
+                                            type="text"
+                                            pInputText
+                                            size="30"
+                                            placeholder="Search Keyword"
+                                            style="width: auto"
+                                            (input)="
+                                                dataTable.filterGlobal(
+                                                    $event.target.value,
+                                                    'contains'
+                                                )
+                                            "
+                                            pattern="^[^\*\=\<\>]+$"
+                                        />
+                                    </div>
+                                </ng-template>
+
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 100px">
+                                            {{ "Actions" | localize }}
+                                        </th>
+                                        <th
+                                            style="width: 100px"
+                                            pSortableColumn="periodName"
+                                        >
+                                            {{ "Period Name" | localize }}
+                                            <p-sortIcon
+                                                field="periodName"
+                                            ></p-sortIcon>
+                                        </th>
+                                        <th
+                                            style="width: 100px"
+                                            pSortableColumn="startPeriodDate"
+                                        >
+                                            {{
+                                                "Period Start Date" | localize
+                                            }}
+                                            <p-sortIcon
+                                                field="startPeriodDate"
+                                            ></p-sortIcon>
+                                        </th>
+
+                                        <th
+                                            style="width: 100px"
+                                            pSortableColumn="endPeriodDate"
+                                        >
+                                            {{ "Period End Date" | localize }}
+                                            <p-sortIcon
+                                                field="endPeriodDate"
+                                            ></p-sortIcon>
+                                        </th>
+
+                                        <th
+                                            style="width: 100px"
+                                            pSortableColumn="requestStartDate"
+                                        >
+                                            {{
+                                                "Request Start Date" | localize
+                                            }}
+                                            <p-sortIcon
+                                                field="requestStartDate"
+                                            ></p-sortIcon>
+                                        </th>
+
+                                        <th
+                                            style="width: 100px"
+                                            pSortableColumn="requestEndDate"
+                                        >
+                                            {{ "Request End Date" | localize }}
+                                            <p-sortIcon
+                                                field="requestEndDate"
+                                            ></p-sortIcon>
+                                        </th>
+
+                                        <th
+                                            style="width: 100px"
+                                            pSortableColumn="transactionStatus"
+                                        >
+                                            {{
+                                                "TransactionStatus" | localize
+                                            }}
+                                            <p-sortIcon
+                                                field="transactionStatus"
+                                            ></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template
+                                    pTemplate="body"
+                                    let-record="$implicit"
+                                >
+                                    <tr>
+                                        <td style="width: 100px">
+                                            <div
+                                                class="btn-group dropdown"
+                                                dropdown
+                                                container="body"
+                                            >
+                                                <button
+                                                    dropdownToggle
+                                                    class="dropdown-toggle btn btn-sm btn-primary"
+                                                >
+                                                    <i class="fa fa-cog"></i
+                                                    ><span class="caret"></span>
+                                                    {{ "Actions" | localize }}
+                                                </button>
+                                                <ul
+                                                    class="dropdown-menu"
+                                                    *dropdownMenu
+                                                >
+                                                    <li>
+                                                        <a
+                                                            href="javascript:;"
+                                                            (click)="
+                                                                edit(record)
+                                                            "
+                                                            >{{
+                                                                "Edit"
+                                                                    | localize
+                                                            }}</a
+                                                        >
+                                                    </li>
+                                                    <li>
+                                                        <a
+                                                            href="javascript:;"
+                                                            (click)="
+                                                                delete(record)
+                                                            "
+                                                            >{{
+                                                                "Delete"
+                                                                    | localize
+                                                            }}</a
+                                                        >
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                    "Description" | localize
+                                                }}</span
+                                            >
+                                            {{ record.periodName }}
+                                        </td>
+
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{ "Rate" | localize }}</span
+                                            >
+                                            {{
+                                                record.startPeriodDate
+                                                    | luxonFormat: "DD"
+                                            }}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{ "Rate" | localize }}</span
+                                            >
+                                            {{
+                                                record.endPeriodDate
+                                                    | luxonFormat: "DD"
+                                            }}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{ "Rate" | localize }}</span
+                                            >
+                                            {{
+                                                record.requestStartDate
+                                                    | luxonFormat: "DD"
+                                            }}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{ "Rate" | localize }}</span
+                                            >
+                                            {{
+                                                record.requestEndDate
+                                                    | luxonFormat: "DD"
+                                            }}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title">
+                                                {{ "Rate" | localize }}</span
+                                            >
+                                            {{ record.transactionStatus }}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+
+                            <!-- <div class="primeng-paging-container">
+                              <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                                  #paginatorAuditLogs
+                                  [totalRecords]="primengTableHelper.totalRecordsCount"
+                                  [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                              </p-paginator>
+
+                          </div> -->
+                        </div>
+                        <!--<Primeng-TurboTable-End>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

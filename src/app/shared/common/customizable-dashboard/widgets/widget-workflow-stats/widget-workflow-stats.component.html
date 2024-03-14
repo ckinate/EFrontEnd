@@ -1,0 +1,122 @@
+<div class="row row-no-padding row-col-separator-xl" [perfectScrollbar] [busyIf]="primengTableHelper.isLoading" >
+    
+    <div class="col pr-0">
+        <div class="card card-custom bgi-no-repeat card-stretch new-subscription-statistics h-100">
+            <div class="card-body">
+                <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h5 text-hover-state-dark d-block">
+                   
+                    <i class="fa fa-hand-holding-usd icon-2x"></i>
+                    {{dashboardTopStats.pendingName}} 
+                </a>
+                <span class="text-info font-weight-bold text-left float-left col-5 p-0 mb-5">Count</span>
+                <div class="text-info font-weight-bold text-right float-right col-6 p-0 mb-5">
+                <span >
+                 {{dashboardTopStats.pendingCount | number:'1.0'}}
+                 </span>
+                </div>
+                <span class="text-danger font-weight-bold text-left float-left col-6 p-0 mb-5">Amount</span>
+                <div class="text-danger font-weight-bold text-right float-right col-6 p-0 mb-5">
+                    <span  counto [step]="30" [duration]="1" [countFrom]="0"
+                    [countTo]="dashboardTopStats.pendingAmount"
+                    (countoChange)="dashboardTopStats.pendingAmountCounter = $event">
+                     {{dashboardTopStats.pendingAmountCounter.toFixed(0)  | number:'1.2-5'}}
+                     </span>
+                    
+                    </div>
+
+
+           </div>
+        </div>
+    </div>
+    <div class="col pr-0">
+        <div class="card card-custom bgi-no-repeat card-stretch new-subscription-statistics h-100">
+            <div class="card-body">
+                <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h5 text-hover-state-dark d-block">
+                   
+                    <i class="fa fa-coins icon-2x"></i>
+                    {{dashboardTopStats.authorizedName}} 
+                </a>
+                <span class="text-info font-weight-bold text-left float-left col-5 p-0 mb-5">Count</span>
+                <div class="text-info font-weight-bold text-right float-right col-6 p-0 mb-5">
+                <span >
+                 {{dashboardTopStats.authorizedCount | number:'1.0'}}
+                 </span>
+                </div>
+                <span class="text-danger font-weight-bold text-left float-left col-6 p-0 mb-5">Amount</span>
+                <div class="text-danger font-weight-bold text-right float-right col-6 p-0 mb-5">
+                    <span  counto [step]="30" [duration]="1" [countFrom]="0"
+                    [countTo]="dashboardTopStats.authorizedAmount"
+                    (countoChange)="dashboardTopStats.authorizedAmountCounter = $event">
+                     {{dashboardTopStats.authorizedAmountCounter.toFixed(0)  | number:'1.2-5'}}
+                     </span>
+                    
+              </div>
+
+
+           </div>
+        </div>
+    </div>
+    <div class="col pr-0">
+        <div class="card card-custom bgi-no-repeat card-stretch new-subscription-statistics h-100">
+            <div class="card-body">
+                <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h5 text-hover-state-dark d-block">
+                   
+                    <i class="fa fa-money-check-alt icon-2x"></i>
+                    {{dashboardTopStats.declinedName}} 
+                </a>
+                <span class="text-info font-weight-bold text-left float-left col-5 p-0 mb-5">Count</span>
+                <div class="text-info font-weight-bold text-right float-right col-6 p-0 mb-5">
+                <span >
+                 {{dashboardTopStats.declinedCount | number:'1.0'}}
+                 </span>
+                </div>
+                <span class="text-danger font-weight-bold text-left float-left col-6 p-0 mb-5">Amount</span>
+                <div class="text-danger font-weight-bold text-right float-right col-6 p-0 mb-5">
+                    <span  counto [step]="30" [duration]="1" [countFrom]="0"
+                    [countTo]="dashboardTopStats.declinedAmount"
+                    (countoChange)="dashboardTopStats.declinedAmountCounter = $event">
+                     {{dashboardTopStats.declinedAmountCounter.toFixed(0)  | number:'1.2-5'}}
+                     </span>
+                    
+                    </div>
+
+
+           </div>
+        </div>
+    </div>
+    <div class="col pr-0">
+        <div class="card card-custom bgi-no-repeat card-stretch new-subscription-statistics h-100">
+            <div class="card-body">
+                <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h5 text-hover-state-dark d-block">
+                    
+                    <i class="fa fa-calculator icon-2x"></i>
+                    {{dashboardTopStats.totalName}} 
+                </a>
+                <span class="text-info font-weight-bold text-left float-left col-5 p-0 mb-5">Count</span>
+                <div class="text-info font-weight-bold text-right float-right col-6 p-0 mb-5">
+                <span >
+                 {{dashboardTopStats.totalCount | number:'1.0'}}
+                 </span>
+                </div>
+                <span class="text-danger font-weight-bold text-left float-left col-6 p-0 mb-5">Amount</span>
+                <div class="text-danger font-weight-bold text-right float-right col-6 p-0 mb-5">
+                    <span  counto [step]="30" [duration]="1" [countFrom]="0"
+                    [countTo]="dashboardTopStats.totalAmount"
+                    (countoChange)="dashboardTopStats.totalCounter = $event">
+                     {{dashboardTopStats.totalCounter.toFixed(0)  | number:'1.2-5'}}
+                     </span>
+                    
+                    </div>
+                    
+                
+           </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+

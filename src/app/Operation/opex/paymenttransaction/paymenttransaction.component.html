@@ -1,0 +1,1552 @@
+<div [@routerTransition] *ngIf="!hideInitiationPage">
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Expense Requisition' | localize">
+            <div role="actions" class="align-center">
+                <!-- <span style="margin-right:20px" title="Pending Transactions:   {{pendingAmountCounter | number:'1.0'}}">  <i class="fa fa-hand-holding-usd icon-2x"></i></span>
+                <span style="margin-right:20px" title="Authorized Transactions: {{authorizedAmountCounter | number:'1.0'}}">   <i class="fa fa-coins icon-2x"></i></span>
+                <span style="margin-right: 20px" title="Declined Transactions:{{declinedAmountCounter | number:'1.0'}}">   <i class="fa fa-money-check-alt icon-2x"></i></span>
+                <span style="margin-right:20px" title="Total Transactions:{{totalCounter  | number:'1.0'}}">   <i class="fa fa-calculator icon-2x"></i></span>
+
+             -->
+
+
+            </div>
+        </sub-header>
+
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body" [busyIf]="primengTableHelper.isLoading">
+                    <div [busyIf]="saving">
+                        <div class="row " style="padding-bottom:10px">
+                            <div class="col-md-3">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                    <div class="card-body text-center">
+                                        <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+                                            <i class="fa fa-hand-holding-usd icon-2x"></i>
+                                           <span class="p-3"> Awaiting Approval  </span>
+
+                                        </a>
+                                        <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                        <div class="text-info font-weight-bold text-right float-right col-6  ">
+                                        <span >
+                                            {{pendingAmountCounter | number:'1.0'}}
+                                         </span>
+                                        </div>
+                                        <!-- <span class="text-danger font-weight-bold text-left float-left col-6 p-0 ">Amount</span>
+                                        <div class="text-danger font-weight-bold text-right float-right col-6 p-0 ">
+                                            <span  counto [step]="30" [duration]="1" [countFrom]="0"
+                                         >
+                                             {{totalLpoDto.dashbordAmount  | number:'1.2-5'}}
+                                             </span>
+
+
+                                      </div> -->
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics bg-light ">
+                                    <div class="card-body text-center">
+                                        <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+
+                                            <i class="fa fa-coins icon-2x"></i>
+                                            Approved Request
+                                        </a>
+                                        <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                        <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                        <span >
+                                            {{authorizedAmountCounter | number:'1.0'}}
+                                         </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                    <div class="card-body text-center">
+                                        <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+
+                                            <i class="fa fa-money-check-alt icon-2x"></i>
+                                            Declined Request
+                                        </a>
+                                        <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                        <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                        <span >
+                                            {{declinedAmountCounter | number:'1.0'}}
+                                         </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                    <div class="card-body text-center">
+                                        <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+
+                                            <i class="fa fa-calculator icon-2x"></i>
+                                            Total Request
+                                        </a>
+                                        <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                        <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                        <span >
+                                            {{totalCounter | number:'1.0'}}
+                                         </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <tabset>
+                            <tab heading="Opex Initiation Page">
+                                <div class="row" *ngIf="false">
+                                    <br />
+                                    <div class="col-md-3 small">
+                                        <div class="form-group">
+                                            <span style="font-weight: bold">{{
+                                                "MIS Budget" | localize
+                                            }}</span>
+
+                                            <br />
+                                            <label style="font-weight: bold"
+                                                >{{
+                                                    misDetails.misCode
+                                                        | localize
+                                                }}-{{
+                                                    misDetails.misName
+                                                        | localize
+                                                }}</label
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 small">
+                                        <div
+                                            class="form-group"
+                                            style="
+                                                box-shadow: 0 0 10px #ccc;
+                                                padding: 7px;
+                                                border-radius: 10px;
+                                            "
+                                        >
+                                            <span style="font-weight: bold">
+                                                {{
+                                                    "Total Budget" | localize
+                                                }}</span
+                                            >
+                                            <br />
+                                            <label
+                                                style="
+                                                    font-weight: bold;
+                                                    color: rgb(12, 12, 175);
+                                                "
+                                            >
+                                                {{
+                                                    calculatebugetforMIS.budgetTotalAmount
+                                                        | number: "1.2-2"
+                                                }}</label
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 small">
+                                        <div
+                                            class="form-group"
+                                            style="
+                                                box-shadow: 0 0 10px #ccc;
+                                                padding: 7px;
+                                                border-radius: 10px;
+                                            "
+                                        >
+                                            <span style="font-weight: bold">
+                                                {{
+                                                    "Budget In Use" | localize
+                                                }}</span
+                                            >
+                                            <br />
+                                            <label
+                                                style="
+                                                    font-weight: bold;
+                                                    color: rgb(12, 12, 175);
+                                                "
+                                            >
+                                                {{
+                                                    calculatebugetforMIS.budgetInUse
+                                                        | number: "1.2-2"
+                                                }}</label
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 small">
+                                        <div
+                                            class="form-group"
+                                            style="
+                                                box-shadow: 0 0 10px #ccc;
+                                                padding: 7px;
+                                                border-radius: 10px;
+                                            "
+                                        >
+                                            <span style="font-weight: bold">
+                                                {{
+                                                    "Used Budget" | localize
+                                                }}</span
+                                            >
+                                            <br />
+                                            <label
+                                                style="
+                                                    font-weight: bold;
+                                                    color: rgb(12, 12, 175);
+                                                "
+                                            >
+                                                {{
+                                                    calculatebugetforMIS.budgetUsedAmount
+                                                        | number: "1.2-2"
+                                                }}</label
+                                            >
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 small">
+                                        <div
+                                            class="form-group"
+                                            style="
+                                                box-shadow: 0 0 10px #ccc;
+                                                padding: 7px;
+                                                border-radius: 10px;
+                                            "
+                                        >
+                                            <span style="font-weight: bold">
+                                                {{
+                                                    "Available Budget"
+                                                        | localize
+                                                }}</span
+                                            >
+                                            <br />
+                                            <label
+                                                style="
+                                                    font-weight: bold;
+                                                    color: rgb(12, 12, 175);
+                                                "
+                                            >
+                                                {{
+                                                    calculatebugetforMIS.availableBudgetAmount
+                                                        | number: "1.2-2"
+                                                }}</label
+                                            >
+                                        </div>
+                                    </div>
+                                    <hr />
+                                </div>
+
+                                <div class="row" *ngIf="false">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <span style="font-weight: bold"
+                                                >{{ "GL Budget" | localize }}-{{
+                                                    paytrans.transactionTypeNarration
+                                                }}</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label
+                                                style="
+                                                    font-weight: bold;
+                                                    color: rgb(12, 12, 175);
+                                                "
+                                            >
+                                                {{
+                                                    calculatebuget.budgetTotalAmount
+                                                        | number: "1.2-2"
+                                                }}</label
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label
+                                                style="
+                                                    font-weight: bold;
+                                                    color: rgb(12, 12, 175);
+                                                "
+                                            >
+                                                {{
+                                                    calculatebuget.budgetInUse
+                                                        | number: "1.2-2"
+                                                }}</label
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label
+                                                style="
+                                                    font-weight: bold;
+                                                    color: rgb(12, 12, 175);
+                                                "
+                                            >
+                                                {{
+                                                    calculatebuget.budgetUsedAmount
+                                                        | number: "1.2-2"
+                                                }}</label
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label
+                                                style="
+                                                    font-weight: bold;
+                                                    color: rgb(12, 12, 175);
+                                                "
+                                            >
+                                                {{
+                                                    calculatebuget.availableBudgetAmount
+                                                        | number: "1.2-2"
+                                                }}</label
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form
+                                    class="form"
+                                    #paytransForm="ngForm" name="form"
+                                    (ngSubmit)="paytransForm.form.valid && save(paytransForm)"
+                                >
+                                    <div class="row align-items-center mb-2">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label
+                                                    class="small mb-1"
+                                                    for="PayeeTypeId"
+                                                    >Payee Type</label
+                                                >
+
+                                                <ng-select
+                                                required
+                                                    [(ngModel)]="
+                                                        paytrans.payeeTypeId
+                                                    "
+                                                    (change)="getNamee
+                                                        (
+                                                            paytrans.payeeTypeId
+                                                        )
+                                                    "
+                                                    name="payeeTypeId"
+                                                    class="rounded"
+                                                    #payeeTypeId="ngModel"
+                                                    [ngClass]="{ 'is-invalid': paytransForm.submitted && payeeTypeId.invalid }"
+                                                    required
+                                                >
+                                                    <ng-option [value]="0">
+                                                        Select Payee
+                                                        Type</ng-option
+                                                    >
+
+                                                    <ng-option
+                                                        *ngFor="
+                                                            let item of payeetypelist
+                                                        "
+                                                        [value]="item.id"
+                                                    >
+                                                        {{
+                                                            item.description
+                                                        }}</ng-option
+                                                    >
+                                                </ng-select>
+                                                <div *ngIf="paytransForm.submitted && payeeTypeId.invalid && paytrans.payeeTypeId == 0" class="invalid-feedback">
+                                                    <div *ngIf="payeeTypeId.errors.required">Payee Type is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="col-md-3"
+                                            *ngIf="paytrans.payeeTypeId !== 3"
+                                        >
+                                            <div class="form-group">
+                                                <label
+                                                    class="small mb-1"
+                                                    for="inputFirstName"
+                                                    >Beneficiary</label
+                                                >
+                                                <ng-select
+                                                    [(ngModel)]="
+                                                        paytrans.payeeName
+                                                    "
+                                                    name="payeeName"
+                                                    #payeeName="ngModel"
+                                                    [ngClass]="{ 'is-invalid': paytransForm.submitted && payeeName.invalid }"
+                                                    required
+                                                    (ngModelChange)="
+                                                        getPayeeBankDetails(
+                                                            $event
+                                                        )
+                                                    "
+                                                    class="rounded"
+                                                >
+                                                    <ng-option
+                                                        *ngIf="
+                                                            paytrans.payeeTypeId ===
+                                                            4
+                                                        "
+                                                        [value]="101"
+                                                    >
+                                                        <span
+                                                            style="
+                                                                color: rgb(
+                                                                    48,
+                                                                    48,
+                                                                    48
+                                                                );
+                                                                font-weight: bold;
+                                                            "
+                                                        >
+                                                            + Create Vendor
+                                                        </span>
+                                                    </ng-option>
+
+                                                    <ng-option
+                                                        *ngFor="
+                                                            let vendorItems of getListOfVendors
+                                                        "
+                                                        [value]="
+                                                            vendorItems.vendorNumber
+                                                        "
+                                                        >{{
+                                                            vendorItems.companyName
+                                                        }}
+                                                    </ng-option>
+
+                                                    <ng-option
+                                                        *ngFor="
+                                                            let payeename of payeenamelist
+                                                        "
+                                                        [value]="
+                                                            payeename.username
+                                                        "
+                                                        >{{
+                                                            payeename.name
+                                                        }}</ng-option
+                                                    >
+                                                </ng-select>
+                                                <div *ngIf="paytransForm.submitted && payeeName.invalid" class="invalid-feedback">
+                                                    <div *ngIf="payeeName.errors.required">Beneficiary is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="col-md-3 text-center"
+                                            *ngIf="paytrans.payeeTypeId === 3"
+                                        >
+                                            <label
+                                                >Add Multiple Beneficiary</label
+                                            >
+                                            <br />
+                                            <a
+                                                href="javascript:;"
+                                                (click)="
+                                                    addmultibeneficiary(
+                                                        attachId,
+                                                        paytrans.amount
+                                                    )
+                                                "
+                                                title="Add Beneficiaries"
+                                            >
+                                                <i class="fa fa-users"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group required" >
+                                                <label
+                                                    class="small mb-1"
+                                                    for="inputFirstName"
+                                                    >Transaction Type</label
+                                                >
+
+                                                <ng-select
+                                                    [(ngModel)]="
+                                                        paytrans.transactionTypeNarration
+                                                    "
+                                                    name="transactionTypeNarration"
+                                                    #transactionTypeNarration="ngModel"
+                                                    [ngClass]="{ 'is-invalid': paytransForm.submitted && transactionTypeNarration.invalid }"
+                                                    (change)="
+                                                        getBudget(
+                                                            paytrans.transactionTypeNarration
+                                                        )
+                                                    "
+                                                    required
+                                                    class="rounded"
+
+
+                                                >
+                                                    <ng-option [value]="0">
+                                                        Select Transaction
+                                                        Type</ng-option
+                                                    >
+
+                                                    <ng-option
+                                                        *ngFor="
+                                                            let item of transactionTypeList
+                                                        "
+                                                        [value]="item.narration"
+                                                    >
+                                                        {{
+                                                            item.narration
+                                                        }}</ng-option
+                                                    >
+                                                </ng-select>
+                                                <div *ngIf="paytransForm.submitted && transactionTypeNarration.invalid" class="invalid-feedback">
+                                                    <div *ngIf="transactionTypeNarration.errors.required">Transaction Type is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label
+                                                    for="GroupName"
+                                                    class="text-left"
+                                                    >{{
+                                                        "Currency" | localize
+                                                    }}</label
+                                                >
+                                                <span class="pull-right"
+                                                    >{{ RateDescription }}
+                                                    {{
+                                                        currencyRate
+                                                            | number: "1.2-2"
+                                                    }}</span
+                                                >
+                                                <ng-select
+                                                    [(ngModel)]="
+                                                        paytrans.currency
+                                                    "
+                                                    required
+                                                    name="currency"
+                                                    placeholder="Currency"
+                                                    class="rounded"
+                                                    (change)="CheckRate()"
+                                                >
+                                                    <ng-option
+                                                        *ngFor="
+                                                            let t of currencyList
+                                                        "
+                                                        [value]="t.currencyCode"
+                                                    >
+                                                        {{ t.currencyName }}
+                                                    </ng-option>
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="GroupName">{{
+                                                    "Invoice Number" | localize
+                                                }}</label>
+                                                <input
+                                                    type="text"
+                                                    name="invoiceNumber"
+                                                    [(ngModel)]="
+                                                        paytrans.invoiceNumber
+                                                    "
+                                                    required
+                                                    placeholder="Invoice No"
+                                                    #invoiceNumber="ngModel"
+                                                    [ngClass]="{ 'is-invalid': paytransForm.submitted && invoiceNumber.invalid }"
+                                                    class="form-control"
+                                                    maxlength="50"
+                                                />
+                                                <div *ngIf="paytransForm.submitted && invoiceNumber.invalid" class="invalid-feedback">
+                                                    <div *ngIf="invoiceNumber.errors.required">Invoice Number is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="SampleDatePicker">{{
+                                                    " Invoice Date" | localize
+                                                }}</label>
+
+                                                <!-- [maxDate]="maxdate" -->
+                                                <div class="input-group">
+                                                    <input
+                                                        id="periodDatePicker"
+                                                        [(ngModel)]="startdate"
+                                                        required
+                                                        type="text"
+                                                        name="Startdate"
+                                                        class="form-control rounded"
+                                                        bsDatepicker
+                                                        #ed="bsDatepicker"
+                                                        datePickerMomentModifier
+                                                        [(date)]="startdate"
+                                                        [minDate]="mindate"
+                                                        [bsConfig]="{
+                                                            adaptivePosition: true
+                                                        }"
+                                                        [maxDate]="maxdate"
+                                                        #Startdate="ngModel"
+                                                        [ngClass]="{ 'is-invalid': paytransForm.submitted && Startdate.invalid }"
+                                                    />
+                                                    <div
+                                                        class="input-group-append"
+                                                    >
+                                                        <button
+                                                            class="input-group-append btn btn-outline-secondary"
+                                                            (click)="
+                                                                ed.toggle()
+                                                            "
+                                                            type="button"
+                                                        >
+                                                            <i
+                                                                class="fa fa-calendar"
+                                                            ></i>
+                                                        </button>
+                                                    </div>
+                                                    <div *ngIf="paytransForm.submitted && Startdate.invalid" class="invalid-feedback">
+                                                        <div *ngIf="Startdate.errors.required">Invoice Date is required</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="amount">{{
+                                                    "Amount" | localize
+                                                }}</label>
+                                                <br />
+
+
+                                                <!-- <p-inputNumber
+                                                    min="0"
+                                                    max="9999999999999"
+                                                    maxlength="20"
+                                                    style="width: 100%"
+                                                    [minFractionDigits]="2"
+                                                    [maxFractionDigits]="2"
+                                                    name="amout"
+                                                    [(ngModel)]="
+                                                        paytrans.amount
+                                                    "
+                                                    (ngModelChange)="validateAmount($event, 0)"
+                                                    mode="decimal"
+                                                >
+                                                </p-inputNumber> -->
+                                                <input size="10" class="form-control"  name="amount" #amount="ngModel"  required [(ngModel)]="paytrans.amount"
+                                                [ngClass]="{ 'is-invalid': paytransForm.submitted && amount.invalid }"
+                                                 (ngModelChange)="validateAmount($event, 0)" appCurrencyInputMask >
+                                                <div *ngIf="paytransForm.submitted && amount.invalid" class="invalid-feedback">
+                                                    <div *ngIf="amount.errors.required">Amount is required</div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                       <!--  <div class="form-group">
+                                            <label for="firstName">First Name</label>
+                                            <input type="text" class="form-control" name="firstName"
+                                            [(ngModel)]="paytrans.narration" #firstName="ngModel" [ngClass]="{ 'is-invalid': paytransForm.submitted && firstName.invalid }" required />
+                                            <div *ngIf="paytransForm.submitted && firstName.invalid" class="invalid-feedback">
+                                                <div *ngIf="firstName.errors.required">First Name is required</div>
+                                            </div>
+                                        </div>
+ -->
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="GroupName">{{
+                                                    "Narration" | localize
+                                                }}</label>
+
+                                                <textarea
+                                                    id="narration"
+                                                    name="narration"
+                                                    [(ngModel)]="paytrans.narration"
+                                                    placeholder="Narration"
+                                                    required
+                                                    #narration="ngModel"
+                                                    [ngClass]="{ 'is-invalid': paytransForm.submitted && narration.invalid }"
+                                                    class="form-control"
+                                                    maxlength="500"
+                                                    appInputSanitzation
+
+                                                >
+                                                </textarea>
+                                                <div *ngIf="paytransForm.submitted && narration.invalid" class="invalid-feedback">
+                                                    <div *ngIf="narration.errors.required">Narration is required</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row align-items-center">
+
+                                        <div class="form-group col-md-3">
+                                            <label>{{
+                                                "Is VAT required?" | localize
+                                            }}</label>
+                                            <div class="row">
+                                                <div class="col-md-3" >
+                                                    <div class="form-check"  >
+                                                        <fieldset [disabled]=hidetaxinput>
+
+                                                        <input
+                                                            class="form-check-input"
+                                                            type="radio"
+                                                            name="isTaxRequired"
+                                                            id="isTaxRequired1"
+                                                            [(ngModel)]="
+                                                                isTaxRequired
+                                                            "
+                                                            [value]="true"
+                                                            (ngModelChange)="
+                                                                handleChangeTax()
+                                                            "
+                                                        />
+                                                        <label
+                                                            class="form-check-label"
+                                                            for="isTaxRequired1"
+                                                        >
+                                                            {{
+                                                                "Yes" | localize
+                                                            }}
+                                                        </label>
+                                                    </fieldset>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <fieldset [disabled]=hidetaxinput>
+
+
+                                                        <input
+                                                            class="form-check-input"
+                                                            type="radio"
+                                                            name="isTaxRequired"
+                                                            id="isTaxRequired2"
+                                                            [(ngModel)]="
+                                                                isTaxRequired
+                                                            "
+                                                            [value]="false"
+                                                            (ngModelChange)="
+                                                                handleChangeTax()
+                                                            "
+                                                        />
+                                                        <label
+                                                            class="form-check-label"
+                                                            for="isTaxRequired2"
+                                                        >
+                                                            {{
+                                                                "No" | localize
+                                                            }}
+                                                        </label>
+                                                    </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div></div>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>{{
+                                                "Is VAT on total amount?"
+                                                    | localize
+                                            }}</label>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <fieldset [disabled]=hidetaxinput>
+
+
+                                                        <input
+                                                            class="form-check-input"
+                                                            type="radio"
+                                                            name="isVATonTotal"
+                                                            id="isVATonTotal1"
+                                                            [(ngModel)]="
+                                                                isVATonTotal
+                                                            "
+                                                            [value]="true"
+                                                            (ngModelChange)="
+                                                                validateAmount(
+                                                                    paytrans.amount,
+                                                                    0
+                                                                )
+                                                            "
+                                                            [disabled]="
+                                                                !isTaxRequired
+                                                            "
+                                                        />
+                                                        <label
+                                                            class="form-check-label"
+                                                            for="isVATonTotal1"
+                                                        >
+                                                            {{
+                                                                "Yes" | localize
+                                                            }}
+                                                        </label>
+                                                    </fieldset>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <fieldset [disabled]=hidetaxinput>
+
+                                                        <input
+                                                            class="form-check-input"
+                                                            type="radio"
+                                                            name="isVATonTotal"
+                                                            id="isVATonTotal2"
+                                                            [(ngModel)]="
+                                                                isVATonTotal
+                                                            "
+                                                            [value]="false"
+                                                            (ngModelChange)="
+                                                                handleChangeTax()
+                                                            "
+                                                            [disabled]="
+                                                                !isTaxRequired
+                                                            "
+                                                        />
+                                                        <label
+                                                            class="form-check-label"
+                                                            for="isVATonTotal2"
+                                                        >
+                                                            {{
+                                                                "No" | localize
+                                                            }}
+                                                        </label>
+                                                    </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div></div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="GroupName">{{
+                                                    "Vatable Amount" | localize
+                                                }}</label>
+                                                <fieldset [disabled]=hidetaxinput>
+
+
+                                                <p-inputNumber
+                                                    min="0"
+                                                    max="99999999999999"
+                                                    [disabled]="isVATonTotal"
+                                                    (change)="
+                                                        effectAmount(0, 1, 0)
+                                                    "
+                                                    [minFractionDigits]="2"
+                                                    [maxFractionDigits]="2"
+                                                    name="taxableAmount"
+                                                    [(ngModel)]="taxableAmount"
+                                                    (ngModelChange)="
+                                                        validateAmount(
+                                                            $event,
+                                                            1
+                                                        )
+                                                    "
+                                                    mode="decimal"
+                                                    maxlength="19"
+                                                >
+                                                </p-inputNumber>
+                                            </fieldset>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3 text-center">
+                                            <p><span>Upload Document</span></p>
+                                            <a
+                                                href="javascript:;"
+                                                (click)="fileDocument(attachId)"
+                                                title="Upload supporting documents"
+                                            >
+                                                <i  [ngStyle]="{'color': !uploadStatus ? 'red' : 'green'}" class="fa fa-upload"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="row align-items-center">
+                                        <div class="form-group col-md-3" >
+                                            <label for="GroupName">{{
+                                                "WHT Rate" | localize
+                                            }}</label>
+                                            <br />
+
+
+
+                                            <ng-select [disabled]=hidetaxinput
+                                                [(ngModel)]="whtid"
+                                                name="WHTDetails"
+                                                (change)="getWHTValue($event)"
+                                            >
+                                                <ng-option [value]="0"
+                                                    >No WHT</ng-option
+                                                >
+                                                <ng-option
+                                                    *ngFor="let item of WHTList"
+                                                    [value]="item.id"
+                                                >
+                                                    {{ item.description }} -
+                                                    {{ item.rate }}</ng-option
+                                                >
+                                            </ng-select>
+
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label>{{
+                                                "Is WHT on total amount?"
+                                                    | localize
+                                            }}</label>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <fieldset [disabled]=hidetaxinput>
+
+
+                                                        <input
+                                                            class="form-check-input"
+                                                            type="radio"
+                                                            name="flexRadioDefault"
+                                                            id="flexRadioDefault1"
+                                                            [(ngModel)]="
+                                                                isWHTonTotal
+                                                            "
+                                                            [value]="true"
+                                                            (ngModelChange)="
+                                                                resetAmount(2)
+                                                            "
+                                                            [disabled]="
+                                                                whtid == 0
+                                                            "
+                                                        />
+                                                        <label
+                                                            class="form-check-label"
+                                                            for="flexRadioDefault1"
+                                                        >
+                                                            {{
+                                                                "Yes" | localize
+                                                            }}
+                                                        </label>
+                                                    </fieldset>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <fieldset [disabled]=hidetaxinput>
+
+
+                                                        <input
+                                                            class="form-check-input"
+                                                            type="radio"
+                                                            name="flexRadioDefault"
+                                                            id="flexRadioDefault2"
+                                                            [(ngModel)]="
+                                                                isWHTonTotal
+                                                            "
+                                                            [value]="false"
+                                                            [disabled]="
+                                                                whtid == 0
+                                                            "
+                                                        />
+                                                        <label
+                                                            class="form-check-label"
+                                                            for="flexRadioDefault2"
+                                                        >
+                                                            {{
+                                                                "No" | localize
+                                                            }}
+                                                        </label>
+                                                    </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div></div>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="GroupName">{{
+                                                "Vatable Amount(WHT)" | localize
+                                            }}</label>
+                                            <fieldset [disabled]=hidetaxinput>
+
+
+                                            <p-inputNumber
+                                                min="0"
+                                                max="9999999999999"
+                                                [disabled]="isWHTonTotal"
+                                                [minFractionDigits]="2"
+                                                [maxFractionDigits]="2"
+                                                name="taxableAmountWHT"
+                                                [(ngModel)]="taxableAmountWHT"
+                                                (ngModelChange)="
+                                                    validateAmount($event, 2)
+                                                "
+                                                mode="decimal"
+                                                maxlength="19"
+                                            >
+                                            </p-inputNumber>
+                                        </fieldset>
+                                        </div>
+
+                                        <div class="form-group col-md-3">
+                                            <label>{{
+                                                "Who bears the WHT cost?"
+                                                    | localize
+                                            }}</label>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <input
+                                                            class="form-check-input"
+                                                            type="radio"
+                                                            name="whtpayee"
+                                                            id="whtpayee1"
+                                                            [(ngModel)]="
+                                                                isWHTonPayee
+                                                            "
+                                                            [value]="false"
+                                                            (ngModelChange)="
+                                                                CostBearer()
+                                                            "
+                                                            [disabled]="
+                                                                whtid == 0
+                                                            "
+                                                        />
+                                                        <label
+                                                            class="form-check-label"
+                                                            for="whtpayee1"
+                                                        >
+                                                            {{
+                                                                "Payer"
+                                                                    | localize
+                                                            }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-check">
+                                                        <input
+                                                            class="form-check-input"
+                                                            type="radio"
+                                                            name="whtpayee"
+                                                            id="whtpayee2"
+                                                            [(ngModel)]="
+                                                                isWHTonPayee
+                                                            "
+                                                            [value]="true"
+                                                            (ngModelChange)="
+                                                                CostBearer()
+                                                            "
+                                                            [disabled]="
+                                                                whtid == 0
+                                                            "
+                                                        />
+                                                        <label
+                                                            class="form-check-label"
+                                                            for="whtpayee2"
+                                                        >
+                                                            {{
+                                                                "Payee"
+                                                                    | localize
+                                                            }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-center">
+                                        <div
+                                            class="col-md-2 custom-control custom-checkbox form-group"
+                                        >
+                                            <label for="totalLine"
+                                                >Apply Prepayment?</label
+                                            >
+                                            <br />
+                                            <p-inputSwitch
+                                                [(ngModel)]="
+                                                    paytrans.applyPrepayments
+                                                "
+                                                (onChange)="
+                                                    handleChange($event)
+                                                "
+                                                name="applyPrepayments"
+                                            >
+                                            </p-inputSwitch>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div
+                                                class="form-group"
+                                                *ngIf="hidesla"
+                                            >
+                                                <label
+                                                    class="small mb-1"
+                                                    for="EndDate"
+                                                    >Select Date
+                                                    Range(Duration)</label
+                                                >
+                                                <br />
+                                                <input
+                                                    name="SampleDateRangePicker"
+                                                    type="text"
+                                                    class="form-control"
+                                                    id="SampleDateRangePicker"
+                                                    bsDaterangepicker
+                                                    dateRangePickerLuxonModifier
+                                                    [(date)]="sampleDateRange"
+                                                    [minDate]="
+                                                        mindatePrepayment
+                                                    "
+                                                    [maxDate]="
+                                                        maxdatePrepayment
+                                                    "
+                                                    [bsConfig]="{
+                                                        adaptivePosition: true
+                                                    }"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2" *ngIf="false">
+                                            <a
+                                                href="javascript:;"
+                                                (click)="
+                                                    add(
+                                                        attachId,
+                                                        paytrans.amount
+                                                    )
+                                                "
+                                                title="Add Tax"
+                                            >
+                                                <i class="fa fa-money-bill"></i>
+                                            </a>
+                                            <br />
+                                            <span>Add Tax</span>
+                                        </div>
+
+                                        <div
+                                            class="col-md-3 form-group text-center"
+                                        >
+                                            <label
+                                                class="font-weight-bolder text-primary h2 mb-1"
+                                            >
+                                                {{
+                                                    grossAmount
+                                                        | number: "1.2-2"
+                                                }}</label
+                                            >
+                                            <br />
+                                            <span style="font-weight: bold">
+                                                {{
+                                                    "Gross Amount" | localize
+                                                }}</span
+                                            >
+                                        </div>
+                                        <div
+                                            class="col-md-4 form-group text-center"
+                                        >
+                                            <label
+                                                class="font-weight-bolder text-danger h2 mb-1"
+                                            >
+                                                {{
+                                                    payableAmount
+                                                        | number: "1.2-2"
+                                                }}</label
+                                            >
+                                            <br />
+                                            <span style="font-weight: bold">
+                                                {{
+                                                    "Amount Payable" | localize
+                                                }}</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-center">
+                                        <div class="mt-5 col-md-3">
+                                            <div *ngIf="!viewBankDetails">
+                                                {{
+                                                    "Beneficiary Bank Details"
+                                                        | localize
+                                                }}
+                                                <div class="form-group">
+                                                    <ng-select
+                                                        [(ngModel)]="
+                                                            benBankDetailId
+                                                        "
+                                                        name="benBankDetail"
+                                                        [disabled]="benDisabled"
+                                                    >
+                                                        <ng-option
+                                                            *ngFor="
+                                                                let item of benBankDetailList
+                                                            "
+                                                            [value]="item.id"
+                                                        >
+                                                            {{
+                                                                item.beneficiaryName
+                                                            }}
+                                                            -
+                                                            {{
+                                                                item.bankName
+                                                            }}
+                                                            -
+                                                            {{
+                                                                item.beneficiaryAccountNumber
+                                                            }}</ng-option
+                                                        >
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-5 col-md-2 text-center">
+                                            <p><span>Split Cost</span></p>
+                                            <a
+                                                href="javascript:;"
+                                                (click)="
+                                                    addsplitcost(
+                                                        attachId,
+                                                        paytrans.amount,
+                                                        paytrans.transactionTypeId,
+                                                        paytrans.requestDate
+                                                    )
+                                                "
+                                                title="Share cost across MIS"
+                                            >
+                                                <i class="fa fa-share-alt"></i>
+                                            </a>
+                                        </div>
+                                        <div class="mt-5 col-md-3 text-right">
+                                            <div
+                                                class="form-group"
+                                                *ngIf="currencyRate !== 1"
+                                                style="
+                                                    box-shadow: 0 0 10px #ccc;
+                                                    padding: 4px;
+                                                    border-radius: 10px;
+                                                    color: red;
+                                                    font-weight: 700;
+                                                    padding-right: 20px;
+                                                    padding-top: 4px;
+                                                "
+                                            >
+                                                {{
+                                                    "Local Currency Value"
+                                                        | localize
+                                                }}
+                                                <br />
+                                                <label
+                                                    class="font-weight-bolder"
+                                                    style="color: red"
+                                                >
+                                                    {{
+                                                        payableAmountConverted
+                                                            | number: "1.2-2"
+                                                    }}</label
+                                                >
+                                            </div>
+                                            <div class="form-group"></div>
+                                        </div>
+                                        <div class="mt-5 col-md-4 text-right">
+                                           
+
+                                            <app-erms-button     type="save"
+                                  
+                                            [buttonBusy]="saving"
+
+                                            [busyText]="l('SavingWithThreeDot')" title="Initiate Request" >
+                                            <i class="fa fa-save"></i>
+                                            </app-erms-button>
+                                        
+
+                                            <!-- <div class="form-group">
+                                                <app-erms-button
+                                                    [title]="
+                                                        'Initiate Request'
+                                                            | localize
+                                                    "
+                                                    [disabled]="
+                                                        !paytransForm.form.valid
+                                                    "
+                                                    type="save"
+                                                    action="submit"
+                                                >
+                                                </app-erms-button>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </form>
+                            </tab>
+                            <tab heading="Opex Pending Task Awaiting Approval">
+                                <br />
+                                <div class="row align-items-center">
+                                    <!--<Primeng-TurboTable-Start>-->
+                                    <div
+                                        class="primeng-datatable-container"
+                                        [busyIf]="primengTableHelper.isLoading"
+                                    >
+                                        <p-table
+                                            #dataTable
+                                            [value]="primengTableHelper.records"
+                                            rows="{{
+                                                primengTableHelper.defaultRecordsCountPerPage
+                                            }}"
+                                            [paginator]="true"
+                                            [rows]="10"
+                                            [rowsPerPageOptions]="[
+                                                5,
+                                                10,
+                                                15,
+                                                20
+                                            ]"
+                                            [lazy]="false"
+                                            [rowHover]="true"
+                                            sortMode="multiple"
+                                            [scrollable]="true"
+                                            scrollWidth="100%"
+                                            scrollHeight="400px"
+                                            [responsive]="
+                                                primengTableHelper.isResponsive
+                                            "
+                                            [resizableColumns]="
+                                                primengTableHelper.resizableColumns
+                                            "
+                                        >
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th style="width: 100px">
+                                                        {{
+                                                            "Actions" | localize
+                                                        }}
+                                                    </th>
+
+                                                    <th style="width: 150px">
+                                                        {{
+                                                            "Transaction Type"
+                                                                | localize
+                                                        }}
+                                                    </th>
+                                                    <th style="width: 100px">
+                                                        {{
+                                                            "Amount" | localize
+                                                        }}
+                                                    </th>
+                                                    <th style="width: 100px">
+                                                        {{
+                                                            "Invoice Number"
+                                                                | localize
+                                                        }}
+                                                    </th>
+                                                    <th style="width: 100px">
+                                                        {{
+                                                            "Invoice Date"
+                                                                | localize
+                                                        }}
+                                                    </th>
+                                                    <th style="width: 100px">
+                                                        {{
+                                                            "Status" | localize
+                                                        }}
+                                                    </th>
+                                                    <th style="width: 200px">
+                                                        {{
+                                                            "Narration"
+                                                                | localize
+                                                        }}
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template
+                                                pTemplate="body"
+                                                let-record="$implicit"
+                                            >
+                                                <tr>
+                                                    <td style="width: 150px">
+                                                        <div
+                                                            class="btn-group dropdown"
+                                                            dropdown
+                                                            container="body"
+                                                        >
+                                                            <!-- <button dropdownToggle
+                                                            class="dropdown-toggle btn btn-sm btn-primary">
+
+                                                            <span class="caret"></span>
+                                                            {{"Actions" | localize}}
+                                                        </button> -->
+                                                            <app-erms-button
+                                                                dropdownToggle
+                                                                title="Actions"
+                                                                style="
+                                                                    padding-right: 10px;
+                                                                    padding-left: 10px;
+                                                                "
+                                                                type="dropdown"
+                                                            ></app-erms-button>
+                                                            <ul
+                                                                class="dropdown-menu"
+                                                                *dropdownMenu
+                                                            >
+                                                                <li>
+                                                                    <a
+                                                                        href="javascript:;"
+                                                                        (click)="
+                                                                            showEditModal(
+                                                                                record
+                                                                            )
+                                                                        "
+                                                                        >{{
+                                                                            "Edit"
+                                                                                | localize
+                                                                        }}</a
+                                                                    >
+                                                                </li>
+                                                                <li>
+                                                                    <a
+                                                                        href="javascript:;"
+                                                                        (click)="
+                                                                            delete(
+                                                                                record
+                                                                            )
+                                                                        "
+                                                                        >{{
+                                                                            "Delete"
+                                                                                | localize
+                                                                        }}</a
+                                                                    >
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+
+                                                    <td style="width: 150px">
+                                                        <span
+                                                            class="ui-column-title"
+                                                        >
+                                                            {{
+                                                                "TransactionType"
+                                                                    | localize
+                                                            }}</span
+                                                        >
+                                                        {{
+                                                            record.transactionDescription
+                                                        }}
+                                                    </td>
+                                                    <td style="width: 100px">
+                                                        <span
+                                                            class="ui-column-title"
+                                                        >
+                                                            {{
+                                                                "Amount"
+                                                                    | localize
+                                                            }}</span
+                                                        >
+                                                        {{
+                                                            record.amount
+                                                                | number
+                                                                    : "1.2-5"
+                                                        }}
+                                                    </td>
+                                                    <td style="width: 100px">
+                                                        <span
+                                                            class="ui-column-title"
+                                                        >
+                                                            {{
+                                                                "Invoice Number"
+                                                                    | localize
+                                                            }}</span
+                                                        >
+                                                        {{
+                                                            record.invoiceNumber
+                                                        }}
+                                                    </td>
+                                                    <td style="width: 100px">
+                                                        <span
+                                                            class="ui-column-title"
+                                                        >
+                                                            {{
+                                                                "Invoice Date"
+                                                                    | localize
+                                                            }}</span
+                                                        >
+                                                        {{
+                                                            record.invoiceDate
+                                                                | date
+                                                                    : "mediumDate"
+                                                        }}
+                                                    </td>
+                                                    <td style="width: 100px">
+                                                        <span
+                                                            class="ui-column-title"
+                                                        >
+                                                            {{
+                                                                "Narration"
+                                                                    | localize
+                                                            }}</span
+                                                        >
+                                                        {{
+                                                            record.transactionStatus
+                                                        }}
+                                                    </td>
+                                                    <td style="width: 200px">
+                                                        <span
+                                                            class="ui-column-title"
+                                                        >
+                                                            {{
+                                                                "Narration"
+                                                                    | localize
+                                                            }}</span
+                                                        >
+                                                        {{ record.narration }}
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+                                    <!--<Primeng-TurboTable-End>-->
+                                </div>
+                            </tab>
+                        </tabset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<taxTransactionModal #taxTransactionModal></taxTransactionModal>
+
+<splitCostModal #splitCostModal></splitCostModal>
+<opexWorkflowRouteModal #opexWorkflowRouteModal></opexWorkflowRouteModal>
+<opexAccrualModal #opexAccrualModal></opexAccrualModal>
+<multipleBeneficiaryModal
+    #multipleBeneficiaryModal
+    (getTotalAmount)="getMultipleBeneficiaryTotalAmount($event)"
+>
+</multipleBeneficiaryModal>
+
+<appfileupload #fileUpload></appfileupload>
+
+<opexPendingTaskTab
+    #opexPendingTaskTab
+    (modalSave)="loadPendingTransaction()"
+></opexPendingTaskTab>
+
+<createVendorOpexModal
+    #createVendorOpexModal
+    (getAllVendorList)="getAllVendorList()"
+    (getVendorNumberItem)="getVendorNumberItem($event)"
+></createVendorOpexModal>

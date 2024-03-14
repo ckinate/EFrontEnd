@@ -1,0 +1,387 @@
+<div [@routerTransition]>
+
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Cash Retirement Payment' | localize" >
+
+        </sub-header>
+
+    <div [class]="containerClass" [busyIf]="primengTableHelper.isLoading">
+        <div class="card card-custom">
+            <div class="card-body" [busyIf]="saving">
+
+                            <div class="col-md-12">
+                                <div class="row  mb-2">
+                                    <div class="col-md-3 " >
+                                        <div class="card"  >
+                                            <div class="form-group m-form__group align-items-center">
+                                                <div class="input-group " >
+                                                    <input   name="filterText" autoFocus [(ngModel)]="filterText"
+                                                        class="form-control m-input " [placeholder]="l('SearchWithThreeDot')"
+                                                        type="text"
+
+                                                        (ngModelChange)="filterText=ReloadpaymentGridView($event)"
+                                                        >
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9 " >
+                                        <div class="row ">
+                                            <div class="col-md-6 text-center display-4 text-bold">
+                                                {{refNo}}
+                                            </div>
+
+                                                <div class="col-md-6 text-center display-4 text-bold">{{paymentOptionNarration}}</div>
+
+
+
+                                        </div>
+                                    </div>
+
+                                <div class="col-md-3 list-group pl">
+
+                                    <div class="card" >
+                                        <!-- <div class="card-header">List of Requests</div> -->
+                                        <!-- <div class="form-group m-form__group align-items-center">
+                                            <div class="input-group sticky" >
+                                                <input   name="filterText" autoFocus [(ngModel)]="filterText"
+                                                    class="form-control m-input sticky" [placeholder]="l('SearchWithThreeDot')"
+                                                    type="text"
+
+                                                    (ngModelChange)="filterText=ReloadpaymentGridView($event)"
+                                                    >
+
+                                            </div>
+                                        </div> -->
+
+                                        <div class="list-group" style="height: 300px;">
+                                            <a href="javascript:void(0);"
+                                                class="list-group-item list-group-item-action flex-column align-items-start"
+                                                (click)="getcarpaymentGridView(item.payeeName,item.requestNumber)"
+                                                *ngFor="let item of paymentTransactionUsers; let i=index">
+
+
+
+
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">{{item.requestNumber}}</h5>
+
+                                            </div>
+
+                                            <p class="mb-1 d-flex w-100 justify-content-between">{{item.payeeName}}</p>
+                                            </a>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                    <div class="col-md-9">
+
+
+                                        <hr/>
+
+                                        <form #carpaymentForm="ngForm"  >
+                                            <div class="row align-items-center mb-2">
+
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="SampleDatePicker">{{"Date" | localize}}</label>
+
+                                                                <div class="input-group">
+                                                                    <input id="SampleDatePicker1" [(ngModel)]="startdate"
+                                                                        type="text" required name="SampleDatePicker1" placeholder="Select Date"
+                                                                        class="form-control rounded" bsDatepicker #ed="bsDatepicker"
+                                                                        datePickerMomentModifier [(date)]="startdate"
+                                                                        [minDate]="mindate"
+                                                                        [bsConfig]="{ adaptivePosition: true }" />
+                                                                    <div class="input-group-append">
+                                                                        <button class="input-group-append btn btn-outline-secondary"
+                                                                            (click)="ed.toggle()" type="button">
+                                                                            <i class="fa fa-calendar"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label class="small mb-1" for="inputFirstName">Payment Mode</label>
+
+
+                                                                <ng-select  [(ngModel)]="carpayment.pModeId" name="paymentmode" required >
+                                                                    <ng-option *ngFor="let itemxx of paymentmode"  [value]="itemxx.id"> {{itemxx.description}}</ng-option>
+                                                                </ng-select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label class="small mb-1" for="inputFirstName">Currency</label>
+
+                                                                <ng-select   [(ngModel)]="carpayment.currency" name="currencyCodeId" (change)="getCurrencyId()" required >
+                                                                    <ng-option *ngFor="let itemvalue of currency" [value]="itemvalue.currencyCode">
+                                                                        {{itemvalue.currencyCode}}</ng-option>
+                                                                </ng-select>
+
+                                                            </div>
+                                                        </div>  -->
+
+
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label class="mb-1" for="inputFirstName">Credit Cash Advance GL</label>
+                                                                <ng-select  [disabled]="amtadvanced>0" [(ngModel)]="CashAdvanceGL" name="creditGL" required>
+                                                                    <ng-option *ngFor="let itemdet of cashAdvanceList"  [value]="itemdet.accountCode">
+                                                                        {{itemdet.accountName}}- {{itemdet.accountCode}}</ng-option>
+                                                                </ng-select>
+
+                                                            </div>
+                                                        </div>
+                                                    <div class="col-md-4" >
+                                                        <div class="form-group">
+                                                            <label class="mb-1" for="inputFirstName">Credit/Debit Cash and Bank</label>
+
+
+                                                            <ng-select   [disabled]="amtadvanced==amtretired||isCardTransaction"  [(ngModel)]="CashAndBankGL" name="debitGL" required (change)="checkCreditGLSelected()" >
+                                                                <ng-option  *ngFor="let itemchar of defchartOfAcct"  [value]="itemchar.accountCode">
+                                                                    {{itemchar.accountName}}- {{itemchar.accountCode}}</ng-option>
+                                                            </ng-select>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="row form-group col-md-12">
+
+                                                        <div class="col-md-3">
+                                                            {{'Amount Advanced' | localize}} <br/>{{amtadvanced | number:'1.2-2'}}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            {{'Amount Retired' | localize}}<br/>{{amtretired | number:'1.2-2'}}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            {{'Refund Staff' | localize}}<br/>{{samount | number:'1.2-2'}}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            {{'Refund Company' | localize}}<br/>{{camount | number:'1.2-2'}}
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="small mb-1" for="inputFirstName">Currency</label>
+                                                            <ng-select [(ngModel)]="carpayment.currency" name="currencyCodeId" required
+                                                                class=" rounded" disabled placeholder="Currency">
+                                                                <ng-option *ngFor="let itemvalue of currency"
+                                                                    [value]="itemvalue.currencyCode" required>
+                                                                    {{itemvalue.currencyCode}}</ng-option>
+                                                            </ng-select>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exchangeRate">{{"Rate" | localize}}</label>
+                                                            <input type="number" name="exchangeRate" placeholder="Rate"
+                                                                [disabled]="!editExchangeRate" class="form-control"
+                                                                 pattern="[a-zA-Z0-9 ]*"
+                                                                [(ngModel)]="currencyRate" min="0"
+                                                                (ngModelChange)="exchangeRateValue()">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exchangeRate">{{"Amount" | localize}}</label>
+                                                            <br/>
+                                                            {{ totalValue | number:'1.2-5'}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group text-center">
+                                                            <label class="small mb-1">Beneficiaries</label>
+                                                            <br/>
+                                                            <a href="javascript:;"  title="view beneficiary" (click)="viewBeneficiary()" >
+                                                                <i class="fas fa-info"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+
+
+                                            </div>
+                                        </form>
+                                        <div class="row align-items-center">
+                                            <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+                                                <table class="table table-hover table-light" >
+                                                    <thead>
+                                                        <tr class="uppercase">
+
+                                                            <!-- <th >
+                                                            Ref
+                                                        </th> -->
+                                                        <th >
+                                                            Account to Debit
+                                                        </th>
+                                                        <th >
+                                                            Amount
+                                                        </th>
+
+
+                                                        <th>Narration</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tr *ngFor="let m of records; let i = index">
+
+                                                        <td>
+                                                            {{m.transactionType }}
+                                                        </td>
+                                                        <td>
+                                                            {{m.amount| number:'1.2-5'}}
+                                                        </td>
+
+                                                        <td>
+                                                            {{m.narration }}
+
+
+                                                        </td>
+
+                                                        <td style="width: 20px">
+                                                            <a href="javascript:;" title="View supporting documents"  (click)="showDocument(m.refNo,21)">
+                                                                <i class="fa fa-download"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td style="width: 20px">
+
+
+                                                            <a href="javascript:;" title="View beneficiaries"  (click)="add(m.id)">
+                                                                <i class="fa fa-share-alt"></i>
+                                                            </a>
+                                                        </td>
+
+                                                    </tr>
+
+
+                                                </table>
+
+
+
+                                            </div>
+
+                                        <!--<Primeng-TurboTable-End>-->
+
+
+                                    </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+
+
+
+                            <div class="row form-group">
+                                <div class="col-md-4">
+                                    <label>{{'Ledger Remarks' | localize}}</label>
+                                    <textarea class="form-control rounded" required [(ngModel)]="carpayment.ledgerRemark"
+                                    name="remark" pattern="[a-zA-Z0-9 ]*" placeholder="{{'Remarks' | localize}}"
+                                    (change)="getAdvancePostingDetails(carpayment.grossAmt)" ></textarea>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>{{'Beneficiary Remarks' | localize}}</label>
+                                    <textarea class="form-control rounded" required pattern="[a-zA-Z0-9 ]*" [(ngModel)]="BenRemark"
+                                    name="remark" placeholder="{{'Remarks' | localize}}" > </textarea>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>{{'Approval Remarks' | localize}}</label>
+                                    <textarea class="form-control rounded" required [(ngModel)]="carpayment.remark"
+                                    name="remark" pattern="[a-zA-Z0-9 ]*" placeholder="{{'Remarks' | localize}}" > </textarea>
+                                </div>
+
+
+                            </div>
+                            <ng-template #template>
+                                <div class="modal-header">
+                                    <h4 class="modal-title pull-left">Reason for Decline</h4>
+                                    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                                       <span aria-hidden="true">×</span>
+                                    </button>
+                                 </div>
+                                 <div class="modal-body">
+                                        <div class="col-md-12">
+                                            <textarea class="form-control rounded"
+                                                name="reqNarration"
+                                                pattern="[a-zA-Z0-9 ]*"
+                                                [(ngModel)]="DeclineComment"
+                                                placeholder="{{'Comments' | localize}}"> </textarea>
+                                        </div>
+
+                                 </div>
+                                 <div class="modal-footer">
+                                    <div class="col-md-12 text-right">
+                                            <button
+                                                type="submit"
+                                                [disabled]="DeclineComment==null"
+                                                flex="15"
+                                                class="btn btn-primary"
+                                                (click)="deleterequest()"
+                                            >
+                                                {{ "Continue" | localize }}
+                                            </button>
+                                    </div>
+                                 </div>
+                            </ng-template>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" (click)="createquery()" [buttonBusy]="saving"
+                                [disabled]="refNo==null"
+                                [busyText]="l('SavingWithThreeDot')" title="Query">
+                                <span><i class="fas fa-comments"></i>{{"Query" | localize}}</span></button>
+
+                                <button  type="submit" class="btn btn-decline" (click)="openModal(template)" [buttonBusy]="saving"
+                                [disabled]="refNo==null"
+                                [busyText]="l('SavingWithThreeDot')" title="Decline"><i class="fa fa-save"></i>
+                                <span>{{ "Decline" | localize }}</span></button>
+                                <button type="submit" class="btn btn-primary"
+                                     (click)="preview()" [buttonBusy]="saving" title="Preview entries" [disabled]="CashAdvanceGL==null" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i>
+                                     <span>{{"Preview Entries" | localize}}</span></button>
+                                <button type="submit" class="btn btn-primary" [disabled]="!carpaymentForm.form.valid || (amtadvanced!=amtretired && CashAndBankGL=='NA'&& !isCardTransaction)" (click)="save(carpaymentForm);"
+                                    [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i>
+                                    <span>{{"Initiate Payment" | localize}}</span></button>
+
+                                    <app-erms-button   type="submit" class="btn btn-primary" [disabled]="!carpaymentForm.form.valid || (amtadvanced!=amtretired && CashAndBankGL=='NA'&& !isCardTransaction)" (click)="save(carpaymentForm);"
+                                    [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')" title="Initiate Payment" >
+                                    </app-erms-button>
+
+
+
+                            </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<postdetails #postdetails ></postdetails>
+<caSplitCostViewModal #caSplitCostViewModal></caSplitCostViewModal>
+<viewbeneficiarytransactionaccounts #viewbeneficiary></viewbeneficiarytransactionaccounts>
+<Opexquerymodal #opexquerymodal></Opexquerymodal>
+<appfileupload #fileUpload></appfileupload>
+
+
+
+
+
+
+

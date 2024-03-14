@@ -1,0 +1,1039 @@
+<script>
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+ </script>
+<div [@routerTransition]>
+
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="ViewType">
+            <div role="actions">
+                <button type="button" class="btn btn-success" (click)="ExportTOExcel()">
+                    <i class="far fa-file-excel"></i>
+                    {{ "ExportToExcel" | localize }}
+                </button>
+            </div>
+        </sub-header>
+        <div [class]="containerClass " [busyIf]="primengTableHelper.isLoading">
+            <div class="card card-custom">
+                <div class="card-body" [busyIf]="isDataLoading">
+
+                    <div class="primeng-datatable-container" [busyIf]="primengTableHelperPayment.isLoading">
+
+                        <div class="row">
+                            <!--  <div *ngFor="let m of listofStatus; let i = index"> -->
+                            <div class="col" data-toggle="tooltip" data-placement="top"  title="Active" *ngIf="isUser">
+
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light">
+                                   
+                                    <div class="card-body text-center p-0">
+                                       
+                                        
+                                        <i class="fa fa-laptop fa-sm" ></i>
+                                        <p class="card-text">{{CAAwaitingApprovalCounter}}</p> 
+                                    </div>
+                                </div>
+          
+
+
+                              </div> 
+                            <div class="col"  data-toggle="tooltip" data-placement="top" (click)="filterGridData('Finance Approval')" title="Finance Approval" >
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light">
+
+                                    <div class="card-body text-center p-0">
+                                        <!-- <h6 class="card-subtitle mb-2 text-muted"> -->
+                                        <i class="fa fa-hand-holding-usd fa-sm" ></i>
+                                        <p class="card-text">{{FApprovalCounter}}</p> 
+
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <!-- <div class="col" data-toggle="tooltip" data-placement="top" title="Finance Approval Checker">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light">
+
+                                    <div class="card-body text-center p-0">
+                                        <i class="fa fa-calculator fa-sm" ></i>
+                                      
+                                        <p class="card-text">{{FACheckerCounter}}</p> 
+
+
+                                    </div>
+                                </div>
+
+
+                            </div> -->
+                           
+                            <!-- <div class="col" data-toggle="tooltip" data-placement="top" title="Pending Retirement"  (click)="filterGridData('Pending Retirement')" >
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light">
+
+                                    <div class="card-body text-center p-0">
+                                         <i class="fa fa-coins fa-sm" ></i>
+                                      
+                                        <p class="card-text">{{pendingRetirementCounter}}</p> 
+
+
+                                    </div>
+                                </div>
+
+
+                            </div> -->
+                            <div class="col" data-toggle="tooltip" data-placement="top"  title="Paid">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light">
+
+                                    <div class="card-body text-center p-0">
+                                        <i
+                                                class="fa fa-money-check-alt fa-sm"></i>
+                                                <p class="card-text">{{ARApprovalCounter}}</p> 
+
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col" data-toggle="tooltip" data-placement="top" (click)="filterGridData('Finance Retirement Approval')" title="Finance Retirement Approval">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light">
+
+                                    <div class="card-body text-center p-0">
+                                        <i class="fa fa-check-square fa-sm" ></i>
+                                                <p class="card-text">{{FRApprovalCounter}}</p> 
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col" data-toggle="tooltip" data-placement="top" (click)="filterGridData('Finance Retirement Approval Checker')" title="Finance Retirement Approval Checker" >
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light">
+
+                                    <div class="card-body text-center p-0">
+                                        <i class="fa fa-folder fa-sm" ></i>
+                                                <p class="card-text">{{FRACheckerCounter }}</p> 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col "   data-toggle="tooltip" data-placement="top" (click)="filterGridData('Retired')" title="Retired">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light  " >
+
+                                    <div class="card-body text-center p-0">
+                                        <i class="fa fa-file fa-sm" ></i>
+                                                <p class="card-text">{{RetiredCounter}}</p> 
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                       
+                        <div class="row mt-1 " >
+
+                            
+                            <div class="col " data-toggle="tooltip" data-placement="top" (click)="filterGridData('Payment - Bank')" title="Payment - Bank">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light" >
+
+                                    <div class="card-body text-center p-0">
+                                        <i class="fa fa-credit-card fa-sm" ></i>
+                                                <p class="card-text">{{PBankCounter}}</p> 
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col " data-toggle="tooltip" data-placement="top" (click)="filterGridData('Tanked')" title="{{tankedTitle}}">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light" >
+
+                                    <div class="card-body text-center p-0 ">
+                                        <i class="fab fa-buffer fa-sm" ></i>
+                                                <p class="card-text">{{tankedCounter}}</p> 
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col " data-toggle="tooltip" data-placement="top" (click)="filterGridData('Failed')" title="Failed">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light" >
+
+                                    <div class="card-body text-center p-0">
+                                      
+                                        <i class="fa fa-exclamation-triangle fa-sm" ></i>
+                                                <p class="card-text">{{failedCounter}}</p> 
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col " data-toggle="tooltip" data-placement="top" (click)="filterGridData('Truncated')" title="Truncated">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light" >
+
+                                    <div class="card-body text-center p-0">
+                                        <i class="fas fa-archive fa-sm"  title="Truncated"></i>
+                                                <p class="card-text">{{truncatedCounter}}</p> 
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col " data-toggle="tooltip" data-placement="top" (click)="filterGridData('Declined')" title="Declined">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light" >
+
+                                    <div class="card-body text-center p-0">
+                                        <i class="fas fa-calendar-times fa-sm" ></i>
+                                                <p class="card-text">{{declinedCounter}}</p> 
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col " data-toggle="tooltip" data-placement="top" title="Total">
+                                <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light" >
+
+                                    <div class="card-body text-center p-0">
+                                        <i class="fa fa-calculator fa-sm" ></i>
+                                                <p class="card-text">{{totalCount}}</p> 
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <!-- </div> -->
+                        </div>
+
+
+                        <br>
+                        <div class="row align-items-center mb-4">
+
+                            <div class="col-md-4">
+
+                                <label for="SampleDateRangePicker">Select Date Range</label>
+
+                                <div class="input-group">
+                                    <input class="form-control" type="text" id="sampleDateTimePicker"
+                                        name="sampleDateTimePicker" #drp="bsDaterangepicker" readonly="readonly"
+                                        bsDaterangepicker dateRangePickerLuxonModifier [(date)]="dateRange" />
+                                    <div class="input-group-append">
+                                        <button class="input-group-append btn btn-outline-secondary"
+                                            (click)="drp.toggle()" type="button">
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <label for="SampleDateRangePicker">Search</label>
+
+                                <div class="input-group">
+                                    <input id="searchBox" type="text" name="searchBox" class="form-control"
+                                        [(ngModel)]="searchBox" />
+                                    <div class="input-group-append">
+                                        <button (click)="getData()" class="input-group-append btn btn-primary"
+                                            type="submit">
+                                            <i class="flaticon-search-1" [attr.aria-label]="l('Search')"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <p-table #dataTablePayment [value]="primengTableHelperPayment.records" rows="{{
+                                primengTableHelperPayment.defaultRecordsCountPerPage
+                            }}" [paginator]="false" [lazy]="true" scrollable="true" ScrollWidth="100%"
+                            responsive="primengTableHelperPayment.isResponsive"
+                            resizableColumns="primengTableHelperPayment.resizableColumns" [rowHover]="true"
+                            sortMode="multiple" (onLazyLoad)="getLogs($event)" id="excel-table">
+
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 40px">
+
+                                    </th>
+
+                                    <th style="width: 70px" pSortableColumn="requestDate">
+                                        {{ l("Req. Date") }}
+                                        <p-sortIcon field="requestDate"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 70px" pSortableColumn="approvedDate">
+                                        {{ l("Mod. Date") }}
+                                        <p-sortIcon field="approvedDate"></p-sortIcon>
+                                    </th>
+
+                                    <th style="width: 70px" pSortableColumn="operationName">
+                                        {{ l("Payment Type") }}
+                                        <p-sortIcon field="operationName"></p-sortIcon>
+                                    </th>
+
+                                    <th style="width: 70px" pSortableColumn="refNo">
+                                        {{ l("Ref No.") }}
+                                        <p-sortIcon field="refNo"></p-sortIcon>
+                                    </th>
+
+                                    <th style="width: 150px" pSortableColumn="narration">
+                                        {{ l("Narration") }}
+                                        <p-sortIcon field="narration"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 70px" pSortableColumn="payeeName">
+                                        {{ l("Payee") }}
+                                        <p-sortIcon field="payeeName"></p-sortIcon>
+                                    </th>
+
+                                    <th style="width: 50px" pSortableColumn="amount">
+                                        {{ l("Amount") }}
+                                        <p-sortIcon field="amount"></p-sortIcon>
+                                    </th>
+
+                                    <th style="width: 50px" pSortableColumn="madeBy">
+                                        {{ l("Initiator") }}
+                                        <p-sortIcon field="madeBy"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 50px" pSortableColumn="transactionStatus">
+                                        {{ l("Status") }}
+                                        <p-sortIcon field="transactionStatus"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 20px" pSortableColumn="">
+
+                                    </th>
+                                    <!-- <th style="width: 10px" pSortableColumn="">
+
+                                    </th>
+                                    <th style="width: 10px" pSortableColumn="">
+
+                                    </th> -->
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+                                    <td style="width: 40px">
+                                        <div class="btn-group dropdown" dropdown container="body">
+                                            <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                                                <i class="fa fa-cog"></i><span class="caret"></span>
+                                                <!-- {{ "Actions" | localize }} -->
+                                            </button>
+                                            <ul class="dropdown-menu" *dropdownMenu>
+                                                <li>
+                                                    <a href="javascript:;" title="Transaction Details"
+                                                        (click)="ViewDetails(record.paymentRef, record.operationID, record.isDeclinedCompleted)">
+
+                                                        {{"Details"}}
+                                                    </a>
+                                                </li>
+                                                <div *ngIf="!isUser">
+
+                                                    <div *ngIf="record.initiatorUserName!= currentusername">
+                                                        <li
+                                                            *ngIf="record.transactionStatusId==11 && 'Pages.OperatingExpense.TankedTxns.Retry'| permission">
+                                                            <a href="javascript:;"
+                                                                (click)="approveTransaction(record.paymentRef)"
+                                                                title="Retry Posting to Bank">
+
+                                                                {{"Retry"}}
+                                                            </a>
+                                                        </li>
+
+                                                        <li
+                                                            *ngIf="(record.transactionStatusId==10||record.transactionStatusId==11) && 'Pages.OperatingExpense.TankedTxns.PostToFinance'| permission">
+                                                            <a href="javascript:;"
+                                                                (click)="PostToFinance(record.paymentRef)"
+                                                                title="Retry Posting to GL">
+
+                                                                {{"Post To Finance"}}
+                                                            </a>
+                                                        </li>
+
+                                                        <li
+                                                            *ngIf="(record.transactionStatusId==10||record.transactionStatusId==11) && 'Pages.OperatingExpense.TankedTxns.ProcessManually'| permission">
+                                                            <a href="javascript:;"
+                                                                (click)="processManual(record.paymentRef)"
+                                                                title="Post transaction outside of the system">
+
+                                                                {{"Treated"}}
+                                                            </a>
+                                                        </li>
+
+
+                                                        <li
+                                                            *ngIf="record.transactionStatusId==9 && 'Pages.OperatingExpense.TankedTxns.Retrigger'| permission">
+                                                            <a href="javascript:;"
+                                                                (click)="RetriggerTransaction(record.paymentRef)"
+                                                                title="Re-trigger">
+
+                                                                {{"Retrigger"}}
+                                                            </a>
+                                                        </li>
+
+                                                        <li
+                                                            *ngIf="(record.transactionStatusId==11||record.transactionStatusId==10) && 'Pages.OperatingExpense.TankedTxns.Truncate'| permission">
+                                                            <a href="javascript:;"
+                                                                (click)="viewDelineModal(record.paymentRef)"
+                                                                title="Decline transaction">
+
+                                                                {{"Truncate"}}
+                                                            </a>
+                                                        </li>
+                                                    </div>
+
+                                                </div>
+                                                <li>
+                                                    <a href="javascript:;" title="View Attachment"
+                                                        (click)="viewAttachments(record.refNo,record.operationID,record.isDeclinedCompleted)">
+
+                                                        {{"Attachments"}}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:;" title="View Enquiry"
+                                                        (click)="viewQuery(record.refNo, record.operationID)">
+
+                                                        {{"View Enquiry"}}
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="javascript:;" title="View Transaction History"
+                                                        (click)="ViewApproval(record.refNo)">
+
+                                                        {{"Txns. History"}}
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td style="width: 70px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{ record.requestDate | luxonFormat: "F" }}
+                                    </td>
+                                    <td style="width: 70px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{ record.approvedDate | luxonFormat: "F" }}
+                                    </td>
+                                    <td style="width: 70px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{ record.operationName }}
+                                    </td>
+
+                                    <td style="width: 70px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{
+                                        record.refNo
+
+                                        }}
+                                    </td>
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{ record.narration }}
+                                    </td>
+                                    <td style="width: 70px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{ record.payeeName }}
+                                    </td>
+                                    <td style="width: 50px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{ record.amount | number:'1.2-5' }}
+                                    </td>
+                                    <td style="width: 50px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        {{ record.madeBy}}
+                                    </td>
+                                    <td style="width: 50px">
+                                        <span class="ui-column-title">
+                                        </span>
+                                        <div *ngIf="!record.isDeclinedCompleted">
+
+                                            <div
+                                                *ngIf="!isUser&&record.transactionStatusId!=11&&record.transactionStatusId!=10">
+                                                {{ record.transactionStatus}}
+                                            </div>
+
+
+                                            <div
+                                                *ngIf="!isUser&&(record.transactionStatusId==11||record.transactionStatusId==10)">
+                                                <a href="javascript:;" title="View Details"
+                                                    (click)="ViewError(record.paymentRef, record.operationID)">
+                                                    {{ record.transactionStatus}} <i class="fa fa-info"></i>
+                                                </a>
+
+                                            </div>
+
+                                            <div *ngIf="isUser">
+
+                                                <div *ngIf="record.transactionStatus=='Tanked'">
+                                                    {{"Awaiting Retirement"}}
+                                                </div>
+                                                <div *ngIf="record.transactionStatus !='Tanked'">
+                                                    {{ record.transactionStatus}}
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                        <div *ngIf="record.isDeclinedCompleted">
+
+                                            {{ record.transactionStatus}}
+
+
+                                        </div>
+
+
+                                    </td>
+
+                                    <td style="width: 10px">
+                                        <div class="row">
+                                            <div *ngIf="record.isEverDeclined" class="col">
+                                                <a href="javascript:;" title="View Justification for decline"
+                                                    (click)="ViewDeclineMessages(record.refNo, record.operationID, record.paymentRef)">
+                                                    <i class="fa fa-ban"></i>
+                                                </a>
+                                            </div>
+                                            <div *ngIf="!record.isDeclinedCompleted && !isUser" class="col">
+                                                <a href="javascript:;" title="View Beneficiary(ies)"
+                                                    (click)="viewBeneficiary(record.paymentRef, record.operationID)">
+                                                    <i class="fa fa-users"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+
+                                    </td>
+                                    <!-- <td style="width: 10px">
+                                        -->
+
+                                </tr>
+                            </ng-template>
+                        </p-table>
+
+                        <div class="primeng-no-data" *ngIf="
+                                primengTableHelperPayment.totalRecordsCount ==
+                                    0
+                                ">
+                            {{ "NoData" | localize }}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator [rows]="
+                                    primengTableHelperPayment.defaultRecordsCountPerPage
+                                    " #paginatorPayment (onPageChange)="getLogs($event)" [totalRecords]="
+                                    primengTableHelperPayment.totalRecordsCount
+                                    " [rowsPerPageOptions]="
+                                    primengTableHelperPayment.predefinedRecordsCountPerPage
+                                    ">
+                            </p-paginator>
+                            <span class="total-records-count">
+                                {{
+                                "TotalRecordsCount"
+                                | localize
+                                : primengTableHelperPayment.totalRecordsCount
+                                }}
+                            </span>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-xl">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Entries
+
+                </h5>
+                <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                    <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <tabset>
+                    <tab heading="Beneficiary(GL and MIS)">
+
+                        <div class="row align-items-center">
+                            <!--<Primeng-TurboTable-Start>-->
+                            <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+                                <table class="table table-hover table-light" id="excel-table">
+                                    <thead>
+                                        <tr class="uppercase">
+
+
+
+                                            <th>
+                                                Transaction Date
+                                            </th>
+                                            <th>
+                                                Transaction Ref
+                                            </th>
+                                            <th>
+                                                Request ID
+                                            </th>
+                                            <th>
+                                                Account
+                                            </th>
+                                            <th>
+                                                Narration
+                                            </th>
+                                            <th>
+                                                Debit Amount
+                                            </th>
+                                            <th>
+                                                Credit Amount
+                                            </th>
+                                            <th>
+                                                MISCode
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tr *ngFor="let m of itemLedgerPosting; let i = index">
+
+
+
+                                        <td>
+                                            {{m.transactionDate | date}}
+                                        </td>
+                                        <td>
+                                            {{m.transactionRef}}
+                                        </td>
+                                        <td>
+                                            {{paymentRef}}
+                                        </td>
+                                        <td>
+                                            {{ m.accountCode}} {{' - '}} {{m.accountName}}
+                                        </td>
+                                        <td>
+                                            {{ m.narration}}
+                                        </td>
+                                        <td>
+                                            {{m.debitAmount | number:'1.2-2'}}
+                                        </td>
+                                        <td>
+                                            {{m.creditAmount | number:'1.2-2'}}
+                                        </td>
+                                        <td>{{m.reportCode}}</td>
+                                        <td>
+
+
+
+                                        </td>
+
+
+
+
+
+                                    </tr>
+
+
+                                </table>
+
+
+
+
+
+
+                            </div>
+
+                        </div>
+
+                    </tab>
+                    <tab heading="Beneficiary(Bank)">
+
+                        <div class="primeng-datatable-container">
+
+                            <div class="text-right">
+
+
+                                <button type="button" class="btn btn-success" (click)="exportPaymentSchedule()">
+                                    <i class="far fa-file-excel"></i>
+                                    {{ "ExportToExcel" | localize }}
+                                </button>
+                            </div>
+
+                            <p-table #dataTable [value]="postedbankBeneficiary"
+                                rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [lazy]="false"
+                                scrollable="true" ScrollWidth="100%" responsive="primengTableHelper.isResponsive"
+                                resizableColumns="primengTableHelper.resizableColumns" dataKey="refNo"
+                                [(selection)]="selectedItems" selectionMode="multiple" [filterDelay]="0"
+                                [globalFilterFields]="['transactionref','narration','amount']" [rowHover]="true"
+                                styleClass="p-datatable-sm" [paginator]="true" [rows]="10"
+                                [rowsPerPageOptions]="[5,10,15,20]" sortMode="multiple" id="excel-tableBank">
+
+
+                                <ng-template pTemplate="caption">
+                                    <div style="text-align: right">
+                                        <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                                        <input type="text" size="50" id="search-text" aria-describedby="search-text"
+                                            pInputText (input)="dataTable.filterGlobal($event.target.value, 'contains')"
+                                            style="width:auto" placeholder="Enter text to search" autofocus>
+
+
+                                    </div>
+                                </ng-template>
+
+                                <ng-template pTemplate="header">
+                                    <tr>
+
+                                        <th style="width: 15%" pSortableColumn="AccountName">{{"Account Name"|localize}}
+
+                                        </th>
+                                        <th style="width: 15%" pSortableColumn="AccountNumber">{{"Account
+                                            Number"|localize}}
+                                        </th>
+                                        <th style="width: 15%" pSortableColumn="BankCode">{{"Bank Code"|localize}}
+                                        </th>
+                                        <th style="width: 15%" pSortableColumn="BankCode">{{"Amount"|localize}}
+                                        </th>
+
+                                        <th style="width: 20%">{{"Status Narration"|localize}}</th>
+                                        <th style="width: 15%"></th>
+
+
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+
+                                        <td style="width: 15%">
+                                            {{record.accountName}}
+                                        </td>
+                                        <td style="width: 15%">
+                                            {{record.accountNumber}}
+                                        </td>
+                                        <td style="width: 15%">
+                                            {{record.bankCode}}
+                                        </td>
+                                        <td style="width: 15%">
+
+                                            {{record.amount | number:'1.2-2' }}
+                                        </td>
+                                        <td style="width: 20%">
+                                            {{record.statusNarration}}
+                                        </td>
+                                        <td style="width: 15%">
+
+
+
+                                            <div *ngIf="record.status!=='Not Posted'">
+
+                                                <a href="javascript:;" (click)="ViewPayAdvance(record.refNo)"
+                                                    title="View Payment Advice">
+
+                                                    <i class="fa fa-file-pdf"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+
+
+
+
+
+                                    </tr>
+                                </ng-template>
+
+                            </p-table>
+
+
+
+
+                            <div class="primeng-paging-container">
+
+                                <!-- <span class="total-records-count">
+                {{l('TotalRecordsCount', primengTableHelper.totalRecordsCount)}}
+            </span> -->
+
+                            </div>
+                        </div>
+
+
+                    </tab>
+                </tabset>
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">{{"Cancel" |
+                        localize}}</button>
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal bsModal #modaldecline="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" (click)="closeDecline()" [attr.aria-label]="l('Close')">
+                    <span aria-hidden="true">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row form-group">
+                    <div class="col">
+                        <label class="small" for="inputFirstName">Remarks</label>
+                        <textarea class="form-control rounded" name="r" [(ngModel)]="rmks" pattern="[a-zA-Z0-9 ]*"
+                            placeholder="Justification for declining">
+
+        </textarea>
+
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="closeDecline()">{{"Cancel" | localize}}</button>
+                <app-erms-button [title]="'Truncate' | localize" (click)="declineTransaction()" [disabled]="!rmks"
+                    type="decline"></app-erms-button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal bsModal #modalmsg="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" (click)="closeDecline()" [attr.aria-label]="l('Close')">
+                    <span aria-hidden="true">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                {{errorMessage}}
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="closeDecline()">{{"Cancel" | localize}}</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div bsModal bsModal #modalhistory="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" (click)="closeDecline()" [attr.aria-label]="l('Close')">
+                    <span aria-hidden="true">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+
+                <div class="row align-items-center">
+                    <!--<Primeng-TurboTable-Start>-->
+                    <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                        <p-table #dataTable sortMode="multiple" [value]="primengTableHelper.records"
+                            rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="false" [lazy]="true"
+                            scrollable="true" ScrollWidth="100%" responsive="primengTableHelper.isResponsive"
+                            resizableColumns="primengTableHelper.resizableColumns">
+
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 150px" pSortableColumn="actionBy">
+                                        {{'Action ' | localize}}
+                                        <p-sortIcon field="actionBy"></p-sortIcon>
+                                    </th>
+
+                                    <th style="width: 150px" pSortableColumn="actionBy">
+                                        {{'Action By' | localize}}
+                                        <p-sortIcon field="actionBy"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="actionBy">
+                                        {{'Level Name' | localize}}
+                                        <p-sortIcon field="actionBy"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="dateTime">
+                                        {{'Action Date ' | localize}}
+                                        <p-sortIcon field="dateTime"></p-sortIcon>
+                                    </th>
+                                    <th style="width: 150px" pSortableColumn="status">
+                                        {{'Action Status' | localize}}
+                                        <p-sortIcon field="status"></p-sortIcon>
+                                    </th>
+
+
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-record="$implicit">
+                                <tr>
+
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">{{'UserName' | localize}}</span>
+                                        {{record.action}}
+                                    </td>
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">{{'UserName' | localize}}</span>
+                                        {{record.actionBy}}
+                                    </td>
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">{{'UserName' | localize}}</span>
+                                        {{record.approvalDepartment}}
+                                    </td>
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">{{'UserName' | localize}}</span>
+                                        {{record.dateTime | luxonFormat:'yyyy-LL-dd HH:mm:ss'}}
+                                    </td>
+                                    <td style="width: 150px">
+                                        <span class="ui-column-title">{{'UserName' | localize}}</span>
+                                        {{record.status}}
+                                    </td>
+
+                                </tr>
+                            </ng-template>
+                        </p-table>
+
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="closeDecline()">{{"Cancel" | localize}}</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div bsModal bsModal #modalDeclinedMessages="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1"
+    role="dialog" aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" (click)="closeDecline()" [attr.aria-label]="l('Close')">
+                    <span aria-hidden="true">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+
+                <div class="row align-items-center">
+                    <!--<Primeng-TurboTable-Start>-->
+                    <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+                        <table class="table table-hover table-light" id="excel-table1">
+                            <thead>
+                                <tr class="uppercase">
+
+
+
+                                    <th>
+                                        Declined By
+                                    </th>
+                                    <th>
+                                        Justification
+                                    </th>
+                                    <th>
+                                        Transaction Date
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tr *ngFor="let m of listofDeclinedMessages; let i = index">
+
+
+
+                                <td>
+                                    {{m.name}}
+                                </td>
+
+                                <td>
+                                    {{m.justification}}
+                                </td>
+                                <td>
+                                    {{m.transactionDate | date :'short'}}
+                                </td>
+
+
+
+
+                            </tr>
+
+
+                        </table>
+
+
+
+
+
+
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="closeDecline()">{{"Cancel" | localize}}</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<Opexquerymodal #Opexquerymodal></Opexquerymodal>
+<queryhistorymodal #opexqueryhistory></queryhistorymodal>
+<appfileupload #fileUpload></appfileupload>
+<workflowdetails #workflowdetails></workflowdetails>
+<modalDeclinedMessages #modalDeclinedMessages></modalDeclinedMessages>

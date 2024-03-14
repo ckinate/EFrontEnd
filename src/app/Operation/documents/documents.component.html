@@ -1,0 +1,35 @@
+<div bsModal #docView="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="docView" aria-hidden="true"   [config]="{backdrop: 'static', keyboard: false}">
+    <div class="modal-dialog modal-xl">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span >Attachment</span>
+                 
+                </h4>                   
+
+              
+
+
+                    <button type="button" class="close" (click)="CloseModal()" [attr.aria-label]="l('Close')">
+                        <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                   </button>
+           
+            </div>          
+            <div class="modal-body" id="contentToConvert">         
+
+   
+                <iframe width="100%" height="600" [src]="link | finsafe">
+                </iframe>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="close" (click)="CloseModal()" aria-label="Close">
+                    <span ><i class="fa window-close" ></i></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

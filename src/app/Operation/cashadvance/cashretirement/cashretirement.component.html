@@ -1,0 +1,598 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="operationNarration | localize">
+            <span>{{ CAType }}</span>
+        </sub-header>
+
+        <div [class]="containerClass" [busyIf]="primengTableHelper.isLoading">
+            <div class="card card-custom">
+                <div class="card-body" [busyIf]="saving">
+                    <div class="row " style="padding-bottom:10px">
+                        <div class="col-md-3">
+                            <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                <div class="card-body text-center">
+                                    <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+                                        <i class="fa fa-hand-holding-usd icon-2x"></i>
+                                       <span class="p-3"> Pending Request  </span>
+
+                                    </a>
+                                    <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                    <div class="text-info font-weight-bold text-right float-right col-6  ">
+                                    <span >
+                                        {{totalCounter | number:'1.0'}}
+                                     </span>
+                                    </div>
+                                    <!-- <span class="text-danger font-weight-bold text-left float-left col-6 p-0 ">Amount</span>
+                                    <div class="text-danger font-weight-bold text-right float-right col-6 p-0 ">
+                                        <span  counto [step]="30" [duration]="1" [countFrom]="0"
+                                     >
+                                         {{totalLpoDto.dashbordAmount  | number:'1.2-5'}}
+                                         </span>
+
+
+                                  </div> -->
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                <div class="card-body text-center">
+                                    <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+
+                                        <i class="fa fa-calculator icon-2x"></i>
+                                        Awaiting Approval
+                                    </a>
+                                    <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                    <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                    <span >
+
+                                        {{pendingAmountCounter | number:'1.0'}}
+                                     </span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-custom bgi-no-repeat  new-subscription-statistics bg-light ">
+                                <div class="card-body text-center">
+                                    <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+
+                                        <i class="fa fa-coins icon-2x"></i>
+                                        Approved Request
+                                    </a>
+                                    <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                    <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                    <span >
+                                        {{authorizedAmountCounter | number:'1.0'}}
+                                     </span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card card-custom bgi-no-repeat  new-subscription-statistics  bg-light ">
+                                <div class="card-body text-center">
+                                    <a href="javascript:;" class="text-left font-weight-bolder text-dark font-size-h7 text-hover-state-dark d-block">
+
+                                        <i class="fa fa-money-check-alt icon-2x"></i>
+                                        Declined Request
+                                    </a>
+                                    <span class="text-info font-weight-bold text-left float-left col-5 ">Count</span>
+                                    <div class="text-info font-weight-bold text-right float-right col-6 ">
+                                    <span >
+                                        {{declinedAmountCounter | number:'1.0'}}
+                                     </span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- <form #payctransForm="ngForm"   (ngSubmit)="save(payctransForm)"> -->
+                    <div class="row align-items-center mb-2">
+                        <div class="col">
+                            <div class="row form-group">
+                                <label class="small mb-1" for="inputFirstName"
+                                    >Advance Voucher No
+                                </label>
+
+                                <ng-select
+                                    [(ngModel)]="paytrans.requestNumber"
+                                    name="advName"
+                                    (change)="getDetails()"
+                                    class="d-flex w-100 justify-content-between"
+                                >
+                                    <ng-option
+                                        *ngFor="let advname of cashadvlist"
+                                        [value]="advname.requestNumber"
+                                        >{{ advname.requestNumber }}
+                                        {{ advname.payeeName }}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName"
+                                    >Beneficiary</label
+                                >
+                                <input
+                                    id="ben"
+                                    type="text"
+                                    [(ngModel)]="paytrans.payeeName"
+                                    pattern="[a-zA-Z0-9 ]*"
+                                    name="Ben"
+                                    class="form-control"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName"
+                                    >Request Type</label
+                                >
+                                <input
+                                    type="text"
+                                    [(ngModel)]="paytrans.requestType"
+                                    name="requestType"
+                                    class="form-control"
+                                    readonly
+                                />
+                            </div>
+                        </div>
+                        <div class="col" *ngIf="!isCardTransaction">
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName"
+                                    >End Date</label
+                                ><br />
+                                {{ endDate | date }}
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3" *ngIf="isCardTransaction">
+                            <a  href="javascript:;" (click)="openModal(template)" >Click here to truncate card transaction?</a>
+                            <!-- <label>{{
+                                "Truncate card transaction?"
+                                    | localize
+                            }}</label> -->
+                            <!-- <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-check"> -->
+                                        <!-- <fieldset >
+
+
+
+                                        <input
+                                            class="form-check-input"
+                                            type="radio"
+                                            name="flexRadioDefault"
+                                            id="flexRadioDefault1"
+                                            [(ngModel)]="paytrans.truncateCardRequest"
+                                   
+                                            [value]="true"
+                                            (click)="openModal(template)"
+                                           
+                                        />
+                                        <label
+                                            class="form-check-label"
+                                            for="flexRadioDefault1"
+                                        >
+                                            {{
+                                                "Yes" | localize
+                                            }}
+                                        </label>
+                                    </fieldset> -->
+<!--                                     
+                                    </div>
+                                </div> -->
+<!--                               
+                            </div>
+                            <div> -->
+
+                            <!-- </div> -->
+                        </div>
+
+                        <div class="row form-group col-md-12">
+                            <div class="col-md-3">
+                                {{ "Amount Advanced" | localize }}:
+                                {{ aAmount | number: "1.2-2" }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ "Amount Retired" | localize }}:
+                                {{ totalAmount | number: "1.2-2" }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ "Refund Staff" | localize }}:
+                                {{ sAmount | number: "1.2-2" }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ "Refund Company" | localize }}:{{
+                                    cAmount | number: "1.2-2"
+                                }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Currency">Currency:</label>
+                            {{ currency }}
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Rate">Rate: </label>
+                            {{ currencyRate | number: "1.2-5" }}
+                        </div>
+                        <div class="col-md-3">
+                            <label for="Value">Value(NGN): </label>
+                            {{ totalValue | number: "1.2-5" }}
+                        </div>
+                        <div class=" col-md-2">
+                            <div class="form-group">
+
+                                <span class="input-group"> 
+                                        <a
+                                        href="javascript:;"
+                                        (click)= "showAttachFileDocument(paytrans.requestNumber)"
+                                        title="View supporting documents"
+                                    >
+                                        <i
+                                            class="fa fa-download"
+                                        ></i>
+                                    </a>
+                                    
+                                    <span class="badge badge-light">{{supportingDocumentCount}}</span>
+                                </span>
+
+
+                            </div>
+
+                        </div>
+                        <div class=" col-md-1">
+                            <div class="form-group">
+                                <!-- <label for="History">View History: </label> -->
+                                <a
+                                href="javascript:;"
+                                (click)= "viewHistory(paytrans.requestNumber)"
+                                title="View Request history"
+                            >
+                                <i
+                                    class="fa fa-eye"
+                                ></i>
+                            </a>
+                            </div>
+                        </div>
+                      
+
+                    </div>
+                    
+
+
+                    <div class="row align-items-center">
+                        <div
+                            class="primeng-datatable-container"
+                            [busyIf]="primengTableHelper.isLoading"
+                        >
+                            <p-table
+                                #dataTable
+                                [value]="primengTableHelper.records"
+                                rows="{{
+                                    primengTableHelper.defaultRecordsCountPerPage
+                                }}"
+                                [paginator]="true"
+                                [rows]="10"
+                                [rowsPerPageOptions]="[5, 10, 15, 20]"
+                                [lazy]="false"
+                                [rowHover]="true"
+                                sortMode="multiple"
+                                [scrollable]="true"
+                                ScrollWidth="100%"
+                                [responsive]="primengTableHelper.isResponsive"
+                                [resizableColumns]="
+                                    primengTableHelper.resizableColumns
+                                "
+                            >
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 200px">
+                                            {{ "Payee" | localize }}
+                                        </th>
+                                        <th style="width: 200px">
+                                            {{ "Expense Type" | localize }}
+                                        </th>
+                                        <th style="width: 200px">
+                                            {{ "Amount" | localize }}
+                                        </th>
+                                        <th style="width: 200px">
+                                            {{ "Narration" | localize }}
+                                        </th>
+                                        <th style="width: 50px"></th>
+                                        <th style="width: 50px"></th>
+                                        <th style="width: 50px"></th>
+                                        <th style="width: 50px"></th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template
+                                    pTemplate="body"
+                                    let-record="$implicit"
+                                >
+                                    <tr>
+                                        <td style="width: 200px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                    "PayeeName" | localize
+                                                }}</span
+                                            >
+                                            {{ record.vendorPayeeName }}
+                                        </td>
+                                        <td style="width: 200px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                    "ExpenseType" | localize
+                                                }}</span
+                                            >
+                                            {{ record.transactionDescription }}
+                                        </td>
+                                        <td style="width: 200px">
+                                            <span class="ui-column-title">
+                                                {{ "Amount" | localize }}</span
+                                            >
+                                            {{
+                                                record.amount | number: "1.2-5"
+                                            }}
+                                        </td>
+
+                                        <td style="width: 200px">
+                                            <span class="ui-column-title">
+                                                {{
+                                                    "Narration" | localize
+                                                }}</span
+                                            >
+                                            {{ record.narration }}
+                                        </td>
+
+                                        <td style="width: 50px">
+                                            <div
+                                                class="btn-group dropdown"
+                                                dropdown
+                                                container="body"
+                                            >
+                                                <a
+                                                    href="javascript:;"
+                                                    (click)="
+                                                        addsplitcost(
+                                                            record.id,
+                                                            record.amount,
+                                                            record.transactionTypeId,
+                                                            record.requestDate
+                                                        )
+                                                    "
+                                                    title="Share cost across MIS"
+                                                >
+                                                    <i
+                                                        class="fa fa-share-alt"
+                                                    ></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td style="width: 50px">
+                                            <div
+                                                class="btn-group dropdown"
+                                                dropdown
+                                                container="body"
+                                            >
+                                            <span class="input-group">
+                                                <a
+                                                href="javascript:;"
+                                                (click)="
+                                                    fileDocument(record.id)
+                                                "
+                                                title="Upload supporting document"
+                                            >
+                                                <i class="fa fa-upload"></i>
+                                            </a>
+                                              <span class="badge badge-light">{{uploadCount}}</span>
+                                            </span>
+                                               
+                                            </div>
+                                        </td>
+                                        <td style="width: 50px">
+                                            <div
+                                                class="btn-group dropdown"
+                                                dropdown
+                                                container="body"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="btn"
+                                                    (click)="edit(record)"
+                                                    title="edit"
+                                                >
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td style="width: 50px">
+                                            <div
+                                                class="btn-group dropdown"
+                                                dropdown
+                                                container="body"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="btn"
+                                                    (click)="delete(record)"
+                                                    title="delete"
+
+                                                >
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="footer">
+                                    <tr>
+                                        <td style="width: 200px">
+                                            <ng-select
+                                                [addTag]="true"
+                                                [(ngModel)]="payeevendor"
+                                                name="payeevendor"
+                                                required appendTo="body"
+                                            >
+                                                <ng-option
+                                                    *ngFor="
+                                                        let itemv of vendorpayeeList
+                                                    "
+                                                    [value]="itemv.companyName"
+                                                >
+                                                    {{
+                                                        itemv.companyName
+                                                    }}</ng-option
+                                                >
+                                            </ng-select>
+                                        </td>
+                                        <td style="width: 200px">
+                                            <ng-select
+                                                [(ngModel)]="
+                                                    paytrans.transactionTypeId
+                                                "
+                                                name="transactionType"
+                                                required appendTo="body"
+                                            >
+                                                <ng-option
+                                                    *ngFor="
+                                                        let item of catransactionTypeList
+                                                    "
+                                                    [value]="item.id"
+                                                >
+                                                    {{
+                                                        item.narration
+                                                    }}</ng-option
+                                                >
+                                            </ng-select>
+                                        </td>
+                                        <td style="width: 200px">
+                                            <input
+                                                required
+                                                min="0"
+                                                max="9999999999999"
+                                                class="form-control"
+                                                [minFractionDigits]="2"
+                                                [maxFractionDigits]="2"
+                                                name="RAmount"
+                                                [(ngModel)]="paytrans.amount"
+                                                mode="decimal"
+                                            />
+                                        </td>
+                                        <td style="width: 200px">
+                                            <textarea
+                                                id="narration"
+                                                name="narration"
+                                                [(ngModel)]="paytrans.narration"
+                                                placeholder="Narration"
+                                                required
+                                                pattern="[a-zA-Z0-9 ]*"
+                                                class="form-control"
+                                            >
+                                            </textarea>
+                                        </td>
+
+                                        <td style="width: 200px">
+                                            <div
+                                                class="btn-group dropdown"
+                                                dropdown
+                                                container="body"
+                                            >
+                                                <a
+                                                    href="javascript:;"
+                                                    title="Save"
+                                                    (click)="save(paytrans)"
+                                                    [disabled]="!paytrans"
+                                                >
+                                                    <i class="fas fa-save"></i>
+                                                </a>
+                                            </div>
+                                            <!-- <button style="background-color:none;border:none"> </button>   -->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Totals:
+                                            {{ totalAmount | number: "1.2-5" }}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+
+                            <div class="col-md-12 mt-20 text-right">
+                                <div class="form-group" *ngIf="isPayeeSelected ==true">
+                                    <app-erms-button    type="save"
+                                    flex="15"
+
+                                    (click)="initiateRequest()"
+                                    [disabled]="initiateButtonDisable" title="Initiate Request" >
+                                    </app-erms-button>
+
+                                </div>
+                            </div>
+
+                            <!-- {{payeevendor | json}}   -->
+                        </div>
+                    </div>
+
+
+                    <ng-template #template>
+                        <div class="modal-header">
+                            <h4 class="modal-title pull-left">Reason </h4>
+                            <!-- <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                               <span aria-hidden="true">×</span>
+                            </button> -->
+                            <button type="button" class="close" (click)="modalRef.hide()" [attr.aria-label]="l('Close')">
+                                <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                            </button>
+                         </div>
+                         <div class="modal-body">
+                                <div class="col-md-12">
+                                    <textarea class="form-control rounded"
+                                        name="reqNarration"
+                                        pattern="[a-zA-Z0-9 ]*" appInputSanitzation
+                                        [(ngModel)]="DeclineComment"
+                                        placeholder="{{'Comments' | localize}}"> </textarea>
+                                </div>
+
+                         </div>
+                         <div class="modal-footer">
+                            <div class="col-md-12 text-right">
+                                    <button
+                                        type="submit"
+                                        [disabled]="DeclineComment==null"
+                                        flex="15"
+                                        class="btn btn-primary"
+                                        (click)="deleterequest()"
+                                    >
+                                        {{ "Continue" | localize }}
+                                    </button>
+                            </div>
+                         </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!--
+<taxTransactionModal  #taxTransactionModal></taxTransactionModal> -->
+
+    <splitCostModal #splitCostModal></splitCostModal>
+    <!-- <cashadvanceWorkflowRouteModal  #cashadvanceWorkflowRouteModal></cashadvanceWorkflowRouteModal> -->
+
+    <!-- <appdocuments #appdocuments></appdocuments> -->
+    <appfileupload #fileUpload (modalSave)="totalupload($event)"></appfileupload>
+<!--  -->
+
+<cashAdViewHistorymodal #cashadviewhistory></cashAdViewHistorymodal>

@@ -1,0 +1,110 @@
+
+
+<div id="kt_tracker_sidebar_toggle" class="topbar-item" >
+ 
+        <div   class="input-group">
+            <!-- <i class="fa fa-address-book"></i> -->
+
+            <input autofocus name="filterText"  style="width: 450px;margin-top: 15px;"
+            class="form-control" placeholder="Track transactions"
+            type="text" [(ngModel)]=" filterText" (keyup)=" filterTracker()">
+     
+        </div>
+    <!-- </button> -->
+
+
+  
+</div>
+
+
+<div id="kt_tracker_sidebar" class="offcanvas offcanvas-right pt-5 pb-10">
+    <div class="quick-panel-actionss">
+        <a href="javascript:;" id="kt_tracker_sidebar_back"
+        (click)="quickSideBarBackClick()"  class="btn btn-xs btn-icon btn-light btn-hover-primary tracker-sidebar-back ml-2" style="float:left;"
+            >
+            <i class="fa fa-arrow-alt-circle-left" aria-label="l('Back')"></i>
+        </a>
+        <!-- <a href="javascript:;" class="btn btn-xs btn-icon btn-light btn-hover-primary page-tracker-sidebar-pinner"
+        (click)="reversePinned()" >
+            <i class="fa fa-map-pin" aria-label="l('Pin')"></i>
+        </a> -->
+        <a href="javascript:;" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_tracker_sidebar_closes">
+            <i class="flaticon2-delete"></i>
+        </a>
+
+
+        <!-- <br> -->
+
+        <!-- <p>
+            Today's item: {{filter}}
+          </p> -->
+          <div class="card card-custom" *ngFor="let item of records" >
+          
+                <div class="card-body "  style="background-color: #fbfcfc;">
+                    <div class="row  text-left">
+                            <div class="col-md-6" >
+                            
+                             
+
+                                {{' Ref:' | localize}}
+                                <p>{{item.ref }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                
+                                {{' Next Action:' | localize}}
+                                <p>{{item.nextAction }}</p>
+                            
+                            </div>
+                          
+                        
+                        
+                        
+                        
+                            <div  class="col-md-12"  >
+                                
+                            
+                                {{' Narration:' | localize}}
+                                <p>{{item.description }}</p>
+
+                            
+                            </div>
+               
+               
+                  
+                        <div class="col-sm-12">
+                            <div class="card-body text-center" >
+                                <button class="btn btn-success"> <a [href]="appBaseUrl + '/app/shared/operationtrackerbarmodal?OPD=' + item.parentRef" style="color:white">Click to see more</a>
+                                </button>
+                               
+                            </div>
+                   
+
+                    <!-- <div class="col-md-6" *ngIf="advancedFiltersAreShown" >
+                        
+                            {{' Initiator:' | localize}}
+                            <p>{{item.initiator}}</p>
+                         
+                       
+                   </div>
+                   <div class="col-md-6" *ngIf="advancedFiltersAreShown" >
+                    
+                        {{' Next Action By:' | localize}}
+                            <p>{{item.nextActionBy}}</p>
+                      
+                    
+                   </div> -->
+                   
+
+           
+                    </div>
+            
+                </div>
+                <br>
+               </div>
+               <hr>
+           </div>
+    </div>
+</div>
+
+
+

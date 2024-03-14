@@ -1,0 +1,55 @@
+<div
+    appBsModal
+    #Createmodal="bs-modal"
+    (onShown)="onShown()"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ViewSchedule"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static', keyboard: !saving }"
+>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    {{Title }}
+                </h4>
+                <button
+                    type="button"
+                    class="close"
+                    (click)="close()"
+                    [attr.aria-label]="l('Close')"
+                    [disabled]="saving"
+                >
+                    <i aria-hidden="true" s class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <br>
+                <!-- <form #paymentmodeForm="ngForm" (ngSubmit)="save(paymentmodeForm)" class="form"> -->
+                    <div class="row align-items-center mb-2">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName">Payment Mode</label>
+                                <input name="Payment" [(ngModel)]="selecteditem"  type="text" class="form-control" required
+                                 />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-2 text-right">
+                        <div class="form-group">
+                            <button type="button" (click)="save()" class="btn btn-primary" >
+                                {{'Save' | localize}}
+                            </button>
+                            <!-- <button type="submit" flex="15" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')" [disabled]="!paymentmodeForm.form.valid" class="btn btn-primary ">
+                                {{'Save' | localize}}
+                            </button> -->
+                        </div>
+                    </div>
+               <!--  </form> -->
+            </div>
+        </div>
+    </div>
+</div>
+

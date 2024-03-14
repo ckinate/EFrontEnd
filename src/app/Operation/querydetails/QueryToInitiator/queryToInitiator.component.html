@@ -1,0 +1,82 @@
+<div
+    bsModal
+    bsModal
+    #queryToInitiator="bs-modal"
+    (onShown)="onShown()"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Query Response For Request Number: {{ Refnumber }}
+                </h5>
+                <button
+                    type="button"
+                    class="close"
+                    (click)="close()"
+                    [attr.aria-label]="l('Close')"
+                >
+                    <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+
+            
+            <div class="modal-body">
+                <tabset>
+                    <tab heading="Send Query">
+                        <h4>Send Query To Initiator</h4>
+                    
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="GroupName">{{
+                                    "Enter Query" | localize
+                                }}</label>
+                                <textarea
+                                    type="text"
+                                    name="queryText"
+                                    maxlength="500"
+                                    placeholder="Enter query here.  max. xter 500"
+                                    required
+                                    class="form-control"
+                                    [(ngModel)]="createquery.query"
+                                    
+                                ></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-default"
+                                (click)="close()"
+                            >
+                                {{ "Close" | localize }}
+                            </button>
+
+                            <button
+                                type="submit"
+                                flex="15"
+                                [disabled]="!createquery.query"
+                                (click)="save()"
+                                class="btn btn-primary"
+                                [buttonBusy]="saving"
+                            >
+                                {{ "Save" | localize }}
+                            </button>
+                        </div>
+                    </tab>
+                   
+                </tabset>
+            </div>
+        </div>
+    </div>
+</div>
+<appfileupload #fileUpload></appfileupload>
+
+
+

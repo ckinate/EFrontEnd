@@ -1,0 +1,16 @@
+/* :host ::ng-deep p-listbox .ui-listbox-list{
+    width: 20rem;
+    border: black;
+} */
+.list-group-item {
+    border: red;
+ 
+    overflow: visible;
+}
+
+.pl {
+   
+   
+    overflow: auto;
+}
+

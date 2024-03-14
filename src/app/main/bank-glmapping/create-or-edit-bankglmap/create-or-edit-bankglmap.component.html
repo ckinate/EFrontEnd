@@ -1,0 +1,132 @@
+<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #bankGLMappingProfileForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="bankGLMappingProfile.id">{{l("Edit Bank GL Mapping ")}}</span>
+                        <span *ngIf="!bankGLMappingProfile.id">{{l("Create New Bank GL Mapping")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')" [disabled]="saving">
+                        <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                   </button>
+                </div>
+                <div class="modal-body">
+                 								
+
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="bankName">{{"Bank" | localize}} </label>
+                                 <ng-select   name="bankName"  placeholder="Select Bank Name" [(ngModel)] = "bankGLMappingProfile.bankCode"  required  #BankNam = "ngModel">
+                                     <ng-option *ngFor="let x of Banks" [value]="x.bankCode">{{x.bankName}} </ng-option>
+                                  </ng-select>
+                                    <div [hidden]="BankNam.valid || BankNam.pristine || BankNam.untouched"
+                                    class="alert alert-danger">
+                                    Bank Name is required
+                                   </div> 
+                                </div>
+                            </div> 
+
+
+                            <div class="col-md-6">
+								<div class="form-group">
+									<label for="BankGLMappingProfile_BeneficiaryAccountNumber">{{l("Bank Account Number")}}</label>
+									<input type="text" id="BankGLMappingProfile_BeneficiaryAccountNumber" class="form-control" [(ngModel)]="bankGLMappingProfile.beneficiaryAccountNumber" pattern="[a-zA-Z0-9 ]*" name="BeneficiaryAccountNumber" required pattern="^\d{10}$" maxlength="10"  onkeyup="this.value=this.value.replace(/[^\d]/,'')"   />
+								</div>
+                            </div>
+                        </div> 
+
+
+                       <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="BankGLMappingProfile_BeneficiaryName">{{l("Account Name")}}</label>
+                                <input type="text" id="BankGLMappingProfile_BeneficiaryName" class="form-control" [(ngModel)]="bankGLMappingProfile.beneficiaryName" pattern="[a-zA-Z0-9 ]*" name="BeneficiaryName"    />
+                            </div>
+                        </div>
+
+
+                        <div class="row">					                          
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="BankGLMappingProfile_BeneficiaryCode">{{"GL" | localize}} </label>
+                                 <ng-select   name="BeneficiaryCode"  placeholder="Select GL" [(ngModel)] = "bankGLMappingProfile.beneficiaryCode"  required  #BeneficiaryCode = "ngModel">
+                                     <ng-option *ngFor="let x of chartOfAcc" [value]="x.accountCode">{{x.accountName}} {{' '}}{{x.accountCode}} </ng-option>
+                                  </ng-select>
+                                    <div [hidden]="BeneficiaryCode.valid || BeneficiaryCode.pristine || BeneficiaryCode.untouched"
+                                    class="alert alert-danger">
+                                    Chart of account is required
+                                   </div> 
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="GroupName" class="text-left">{{"Currency" |
+                                        localize}}</label>
+                                    <ng-select [(ngModel)]="bankGLMappingProfile.beneficiaryCurrencyCode" required name="currency"
+                                        placeholder="Currency" class="rounded" >
+    
+                                        <ng-option *ngFor="let t of currencyList" [value]="t.currencyCode">
+                                            {{t.currencyName}}
+                                        </ng-option>
+                                    </ng-select>
+    
+                                </div>
+                            </div>
+                                  
+                        </div>
+                           
+                                                  
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="DefaultCode">{{"Choose Beneficiary Type" | localize}}</label>
+                                    
+                                    <div class="row" style="margin-top: 20px;">
+                                        <div class="col-md-2 align-items-center mb-2" *ngFor="let beneficiary of creditTypeList" style="flex-direction: row;">
+                                            <div style="background-color: lightgray; align-items: center; justify-content: center; border-radius: 5px; padding: 5px;">
+                                                <div class="custom-control custom-checkbox form-group">
+                                                    <input type="checkbox" [checked]="checkIfEqualCredit(beneficiary)" class="custom-control-input" id="{{beneficiary.toLowerCase()}}credit" (ngModelChange)="addValueCredit(beneficiary)" [(ngModel)]="creditType[beneficiary]" name="{{beneficiary}}credit">
+                                                    <label class="custom-control-label" for="{{beneficiary.toLowerCase()}}credit">{{beneficiary | localize}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>					
+
+
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="submit" class="btn btn-primary blue" [disabled]="!bankGLMappingProfileForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                    -->
+                    <app-erms-button 
+                    [title]="'Save' | localize"
+                    [disabled]="!bankGLMappingProfileForm.form.valid" (click)="save()"
+                    action="submit"
+                    [isLoading]="saving"
+                    appNoDoubleClick
+                    type="others"
+                    icon="<i class='fa fa-plus'></i>"
+                ></app-erms-button> 
+
+                    <!-- <button [disabled]="saving" type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">{{l("Exit")}}</button>
+                     -->
+                     <app-erms-button 
+                [title]="'Cancel' | localize"
+                action="button"
+                (click)="close()"
+                type="cancel"
+            ></app-erms-button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- {{bankGLMappingProfile | json}} -->
+</div>

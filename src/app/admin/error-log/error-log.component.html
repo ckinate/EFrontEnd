@@ -1,0 +1,325 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid" #table>
+        <sub-header title="Error Logs"> 
+           
+        </sub-header>
+
+ <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body" [busyIf]="primengTableHelperErrorLogs.isLoading">
+                    <div class="row align-items-center">
+                        <!--<Primeng-TurboTable-Start>-->
+                        <div
+                            class="primeng-datatable-container"
+                            [busyIf]="primengTableHelper.isLoading"
+                        >
+                            <div class="row align-items-center mb-4">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label for="StartEndRange">{{
+                                            "DateRange" | localize
+                                        }}</label>
+                                        <input
+                                            class="form-control"
+                                            id="StartEndRange"
+                                            name="StartEndRange"
+                                            #drp="bsDaterangepicker"
+                                            readonly="readonly"
+                                            bsDaterangepicker
+                                            dateRangePickerLuxonModifier
+                                            [(date)]="dateRange"
+                                            [maxDate]="maxdate"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <input id="searchBox" type="text"  name="searchBox"
+                                    class="form-control" [(ngModel)]="searchBox">
+                                </div>
+                                <div class="col-md-2 text-right">
+                                    <button
+                                        (click)="getLogs()"
+                                        class="btn btn-primary"
+                                        type="submit"
+                                    >
+                                        <i
+                                            class="flaticon-search-1"
+                                            [attr.aria-label]="l('Search')"
+                                        ></i>
+                                    </button>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="text-right">
+                                        <button
+                                        type="button"
+                                        class="btn btn-success"
+                                        (click)="ExportTOExcel()"
+                                    >
+                                        <i class="far fa-file-excel"></i>
+                                        {{ "ExportToExcel" | localize }}
+                                    </button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <p-table
+                                #dataTableErrorLogs
+                                [value]="primengTableHelperErrorLogs.records"
+                                rows="{{primengTableHelperErrorLogs.defaultRecordsCountPerPage}}"
+                                [paginator]="false" [lazy]="true" scrollable="true" ScrollWidth="100%"
+                                responsive="primengTableHelperErrorLogs.isResponsive"
+                                resizableColumns="primengTableHelperErrorLogs.resizableColumns"
+                                [rowHover]="true"
+
+                                sortMode="multiple" (onLazyLoad)="getLogs($event)"
+                                [globalFilterFields]="[
+                                    'transactionCode',
+                                    'logDescription',
+                                    'detailedDescription',
+                                    'ipAddress',
+                                    'operationName',
+                                    'module',
+                                    'userName',
+                                    'loggingDate'
+                                ]"
+                                id="excel-table"
+                            >
+                                <!-- <ng-template pTemplate="caption">
+                                    <div style="text-align: right">
+                                        <i
+                                            class="pi pi-search"
+                                            style="margin: 4px 4px 0 0"
+                                        ></i>
+                                        <input
+                                            type="text"
+                                            pInputText
+                                            size="30"
+                                            placeholder="Search Keyword"
+                                            style="width: auto"
+
+                                        />
+                                    </div>
+                                </ng-template> -->
+
+                                <ng-template pTemplate="header">
+                                    <tr>
+
+
+                                        <th  
+                                        style="width: 30px"
+                                        pSortableColumn="transactionCode"
+                                    >
+                                        {{ l("S/N") }}
+                                        <p-sortIcon
+                                            field="transactionCode"
+                                        ></p-sortIcon>
+                                    </th>
+
+
+
+                                        <th  
+                                        style="width: 70px"
+                                        pSortableColumn="transactionCode"
+                                    >
+                                        {{ l("Error Code") }}
+                                        <p-sortIcon
+                                            field="transactionCode"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                        <th  
+                                        style="width: 150px"
+                                        pSortableColumn="detailedDescription"
+                                    >
+                                        {{ l("Technical Description") }}
+                                        <p-sortIcon
+                                            field="detailedDescription"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                        
+
+                                        <th  
+                                        style="width: 150px"
+                                        pSortableColumn="logDescription"
+                                    >
+                                        {{ l("Error Description") }}
+                                        <p-sortIcon
+                                            field="logDescription"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                     
+                                    <th
+                                    style="width: 70px"
+                                    pSortableColumn="userName"
+                                >
+                                    {{ l("User Name") }}
+                                    <p-sortIcon
+                                        field="userName"
+                                    ></p-sortIcon>
+                                </th>
+
+
+                                <th
+                                            style="width: 70px"
+                                            pSortableColumn="operationName"
+                                        >
+                                            {{ l("Operation Name") }}
+                                            <p-sortIcon
+                                                field="operationName"
+                                            ></p-sortIcon>
+                                        </th>
+
+
+                                        <!-- 
+
+
+                                        <th
+                                        style="width: 150px"
+                                        pSortableColumn="module"
+                                    >
+                                        {{ l("Module") }}
+                                        <p-sortIcon
+                                            field="module"
+                                        ></p-sortIcon>
+                                    </th> -->
+
+
+                                        <th
+                                            style="width: 70px"
+                                            pSortableColumn="loggingDate"
+                                        >
+                                            {{ l("Date and Time") }}
+                                            <p-sortIcon
+                                                field="loggingDate"
+                                            ></p-sortIcon>
+                                        </th>
+
+                                        <th
+                                        style="width: 70px"
+                                        pSortableColumn="ipAddress"
+                                    >
+                                        {{ l("IP Address") }}
+                                        <p-sortIcon
+                                            field="ipAddress"
+                                        ></p-sortIcon>
+                                    </th>
+
+                                        <!-- <th style="width: 50px">
+                                            {{ l("Status") }}
+                                        </th> -->
+                                    </tr>
+                                </ng-template>
+                                <ng-template
+                                    pTemplate="body"
+                                    let-record="$implicit" 
+                                    let-rowIndex="rowIndex"
+                                
+                                    
+                                >
+                                    <tr>
+                                       
+                                        <td style="width: 30px">
+                                            <span class="ui-column-title">
+                                            </span>
+                                            {{ rowIndex + 1 }}
+                                        </td>
+
+
+                                        <td style="width: 70px">
+                                            <span class="ui-column-title">
+                                            </span>
+                                            {{ record.transactionCode }}
+                                        </td>
+
+                                        <td style="width: 150px">
+                                            <span class="ui-column-title">
+                                            </span>
+                                            {{ record.detailedDescription }}
+                                        </td>
+
+                                        <td style="width: 150px">
+                                            <span class="ui-column-title">
+                                            </span>
+                                            {{ record.logDescription }}
+                                        </td>
+
+
+                                        <td style="width: 70px">
+                                            <span class="ui-column-title">
+                                            </span>
+                                            {{ record.userName }}
+                                        </td>
+
+                                        <td style="width: 70px">
+                                            <span class="ui-column-title">
+                                            </span>
+                                            {{ record.operationName }}
+                                        </td>
+                                      
+                                        <!-- 
+
+                                        <td style="width: 150px">
+                                            <span class="ui-column-title">
+                                            </span>
+                                            {{ record.module }}
+                                        </td> -->
+
+                                      
+                                        <td style="width: 70px">
+                                            <span class="ui-column-title">
+                                            </span>
+                                            {{
+                                                record.loggingDate
+                                                    | luxonFormat: "F"
+                                            }}
+                                        </td>
+                                        <td style="width: 70px">
+                                            <span class="ui-column-title">
+                                            </span>
+                                            {{ record.ipAddress }}
+                                        </td>
+                                        <!-- <td style="width: 50px">
+                                            <div class="text-center">
+                                                <i
+                                                    *ngIf="
+                                                        record.loggingType == 2
+                                                    "
+                                                    class="fa fa-exclamation-triangle text-warning"
+                                                ></i>
+                                                <i
+                                                    *ngIf="
+                                                        record.loggingType !== 2
+                                                    "
+                                                    class="fa fa-check-circle text-success"
+                                                ></i>
+                                            </div>
+                                        </td> -->
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data"
+                            *ngIf="primengTableHelperErrorLogs.totalRecordsCount == 0">
+                            {{'NoData' | localize}}
+                        </div>
+                        <div class="primeng-paging-container">
+                            <p-paginator [rows]="primengTableHelperErrorLogs.defaultRecordsCountPerPage"
+                                #paginatorErrorLogs (onPageChange)="getLogs($event)"
+                                [totalRecords]="primengTableHelperErrorLogs.totalRecordsCount"
+                                [rowsPerPageOptions]="primengTableHelperErrorLogs.predefinedRecordsCountPerPage">
+                            </p-paginator>
+                            <span class="total-records-count">
+                                {{'TotalRecordsCount' | localize:primengTableHelperErrorLogs.totalRecordsCount}}
+                            </span>
+                        </div>
+                        </div>
+                        <!--<Primeng-TurboTable-End>-->
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>

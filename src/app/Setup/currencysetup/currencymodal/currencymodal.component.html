@@ -1,0 +1,88 @@
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog" 
+aria-hidden="true" [config]="{backdrop: 'static'}">
+<div class="modal-dialog modal-xl">
+
+
+
+
+    <div class="modal-content">
+
+      
+
+        <div class="modal-header">
+            <h5 class="modal-title"   >
+              Currency  Setup 
+              
+            </h5>
+            <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <!--Design input form for modal add chart of account-->
+            <form #currencyForm="ngForm" (ngSubmit)="save(currencyForm)" class="form">
+                <div class="row align-items-center mb-2">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="DefaultCode">{{"Currency Name" | localize}}</label>
+
+                            <input id="Discription" type="text" name="currencyname" [(ngModel)]="currencydto.currencyName" placeholder="Enter Currency Name" 
+                            required pattern="^[^\*\=\<\>]+$"
+ 
+                                class="form-control rounded">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="small mb-1" for="inputFirstName">Currency Code</label>
+
+
+                            <input id="Discription" type="text" name="currencycode" pattern="^[^\*\=\<\>]+$"
+                            [(ngModel)]="currencydto.currencyCode" placeholder="Enter Currency Code" required
+                            class="form-control rounded">
+                        </div>
+                    </div>
+
+
+                 </div>
+            </form>
+
+    
+        </div>
+
+
+        <div class="modal-footer">
+         
+             <div class="form-group">
+                 <button type="submit" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"  flex="15" class="btn btn-primary "
+                 [disabled]="  !currencyForm.form.valid" (click)="save(currencyForm)"
+                 >
+                 {{ "Save" | localize }} 
+                 </button>
+             </div>
+       
+            <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+          
+       
+        </div>
+    
+
+</div>
+
+
+
+
+
+
+           
+
+
+               
+
+        </div>
+    </div>
+
+
+

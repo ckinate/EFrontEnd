@@ -1,0 +1,474 @@
+
+<div
+bsModal
+bsModal
+#querymodal="bs-modal"
+(onShown)="onShown()"
+class="modal fade"
+tabindex="-1"
+role="dialog"
+aria-hidden="true"
+[config]="{ backdrop: 'static' }"
+>
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">
+                Query For Request Number: {{ Refnumber }}
+            </h5>
+            <button
+                type="button"
+                class="close"
+                (click)="close()"
+                [attr.aria-label]="l('Close')"
+            >
+                <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <tabset>
+                <tab heading="Query Comment" *ngIf="ViewOnly">
+                    <form #opexForm="ngForm" (ngSubmit)="save(opexForm)">
+                        <div class="row">
+                            <!--  <div class="col-md-5">
+
+                                </div> -->
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>{{
+                                        "Comment" | localize
+                                    }}</label>
+                                    <textarea
+                                        class="form-control rounded"
+                                        required
+                                        name="query"
+                                        pattern="[a-zA-Z0-9 ]*"
+                                        placeholder="{{
+                                            'Comment' | localize
+                                        }}"
+                                        [(ngModel)]="OpexQuery.query"
+                                    >
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a
+                                    href="javascript:;"
+                                    (click)="
+                                        showDocument()
+                                    "
+                                    title="Upload supporting documents"
+                                >
+                                    <em class="fa fa-upload"></em>
+                                </a>
+                                <br />
+                                <span>Upload Document</span>
+                            </div>
+                            <!-- <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="GroupName">
+                                        <span (click)="yesResponse()">
+                                            <i class="fas fa-thumbs-up">Yes</i>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div> -->
+                            <!-- <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="GroupName">
+                                        <span (click)="noResponse()">
+                                            <i class="fas fa-thumbs-down">No</i>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div> -->
+                        </div>
+
+                        <div class="col-md-12 mt-2 text-right">
+                            <div class="form-group">
+                                <!--   (click)="save(opexForm)"
+[(ngModel)]="createquery.query"createquery.query==null||createquery.queryResponder==null -->
+                                <button
+                                    type="submit"
+                                    [disabled]="OpexQuery.query == null"
+                                    flex="15"
+                                    class="btn btn-primary"
+                                >
+                                    {{ "Save Comment" | localize }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="card card-custom">
+                        <!--     <div class="form-group">
+    
+                                        <button
+                                            type="submit"
+                                            [disabled]="Isapprovedbtn == false"
+                                            flex="15"
+                                            class="btn btn-primary"
+                                            (click)="approvedquery()"
+                                        >
+                                            {{ "Approved Query" | localize }}
+                                        </button>
+                                    </div> -->
+
+                        <div class="row align-items-center">
+                            <div
+                                class="primeng-datatable-container"
+                                [busyIf]="primengTableHelper.isLoading"
+                            >
+                                <p-table
+                                    #dataTable
+                                    [value]="primengTableHelper.records"
+                                    rows="{{
+                                        primengTableHelper.defaultRecordsCountPerPage
+                                    }}"
+                                    [paginator]="true"
+                                    [rows]="10"
+                                    [rowsPerPageOptions]="[5, 10, 15, 20]"
+                                    [lazy]="false"
+                                    [rowHover]="true"
+                                    sortMode="multiple"
+                                    [scrollable]="true"
+                                    ScrollWidth="100%"
+                                    [responsive]="
+                                        primengTableHelper.isResponsive
+                                    "
+                                    [resizableColumns]="
+                                        primengTableHelper.resizableColumns
+                                    "
+                                    [globalFilterFields]="['queryDate']"
+                                >
+                                    <ng-template pTemplate="caption">
+                                        <div style="text-align: right">
+                                            <i
+                                                class="pi pi-search"
+                                                style="margin: 4px 4px 0 0"
+                                            ></i>
+                                            <input
+                                                type="text"
+                                                pInputText
+                                                size="30"
+                                                placeholder="Search Keyword"
+                                                style="width: auto"
+                                                (input)="
+                                                    dataTable.filterGlobal(
+                                                        $event.target.value,
+                                                        'contains'
+                                                    )
+                                                "
+                                                pattern="[a-zA-Z0-9 ]*"
+                                            />
+                                        </div>
+                                    </ng-template>
+
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>
+                                                <!--  <input
+                  type="checkbox"
+                  name="checked"
+                  [(ngModel)]="checked"
+                  (change)="checkquery($event)"
+                  />&nbsp; -->
+                                                {{ "Action" | localize }}
+                                            </th>
+                                            <th>
+                                                {{ "Initiator" | localize }}
+                                            </th>
+                                            <th>
+                                                {{ "Query" | localize }}
+                                            </th>
+                                            <th>
+                                                {{
+                                                    "Query Date" | localize
+                                                }}
+                                            </th>
+                                            <th>
+                                                {{ "Responder" | localize }}
+                                            </th>
+                                            <th>
+                                                {{
+                                                    "View Response"
+                                                        | localize
+                                                }}
+                                            </th>
+                                            <th>
+                                                {{
+                                                    "Response Date"
+                                                        | localize
+                                                }}
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template
+                                        pTemplate="body"
+                                        let-record="$implicit"
+                                    >
+                                        <tr>
+                                            <!--  <td style="width: 100px">
+                  <input *ngIf="record.isapproved==true"
+                  disabled
+                  type="checkbox"
+                  name="checked"
+                  [(ngModel)]="checked"
+                  (change)="checkquery($event)"
+              />
+              <input *ngIf="record.isapproved==false"
+              type="checkbox"
+              name="checked"
+              [(ngModel)]="checked"
+              (change)="checkquery($event)"
+              />
+              </td> -->
+
+                                            <td style="width: 100px">
+                                                <button
+                                                    (click)="
+                                                        Cancelquery(record)
+                                                    "
+                                                    class="btn btn-primary"
+                                                >
+                                                    {{
+                                                        "Cancel " | localize
+                                                    }}
+                                                </button>
+
+                                                <!--    <button
+
+
+              flex="15"
+              class="btn btn-primary"
+          >
+              {{ "Cancel Query | localize }}
+          </button> -->
+                                            </td>
+                                            <td style="width: 100px">
+                                                <span
+                                                    class="ui-column-title"
+                                                ></span>
+                                                {{ record.queryInitiator }}
+                                            </td>
+                                            <td style="width: 100px">
+                                                <span
+                                                    class="ui-column-title"
+                                                ></span>
+                                                {{
+                                                    record.query
+                                                        | slice: 0:52
+                                                }}
+                                               
+                                            </td>
+                                            <td style="width: 100px">
+                                                <span
+                                                    class="ui-column-title"
+                                                ></span>
+                                                {{
+                                                    record.queryDate
+                                                        | date: "mediumDate"
+                                                }}
+                                            </td>
+                                            <td style="width: 100px">
+                                                <span
+                                                    class="ui-column-title"
+                                                ></span>
+                                                {{ record.queryResponder }}
+                                            </td>
+                                            <td style="width: 100px">
+                                                <a
+                                                    *ngIf="
+                                                        record.status ==
+                                                        true
+                                                    "
+                                                    href="javascript:;"
+                                                    (click)="
+                                                        response(record)
+                                                    "
+                                                    title="query response"
+                                                    ><i
+                                                        class="fas fa-info"
+                                                    ></i
+                                                ></a>
+                                            </td>
+                                            <td style="width: 100px">
+                                                <span
+                                                    class="ui-column-title"
+                                                ></span>
+                                                {{
+                                                    record.responseDate
+                                                        | date: "mediumDate"
+                                                }}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+                <tab heading="Query History">
+                    <div class="row align-items-center">
+                        <div class="primeng-datatable-container">
+                            <div *ngFor="let i of querytraillist">
+                                <div style="padding: 20" class="row">
+                                    <div
+                                        style="width: 45%"
+                                        class="col-md-6"
+                                    >
+                                        <div
+                                            *ngIf="
+                                                i.queryResponse &&
+                                                i.queryResponse.length > 1
+                                            "
+                                        >
+                                            <br /><br /><br />
+                                            <div
+                                                class="customer message__text last"
+                                            >
+                                                <div>
+                                                    {{
+                                                        i.queryResponse
+                                                            | slice: 0:50
+                                                    }}
+                                                    <a href=":;"></a>
+                                                    <button
+                                                        class="btn"
+                                                        type="button"
+                                                        popover="{{
+                                                            i.queryResponse
+                                                        }}"
+                                                        popoverTitle="Full Message"
+                                                        placement="top"
+                                                    >
+                                                        {{
+                                                            "...show more!"
+                                                        }}
+                                                    </button>
+                                                </div>
+
+                                                <div
+                                                    style="
+                                                        font-size: 9px;
+                                                        text-align: left;
+                                                        font-weight: bold;
+                                                    "
+                                                >
+                                                    {{
+                                                        i.responseDate
+                                                            | luxonFormat
+                                                                : "F"
+                                                    }}
+                                                </div>
+                                                <div
+                                                    style="
+                                                        font-size: 9px;
+                                                        text-align: right;
+                                                        font-weight: bold;
+                                                    "
+                                                >
+                                                    {{ i.fullNameOfQueryResponder }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-md-6"
+                                        style="width: 45%"
+                                    >
+                                        <div
+                                            class="team message__text last"
+                                        >
+                                            <div>
+                                                {{ i.query | slice: 0:50 }}
+                                                <button
+                                                    class="btn"
+                                                    type="button"
+                                                    popover="{{ i.query }}"
+                                                    popoverTitle="Full Message"
+                                                    placement="top"
+                                                >
+                                                    {{ "...show more!" }}
+                                                </button>
+                                            </div>
+
+                                            <div
+                                                style="
+                                                    font-size: 9px;
+                                                    text-align: left;
+                                                    font-weight: bold;
+                                                "
+                                            >
+                                                {{
+                                                    i.queryDate
+                                                        | luxonFormat: "F"
+                                                }}
+                                            </div>
+                                            <div
+                                                style="
+                                                    font-size: 9px;
+                                                    text-align: right;
+                                                    font-weight: bold;
+                                                "
+                                            >
+                                                {{ i.fullNameOfQueryInitiator }}
+                                            </div>
+                                        </div>
+                                        <br /><br /><br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+
+            <div *ngIf="isshow" class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>{{ "Response" | localize }}</label>
+                        <textarea
+                            class="form-control rounded"
+                            readonly
+                            name="response"
+                            pattern="[a-zA-Z0-9 ]*"
+                            placeholder="{{ 'Response' | localize }}"
+                            [(ngModel)]="OpexQueryTrail.queryResponse"
+                        >
+                        </textarea>
+                    </div>
+                </div>
+                <!--  <div class="col-md-5">
+
+                            </div> -->
+            </div>
+
+            <div class="card card-custom">
+                <!--     <div class="form-group">
+
+                                <button
+                                    type="submit"
+                                    [disabled]="Isapprovedbtn == false"
+                                    flex="15"
+                                    class="btn btn-primary"
+                                    (click)="approvedquery()"
+                                >
+                                    {{ "Approved Query" | localize }}
+                                </button>
+                            </div> -->
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" (click)="close()">
+                {{ "Cancel" | localize }}
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+<appfileupload #fileUpload></appfileupload>

@@ -1,0 +1,58 @@
+﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #debitAccountProfileForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="debitAccountProfile.id">{{l("EditDebitAccountProfile")}}</span>
+                        <span *ngIf="!debitAccountProfile.id">{{l("CreateNewDebitAccountProfile")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+
+								<div class="form-group">
+									<label for="DebitAccountProfile_AccountName">{{l("AccountName")}}</label>
+									<input type="text" id="DebitAccountProfile_AccountName" class="form-control" [(ngModel)]="debitAccountProfile.accountName" pattern="[a-zA-Z0-9 ]*" name="AccountName"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="DebitAccountProfile_AccountNumber">{{l("AccountNumber")}}</label>
+									<input type="text" id="DebitAccountProfile_AccountNumber" class="form-control" [(ngModel)]="debitAccountProfile.accountNumber" pattern="[a-zA-Z0-9 ]*" name="AccountNumber"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="DebitAccountProfile_BankCode">{{l("BankCode")}}</label>
+									<input type="text" id="DebitAccountProfile_BankCode" class="form-control" [(ngModel)]="debitAccountProfile.bankCode" pattern="[a-zA-Z0-9 ]*" name="BankCode"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="DebitAccountProfile_PaymentProviderID">{{l("PaymentProviderID")}}</label>
+									<input type="number" id="DebitAccountProfile_PaymentProviderID" class="form-control" [(ngModel)]="debitAccountProfile.paymentProviderID" pattern="[a-zA-Z0-9 ]*" name="PaymentProviderID"   />
+								</div>
+					
+								<div class="form-group">
+									<label for="DebitAccountProfile_CurrencyCode">{{l("CurrencyCode")}}</label>
+									<input type="text" id="DebitAccountProfile_CurrencyCode" class="form-control" [(ngModel)]="debitAccountProfile.currencyCode" pattern="[a-zA-Z0-9 ]*" name="CurrencyCode"    />
+								</div>
+					
+								<!-- <div class="form-group">
+									<label for="DebitAccountProfile_CompanyCode">{{l("CompanyCode")}}</label>
+									<input type="text" id="DebitAccountProfile_CompanyCode" class="form-control" [(ngModel)]="debitAccountProfile.companyCode" name="CompanyCode"    />
+								</div> -->
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!debitAccountProfileForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

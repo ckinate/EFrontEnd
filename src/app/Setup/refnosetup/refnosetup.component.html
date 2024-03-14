@@ -1,0 +1,161 @@
+<div [@routerTransition]>
+
+    <div class="content d-flex flex-column flex-column-fluid">
+
+        <sub-header [title]="'Reference Number Setup' | localize" >
+
+        </sub-header>
+
+
+
+
+
+      <div [class]="containerClass">
+        <div class="card card-custom ">
+            <div class="card-body">
+
+                    <form #refForm="ngForm" (ngSubmit)="save(refForm)">
+                        <div class="row align-items-center mb-2" *ngIf="'Pages.ReferenceNoSetUp.Create'| permission">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="small mb-1" for="description">Select Operation Name</label>
+                                    <select name="description" required class="form-control rounded" [(ngModel)]="createRefSetting.operationId"
+                               >
+                                    <option  *ngFor="let operationitem of operationList" [value]="operationitem.id" >
+                                        {{operationitem.description}}
+                                    </option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="SLAName">{{"Acronym" | localize}}</label>
+                                    <input  type="text" name="workflowDefinitionName" [(ngModel)]="createRefSetting.norm_Acroyno"  placeholder="Enter NormAcroy no" required
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="WorkFlowDescription">{{"length" | localize}}</label>
+                                    <input  type="number" name="lenCount" [(ngModel)]="createRefSetting.lenCount" placeholder="Enter  Description" required
+                                        class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <label for="GroupName"></label>
+                                <div class="form-group">
+
+                                    <button type="submit"  [disabled]="!refForm.form.valid" flex="15" class="btn btn-primary  form-control rounded"
+                                    >
+                                    {{ "Save" | localize }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <br>
+                    <div class="col-md-12 mt-0 text-right">
+                        <div class="btn-group" >
+                            <button  type="button" class="btn btn-outline-secondary mr-1"
+                            style="border-color: green; border-width: 2px; color:green"
+                                  aria-expanded="false" (click)="frontEndExcelExport()">
+                                <i class="far fa-file-excel" style="color:green ;"></i> {{"ExportToExcel" | localize}}
+                            </button>
+
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row align-items-center">
+                        <!--<Primeng-TurboTable-Start>-->
+                      <div class="primeng-datatable-container"
+                          [busyIf]="primengTableHelper.isLoading">
+
+                          <p-table #dataTable
+                          [value]="primengTableHelper.records"
+                          rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20]" [lazy]="false" [rowHover]="true" sortMode="multiple" [scrollable]="true"
+   scrollWidth="100%" [responsive]="primengTableHelper.isResponsive" [resizableColumns]="primengTableHelper.resizableColumns" id="excel-table">
+
+
+                              <ng-template pTemplate="header">
+                                  <tr>
+
+                                      <th style="width: 100px" *ngIf="'Pages.ReferenceNoSetUp.Edit'| permission">
+                                        {{'Action' | localize}}
+                                    </th>
+                                      <th style="width: 100px">
+                                          {{'Operation ' | localize}}
+                                      </th>
+                                      <th style="width: 100px">
+                                        {{'Acronym' | localize}}
+                                      </th>
+                                      <th style="width: 100px">
+                                        {{'Length' | localize}}
+                                      </th>
+
+
+
+
+                                  </tr>
+                              </ng-template>
+                              <ng-template pTemplate="body" let-record="$implicit">
+                                   <tr>
+
+                                        <td style="width: 100px" *ngIf="'Pages.ReferenceNoSetUp.Edit'| permission">
+                                            <div class="btn-group dropdown" dropdown container="body">
+                                                <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                                                <i class="fa fa-cog"></i><span class="caret"></span>
+                                                {{"Actions" | localize}}
+                                            </button>
+                                                <ul class="dropdown-menu" *dropdownMenu  >
+                                                    <li *ngIf="'Pages.ReferenceNoSetUp.Edit'| permission">
+                                                        <a href="javascript:;" (click)="Edit(record)">{{'Edit' | localize}}</a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </td>
+
+                                          <td style="width: 100px" >
+                                              <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                              {{record.operationName}}
+                                          </td>
+                                          <td  style="width: 100px">
+                                            <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+
+                                            {{record.norm_Acroyno}}
+                                        </td>
+                                        <td  style="width: 100px">
+                                            <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                            {{record.lenCount}}
+                                        </td>
+
+
+
+
+
+
+                                   </tr>
+                              </ng-template>
+                          </p-table>
+
+
+                      </div>
+                        <!--<Primeng-TurboTable-End>-->
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+

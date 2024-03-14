@@ -1,0 +1,481 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid"
+    >
+            <sub-header [title]="' Budget Setup' | localize" >
+
+            </sub-header>
+    </div>
+
+    <div [class]="containerClass " [busyIf]="primengTableHelper.isLoading">
+        <div class="card card-custom">
+            <div class="card-body">
+                <div class="createsection">
+                    <div class="row" *ngIf="hidefirstdivcard">
+                        <!-- <div class="col-md-12"> -->
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName"
+                                    >Select Budget Period</label
+                                >
+
+                                <ng-select
+                                    name="acct"
+                                    [(ngModel)]="budgetSetup.budgetPeriodId"
+                                    required
+                                >
+                                    <ng-option
+                                        *ngFor="let acc of budperiodrecords"
+                                        [value]="acc.id"
+                                    >
+                                        {{ acc.description }}</ng-option
+                                    >
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName"
+                                    >Budget Level</label
+                                >
+
+                                <ng-select
+                                    name="acct"
+                                    [(ngModel)]="budgetSetup.budGetLevelId"
+                                    required
+                                >
+                                    <ng-option
+                                        *ngFor="let budlevel of budlevelrecords"
+                                        [value]="budlevel.id"
+                                    >
+                                        {{ budlevel.description }}</ng-option
+                                    >
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 " *ngIf="budgetSetup.budGetLevelId">
+                            <div class="form-group">
+                                <label for="mislimit">{{"Select MIS Category Limit" | localize}}</label>
+
+                                <select name="userName" required class="form-control" [(ngModel)]="budgetSetup.companyCategoryStructureId">
+                                    <option   *ngFor="let item of companystructurecategory" [value]="item.id" >
+                                        {{item.categoryName}}
+                                    </option>
+                                    </select>
+                            </div>
+                        </div>
+
+                        <!-- </div> -->
+                    </div>
+
+                    <div *ngIf="thresholdblock && 'Pages.BudgetSetUp.Edit'| permission" class="row" style="margin-bottom: 30px;">
+                        <div class="col-md-4" [style]="switchStyle1">
+                            <div class="form-group">
+                                <label for="totalLine">Enforce Budget</label>
+                                <span style="margin-right: 20px;"></span>
+                                <p-inputSwitch
+                                    (onChange)="handleChange($event)"
+                                    name="total"
+                                    style="position: relative; top: 10px; box-shadow: 0 0 5px #ccc;"
+                                    [(ngModel)]="budgetSetup.enforceBudget"
+                                >
+                                </p-inputSwitch>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5" [style]="switchStyle2">
+                            <div class="form-group">
+                                <label for="notify"
+                                    >Set Notification at Threshold</label
+                                >
+                                <span style="margin-right: 20px;"></span>
+                                <p-inputSwitch
+                                    (onChange)="handleChange1($event)"
+                                    name="notify"
+                                    style="position: relative; top: 10px; box-shadow: 0 0 5px #ccc;"
+                                    [(ngModel)]="budgetSetup.budgetThreshold"
+                                >
+                                </p-inputSwitch>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div  class="col-md-12" *ngIf="hidethresholdnotificationform" >
+                            <div class="row align-items-center mb-2">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label
+                                            class="small mb-1"
+                                            for="inputFirstName"
+                                            >Notification Threshold %(75 to
+                                            100)</label
+                                        >
+
+                                        <input
+                                            id="TransactionType"
+                                            type="input"
+                                            class="form-control"
+                                            name="thresholdpercent"
+                                            [(ngModel)]="thresholdpercent"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="Vendor">
+                                            Notification Roles
+                                        </label>
+                                        <ng-multiselect-dropdown
+                                            [placeholder]="'Select Roles'"
+                                            [(ngModel)]="emails"
+                                            [ngModelOptions]="{
+                                                standalone: true
+                                            }"
+                                            [settings]="dropdownSettings"
+                                            [data]="roles"
+                                            (onSelect)="selectRoles($event)"
+                                            (onSelectAll)="onSelectAll($event)"
+                                        >
+                                        </ng-multiselect-dropdown>
+                                    </div>
+                                </div>
+                                <div
+                                    class="col-md-2 "
+                                    *ngIf="hidethresholdaddbutton && 'Pages.BudgetSetUp.Edit'| permission"
+                                >
+                                    <div class="form-group">
+                                        <label
+                                            class="small mb-1"
+                                            for="inputFirstName"
+                                        ></label>
+                                        <br />
+                                        <button
+                                            type="submit"
+                                            [disabled]="
+                                                !thresholdpercent || !emails
+                                            "
+                                            (click)="savebudgetthreshold()"
+                                            flex="15"
+                                            class="btn btn-primary "
+                                        >
+                                            {{ "Add Threshold" | localize }}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="col-md-2 "
+                                    *ngIf="hidethresholdupdatebutton && 'Pages.BudgetSetUp.Edit'| permission"
+                                >
+                                    <div class="form-group">
+                                        <label
+                                            class="small mb-1"
+                                            for="inputFirstName"
+                                        ></label>
+                                        <button
+                                            type="submit"
+                                            (click)="updatebudgetthreshold()"
+                                            flex="15"
+                                            class="btn btn-primary "
+                                        >
+                                            {{ "Update Threshold" | localize }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row align-items-center col-md-12">
+                                <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading" >
+                                    <div
+                                        class="table-scrollable table-scrollable-borderless border border-primary">
+                                        <table
+                                            class="table table-hover table-light ">
+                                            <thead>
+                                                <th>{{ "Action" }}</th>
+                                                <th>
+                                                    {{
+                                                        "Percentage Threshold"
+                                                            | localize
+                                                    }}
+                                                </th>
+                                                <th>
+                                                    {{ "Notification Roles" | localize }}
+                                                </th>
+                                                <th>
+                                                    {{ "Status" | localize }}
+                                                </th>
+                                            </thead>
+                                            <tr
+                                                *ngFor="
+                                                    let record of primengTableHelper.records;
+                                                    let index = index
+                                                "
+                                            >
+                                                <td style="width: 100px">
+                                                    <div
+                                                        class="
+                                                            btn-group
+                                                            dropdown
+                                                        "
+                                                        dropdown
+                                                        container="body"
+                                                    >
+                                                        <button
+                                                            dropdownToggle
+                                                            class="
+                                                                dropdown-toggle
+                                                                btn
+                                                                btn-sm
+                                                                btn-primary
+                                                            "
+                                                        >
+                                                            <i
+                                                                class="
+                                                                    fa fa-cog
+                                                                "
+                                                            ></i
+                                                            ><span
+                                                                class="caret"
+                                                            ></span>
+                                                            {{
+                                                                "Actions"
+                                                                    | localize
+                                                            }}
+                                                        </button>
+                                                        <ul
+                                                            class="
+                                                                dropdown-menu
+                                                            "
+                                                            *dropdownMenu
+                                                        >
+                                                            <li *ngIf="!record.status && 'Pages.BudgetSetUp.Edit'| permission">
+                                                                <a
+                                                                    href="javascript:;"
+                                                                    (click)="
+                                                                        activate(
+                                                                            record
+                                                                        )
+                                                                    "
+                                                                    >{{
+                                                                        "Activate"
+                                                                            | localize
+                                                                    }}</a
+                                                                >
+                                                            </li>
+                                                            <li *ngIf="record.status && 'Pages.BudgetSetUp.Edit'| permission">
+                                                                <a
+                                                                    href="javascript:;"
+                                                                    (click)="
+                                                                        editbudgetthreshold(
+                                                                            record
+                                                                        )
+                                                                    "
+                                                                    >{{
+                                                                        "Edit"
+                                                                            | localize
+                                                                    }}</a
+                                                                >
+                                                            </li>
+                                                            <li *ngIf="record.status && 'Pages.BudgetSetUp.Edit'| permission">
+                                                                <a
+                                                                    href="javascript:;"
+                                                                    (click)="
+                                                                        delete(
+                                                                            record
+                                                                        )
+                                                                    "
+                                                                    >{{
+                                                                        "Disable"
+                                                                            | localize
+                                                                    }}</a
+                                                                >
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    {{
+                                                        record.thresholdPercentage
+                                                    }}
+                                                </td>
+                                                <td>
+                                                    {{ record.roleName }}
+                                                </td>
+                                                <td>
+                                                    {{ record.status }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="'Pages.BudgetSetUp.Edit'| permission">
+                        <div
+                            class="col-md-12 mt-10 text-right"
+                            *ngIf="hidesavebutton"
+                        >
+                            <div class="form-group">
+                                <button
+                                    type="submit"
+                                    (click)="save()"
+                                    [disabled]="
+                                        !budgetSetup.budgetPeriodId ||
+                                        !budgetSetup.budGetLevelId
+                                    "
+                                    flex="15"
+                                    class="btn btn-primary "
+                                >
+                                    {{ "Save" | localize }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="updatesection">
+                    <div class="form-group row" *ngIf="hideseconddivcard">
+                        <div class="col-md-2">
+                            <label
+                                class="small mb-1 font-weight-bold col-12"
+                                for="payeeTypeDescription"
+                                >Budget Period</label
+                            >
+                            <label
+                                class="small mb-1 col-12"
+                                for="payeeTypeDescription"
+                                >{{ records.budgetPeriodName }}</label
+                            >
+                        </div>
+                        <div class="col-md-2">
+                            <label
+                                class="small mb-1 font-weight-bold col-12"
+                                for="inputFirstName"
+                                >Budget Level</label
+                            >
+                            <label class="small mb-1 col-12">
+                                {{ records.budGetLevel}}</label
+                            >
+                        </div>
+                        <div class="col-md-2" *ngIf="records.budGetLevelId==3">
+                            <label
+                                class="small mb-1 font-weight-bold col-12"
+                                for="inputFirstName"
+                                >Mis Category</label
+                            >
+                            <label class="small mb-1 col-12">
+                                {{ records.companyCategoryStructureName}}</label
+                            >
+                        </div>
+                        <div class="col-md-3">
+                            <label
+                                class="small mb-1 font-weight-bold col-12"
+                                for="invoiceDate"
+                                >Enforce Budget</label
+                            >
+
+                            <label class="small mb-1 col-12">{{
+                                records.enforceBudget
+                            }}</label>
+                        </div>
+                        <div class="col-md-2">
+                            <label
+                                class="small mb-1 font-weight-bold col-12"
+                                for="invoiceDate"
+                                >Set Notification at Threshold</label
+                            >
+
+                            <label class="small mb-1 col-12">{{
+                                records.budgetThreshold
+                            }}</label>
+                        </div>
+                    </div>
+                    <div
+                        class="row align-items-center col-md-12"
+                        *ngIf="hideseconddivcard"
+                    >
+                        <div
+                            class="primeng-datatable-container"
+                            [busyIf]="primengTableHelper.isLoading"
+                        >
+                            <div
+                                class="
+                                    table-scrollable table-scrollable-borderless
+                                    border border-primary
+                                "
+                            >
+                                <table class="table table-hover table-light">
+                                    <thead>
+                                        <th>
+                                            {{
+                                                "Percentage Threshold"
+                                                    | localize
+                                            }}
+                                        </th>
+                                        <th>
+                                            {{ "Notification Roles" | localize }}
+                                        </th>
+                                    </thead>
+                                    <tr
+                                        *ngFor="
+                                            let record of primengTableHelper.records;
+                                            let index = index
+                                        "
+                                    >
+                                        <td>
+                                            {{ record.thresholdPercentage }}
+                                        </td>
+                                        <td>
+                                            {{ record.roleName }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div
+                        class="col-md-12 mt-10 text-right"
+                        *ngIf="((hideseconddivcard && !hideupdatebutton) || hideeditbutton) && 'Pages.BudgetSetUp.Edit'| permission"
+                    >
+                        <div class="form-group">
+                            <button
+                                type="submit"
+                                (click)="edit(records)"
+                                flex="15"
+                                class="btn btn-primary "
+                            >
+                                {{ "Edit" | localize }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        class="col-md-12 mt-10 text-right"
+                        *ngIf="hideupdatebutton && 'Pages.BudgetSetUp.Edit'| permission"
+                    >
+                        <div class="form-group">
+                            <button
+                                type="submit"
+                                (click)="update()"
+                                flex="15"
+                                class="btn btn-primary "
+                            >
+                                {{ "Update" | localize }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<budgetThresholdViewModal #budgetThresholdViewModal></budgetThresholdViewModal>

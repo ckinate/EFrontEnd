@@ -1,0 +1,210 @@
+<div [@routerTransition]>
+
+    <div   class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Taxation Setup' | localize" [description]="'Setup' | localize">
+            <div role="actions" *ngIf="'Pages.TaxationSetUp.Create'| permission">
+                <div class="btn-group" dropdown>
+
+                </div>
+                <button (click)="showEditModal(taxation)"  flex="15" class="btn btn-primary"><i class="fa fa-plus"></i>
+                    {{ "Create New" | localize }}
+                    </button>
+            </div>
+        </sub-header>
+
+
+        <div [class]="containerClass ">
+            <div class="card card-custom">
+                <div class="card-body">
+                <!-- <form #taxationForm="ngForm"  (ngSubmit)="save(taxationForm)">
+                    <div class="row align-items-center mb-2">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="GroupName">{{" Tax Description" | localize}}</label>
+                                <input id="Discription" type="text" name="description" [(ngModel)]="taxation.description" placeholder="Enter  Name" required
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="GroupName">{{"Rate" | localize}}</label>
+                                <input id="Discription" type="number" oninput="this.value = Math.abs(this.value)" name="rate" [(ngModel)]="taxation.rate" placeholder="rate" required
+                                    class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName">Account Name</label>
+
+
+                                <ng-select   [(ngModel)]="taxation.chartOfAccountId" name="debitGL" required >
+                                    <ng-option *ngFor="let acc of chartOfAcct"  [value]="acc.id">
+                                        {{acc.accountName}}- {{acc.accountCode}}</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="custom-control custom-checkbox form-group">
+                                <input type="checkbox" class="custom-control-input" id="customCheck9" [(ngModel)]="taxation.witholding" name="withholding">
+                                <label class="custom-control-label" for="customCheck9">{{"Is WithHolding Tax?" | localize}}</label>
+                              </div>
+                        </div>
+                        <div class="col-md-12 mt-2 text-right">
+                            <div class="form-group">
+                                <button type="submit" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')" [disabled]="!taxationForm.form.valid"  flex="15" class="btn btn-primary "
+                                >
+                                {{ "Save" | localize }}
+                                </button>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </form> -->
+                <br>
+                <div class="col-md-12 mt-0 text-right">
+                    <div class="btn-group" >
+                        <button  type="button" class="btn btn-outline-secondary mr-1"
+                        style="border-color: green; border-width: 2px; color:green"
+                              aria-expanded="false" (click)="frontEndExcelExport()">
+                            <i class="far fa-file-excel" style="color:green ;"></i> {{"ExportToExcel" | localize}}
+                        </button>
+
+                    </div>
+                </div>
+                <br>
+
+
+                <div class="row align-items-center">
+                    <!--<Primeng-TurboTable-Start>-->
+                  <div class="primeng-datatable-container"
+                      [busyIf]="primengTableHelper.isLoading">
+
+                      <p-table #dataTable
+                      [value]="primengTableHelper.records"
+
+   rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20]" [lazy]="false" [rowHover]="true" sortMode="multiple" [scrollable]="true"
+   scrollWidth="100%" scrollHeight="400px" [responsive]="primengTableHelper.isResponsive" [resizableColumns]="primengTableHelper.resizableColumns"
+                      [globalFilterFields]="['description','rate','chartOfAccountCode','witholding']" id="excel-table">
+
+                      <ng-template pTemplate="caption">
+                        <div style="text-align: right">
+                            <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                            <input type="text" pInputText size="50" placeholder="Search keyword" style="width:auto" (input)="dataTable.filterGlobal($event.target.value, 'contains')">
+                        </div>
+                    </ng-template>
+                          <ng-template pTemplate="header">
+                              <tr>
+
+                                  <th  style="width: 100px" *ngIf="('Pages.TaxationSetUp.Edit'| permission)&& ('Pages.TaxationSetUp.Deactivate'| permission)">
+                                    {{'Actions' | localize}}
+                                </th>
+                                 <th style="width: 100px" pSortableColumn="description">{{"Description"|localize}} <p-sortIcon field="description"></p-sortIcon></th>
+
+
+                                <th style="width: 100px" pSortableColumn="rate">{{"Rate"|localize}} <p-sortIcon field="rate"></p-sortIcon></th>
+
+                                <th style="width: 100px" pSortableColumn="chartOfAccountCode">{{"Account Name"|localize}} <p-sortIcon field="chartOfAccountCode"></p-sortIcon></th>
+                                <th style="width: 100px" pSortableColumn="witholding">{{"WithHolding"|localize}} <p-sortIcon field="witholding"></p-sortIcon></th>
+                                <th style="width: 100px" pSortableColumn="creationTime">{{"Creation Time"|localize}} <p-sortIcon field="creationTime"></p-sortIcon></th>
+
+                                <th style="width: 100px" pSortableColumn="userName">{{"Creator Name"|localize}} <p-sortIcon field="userName"></p-sortIcon></th>
+                                <th style="width: 100px" pSortableColumn="default">{{"Default"|localize}} <p-sortIcon field="default"></p-sortIcon></th>
+                                 <th style="width: 100px" pSortableColumn="active">{{"Status"|localize}} <p-sortIcon field="active"></p-sortIcon></th>
+
+
+
+                              </tr>
+                          </ng-template>
+                          <ng-template pTemplate="body" let-record="$implicit">
+                               <tr>
+                                    <td style="width: 100px" *ngIf="('Pages.TaxationSetUp.Edit'| permission)&& ('Pages.TaxationSetUp.Deactivate'| permission)">
+                                        <div class="btn-group dropdown" dropdown container="body">
+                                            <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                                            <i class="fa fa-cog"></i><span class="caret"></span>
+                                            {{"Actions" | localize}}
+                                        </button>
+                                            <ul class="dropdown-menu" *dropdownMenu>
+                                                <li *ngIf="record.active=='Inactive'&& 'Pages.TaxationSetUp.Deactivate'| permission">
+                                                    <a href="javascript:;" (click)="activate(record)">{{'Activate' | localize}}</a>
+                                                </li>
+                                                <li *ngIf="'Pages.TaxationSetUp.Edit'| permission">
+                                                    <a href="javascript:;" (click)="showEditModal(record)">{{'Edit' | localize}}</a>
+                                                </li>
+                                                <li *ngIf="(!record.witholding&&!record.isDefault&&record.active=='Active')&&'Pages.TaxationSetUp.Edit'| permission">
+                                                    <a href="javascript:;" (click)="setDefault(record)">{{'Set as Default' | localize}}</a>
+                                                </li>
+                                                <li *ngIf="(record.active=='Active'&&!record.isDefault) && 'Pages.TaxationSetUp.Deactivate'| permission">
+                                                    <a href="javascript:;" (click)="delete(record)">{{'Deactivate' | localize}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                      <td style="width: 100px">
+
+                                          {{record.description}}
+                                      </td>
+
+                                      <td style="width: 100px">
+
+                                        {{record.rate}}
+                                    </td>
+                                    <td style="width: 100px">
+
+                                     {{record.chartOfAccountCode}} {{" - "}}   {{record.accountName}}
+                                    </td>
+                                    <td style="width: 100px">
+
+
+
+                                        <span *ngIf="record.witholding"> {{'Yes' | localize}}</span>
+                                            <span *ngIf="!record.witholding"> {{'No' | localize}}</span>
+                                    </td>
+
+                                      <td style="width: 100px">
+
+                                              <span
+                                                    *ngIf="isEdit == false">{{record.creationTime  |  luxonFormat:'yyyy-LL-dd HH:mm:ss' }}</span>
+                                           <span
+                                            *ngIf="isEdit == true">{{record.lastModificationTime  |  luxonFormat:'yyyy-LL-dd HH:mm:ss'}}</span>
+                                        </td>
+
+                                        <td style="width: 100px">
+
+                                            {{record.userName}}
+                                        </td>
+                                        <td style="width: 100px">
+
+                                            <span *ngIf="record.isDefault&&!record.witholding"> {{'Yes' | localize}}</span>
+                                            <span *ngIf="!record.isDefault&&!record.witholding"> {{'No' | localize}}</span>
+                                            <span *ngIf="record.witholding"> {{'NA' | localize}}</span>
+
+                                        </td>
+                                   <td style="width: 100px">
+
+                                        {{record.active}}
+                                    </td>
+                               </tr>
+                          </ng-template>
+                      </p-table>
+
+
+                  </div>
+                    <!--<Primeng-TurboTable-End>-->
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+</div>
+
+<taxModal #taxModal></taxModal>

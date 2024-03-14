@@ -1,0 +1,12 @@
+<button 
+    (click)="handleClick"  
+    flex="15" 
+    [class]="class"
+    [disabled]="disabled"
+    [style]="inbuiltStyle+style"
+    [type]="action"
+>
+    <button *ngIf="!isLoading" [innerHTML]="iconHtml" class="strip-button" [disabled]="disabled" appNoDoubleClick></button> 
+    <button *ngIf="isLoading" class="strip-button fa fa-spinner fa-spin" style="color: #FFF" [disabled]="disabled" appNoDoubleClick></button> 
+{{ title }} 
+</button>

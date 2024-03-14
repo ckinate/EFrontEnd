@@ -1,0 +1,142 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Detailed Expense transaction' | localize"></sub-header>
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div class="form-group">            
+                      </div>
+
+                      <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="form-group">
+                          <label for="CallOver">{{"Report Type" | localize}}</label>                
+                          <select id="CallOver" name="CallOver" class="form-control" placeholder="Select Report Type" (change)="onTypeChange()" 
+                              [(ngModel)]="opid" >
+                              <option value="0">{{"All" | localize}}</option> 
+                              <option value="6">{{"Operating Expense" | localize}}</option> 
+                              <option value="20">{{"Cash Advance" | localize}}</option>                                            
+                          </select>           
+                        </div>
+                      </div>
+
+
+                      
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                          <label for="SampleDateRangePicker" class="col-md-12">Initiation Date</label>
+                          <div class="input-group">
+                          <input class="form-control" type="text" id="sampleDateTimePicker"
+                                name="sampleDateTimePicker" #drp="bsDaterangepicker" readonly="readonly"
+                                bsDaterangepicker dateRangePickerLuxonModifier [(date)]="dateRange" (bsValueChange)="onValueChange($event)" />
+                            <div class="input-group-append">
+                                <button class="input-group-append btn btn-outline-secondary" (click)="drp.toggle()"
+                                    type="button">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </div>
+                          </div>  
+                        </div>    
+                      </div>                   
+
+<div class="row">
+  <div class="col-lg-6 col-md-6 col-sm-6">
+                          <div class="form-group">
+                            <label for="categoryName">Select Processor</label>
+                            <ng-select name="categoryName" placeholder="Category Name"  [(ngModel)]="PaymentProcessor" (change) ="onProcessorChange()" >
+                              <ng-option  value="All">All</ng-option> 
+                              <ng-option *ngFor="let x of ProcessorList" [value]="x.key">{{x.value}} </ng-option>
+                            </ng-select>            
+                          </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                          <div class="form-group">
+                            <label for="custCode">Select Payment Reference</label>
+                            <ng-select name="companyStructure" placeholder="Mis Code" [(ngModel)]="RequestRef" (change)="onRequestRefChange()">     
+                              <ng-option  value="All">All</ng-option>       
+                              <ng-option *ngFor="let x of RefList" [value]="x">{{x}}</ng-option>
+                            </ng-select>            
+                          </div>
+                        </div>
+                      </div>                      
+
+
+
+                      <div class="row align-items-center">
+                        <!--<Primeng-TurboTable-Start>-->
+                        <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+
+                            <p-table #dataTable [value]="primengTableHelper.records"
+                                rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true"
+                                [rows]="10" [rowsPerPageOptions]="[5,10,15,20]" [lazy]="false"
+                                [rowHover]="true" sortMode="multiple" [scrollable]="true" ScrollWidth="100%"
+                                [responsive]="primengTableHelper.isResponsive"
+                                [resizableColumns]="primengTableHelper.resizableColumns">
+
+
+                                <ng-template pTemplate="header">
+                                    <tr>
+
+
+                                        <th style="width: 150px">
+                                            {{'Ref' | localize}}
+                                        </th>
+                                        <th style="width: 200px">
+                                          {{'Narration' | localize}}
+                                      </th>
+                                        <th style="width: 100px">
+                                            {{'Amount' | localize}}
+                                        </th>
+
+                                        <th style="width: 100px">                                            
+                                        </th>
+                                        <th style="width: 100px">                                            
+                                        </th>
+
+
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+
+
+                                        <td style="width: 150px">                                            
+                                            {{record.pVoucherNo}}
+                                        </td>
+                                        <td style="width: 200px">
+                                          <span class="ui-column-title"> {{'Narration' | localize}}</span>
+                                          {{record.ledgerRemark}}
+                                      </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title"> {{'Amount' | localize}}</span>
+                                            {{record.amountNowPaid | number:'1.2-5'}}
+                                        </td>
+                                        <td style="width: 100px">
+                                          <a href="javascript:;"  title="view supporting documents"   (click)="showDocument(record.pRefNo, record.operationId)">
+                                            <i class="fa fa-download"></i> 
+                                        </a>
+                                        </td>
+                                        <td style="width: 100px">
+                                          <a href="javascript:;"  title="View report"  (click)="ViewReport(record.pVoucherNo,record.operationId)">
+                                            <i class="fa fa-book"></i> 
+                                        </a>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+
+
+                            </p-table>
+
+
+
+
+                        </div>
+                        <!--<Primeng-TurboTable-End>-->
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<appdocuments #appdocuments></appdocuments> 

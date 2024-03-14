@@ -1,0 +1,121 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Expense Transaction' | localize"></sub-header>
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div class="form-group">
+                    </div>
+
+                    <div class="row">
+
+
+                        <div class="col-md-4 text-center">
+                            <div class="form-group">
+                                <label for="options1">{{
+                                    "By Category" | localize
+                                    }}</label>
+                                <input id="options1" type="radio" name="baseType" [(ngModel)]="reportType" [value]="1"
+                                    class="form-control" />
+                            </div>
+                        </div>
+                        <div class=" col-md-4 text-center">
+                            <div class="form-group">
+                                <label for="options2">{{
+                                    "By TransactionType" | localize
+                                    }}</label>
+                                <input id="options2" type="radio" name="baseType" [(ngModel)]="reportType" [value]="2"
+                                    class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="form-group">
+                                <label for="options3">{{
+                                    "Detailed Transaction" | localize
+                                    }}</label>
+                                <input id="options3" type="radio" name="baseType" [(ngModel)]="reportType" [value]="3"
+                                    class="form-control" />
+                            </div>
+
+
+                        </div>
+
+                            <div class="col-md-4 pull-right">
+                                <label for="SampleDateRangePicker" class="col-md-12">Select Period</label>
+                                <div class="input-group">
+                                    <input class="form-control" type="text" id="sampleDateTimePicker"
+                                        name="sampleDateTimePicker" #drp="bsDaterangepicker" readonly="readonly"
+                                        bsDaterangepicker dateRangePickerLuxonModifier [(date)]="dateRange"
+                                        (bsValueChange)="onValueChange($event)" />
+                                    <div class="input-group-append">
+                                        <button class="input-group-append btn btn-outline-secondary"
+                                            (click)="drp.toggle()" type="button">
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                             <!--    <div class="col-md-3">
+
+                                  <div class="form-group">
+
+                                    <label for="categoryName">Division</label>
+
+                                    <ng-select name="categoryName" placeholder="Category Name" (change)="getCompanyStructure($event)">
+
+                                      <ng-option *ngFor="let x of categoryList" [value]="x.id">{{x.categoryName}} </ng-option>
+
+                                    </ng-select>
+
+                                  </div>
+
+                                </div>
+
+                                <div class="col-md-3">
+
+                                    <div class="form-group">
+
+                                      <label for="custCode">MIS Code</label>
+
+                                      <ng-select name="companyStructure" placeholder="Mis Code" [(ngModel)]="miscode">
+
+                                        <ng-option  [value]="0"></ng-option>
+
+                                        <ng-option *ngFor="let x of listCompanyStructure" [value]="x.customCode">{{x.displayName+' '+'-'+' '+ x.customCode}}</ng-option>
+
+                                      </ng-select>
+
+                                    </div>
+
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="options1">{{
+                                            "Transaction TypeId" | localize
+                                            }}</label>
+                                            <input type="number" name="TransactionTypeId" class="form-control" [(ngModel)]="Tid" />
+                                    </div>
+                                  </div> -->
+
+                                <div class="col-md-4 mt-6">
+                                    <button class="btn btn-primary" type="button" title="View report"  [disabled]="reportType==0||dateRange==null" (click)="ViewReport()">View
+                                        Report</button>
+                                </div>
+
+                                <div class="col-md-4">
+
+                                </div>
+
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

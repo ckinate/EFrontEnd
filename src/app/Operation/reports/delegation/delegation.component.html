@@ -1,0 +1,75 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Delegation Report' | localize"></sub-header>
+        <div [class]="containerClass">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div class="form-group row">
+
+                        <div class="col-lg-5 col-md-5 col-sm-5">
+
+                                <label for="usersName">Delegator</label>
+                                <ng-select
+                                        [(ngModel)]="madeBy"
+                                        name="payeeName"
+                                        [disabled]="!isAdmin"
+                                    >
+                                    <ng-option [value]="0" >All</ng-option
+                                        >
+
+                                        <ng-option
+                                            *ngFor="
+                                                let payeename of payeenamelist
+                                            "
+                                            [value]="payeename.username"
+                                            >{{ payeename.username }}</ng-option
+                                        >
+                                    </ng-select>
+
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-sm-5 input-group">
+                            <label for="SampleDateRangePicker" class="col-md-12"
+                            >Select Date Range</label
+                        >
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="sampleDateTimePicker"
+                                name="sampleDateTimePicker"
+                                #drp="bsDaterangepicker"
+                                readonly="readonly"
+                                bsDaterangepicker
+                                dateRangePickerLuxonModifier
+                                [(date)]="dateRange"
+                            />
+                            <div class="input-group-append">
+                                <button
+                                    class="input-group-append btn btn-outline-secondary"
+                                    (click)="drp.toggle()"
+                                    type="button"
+                                >
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2">
+                            <label for="SampleDateRangePicker" class="col-md-12"
+                            >.</label
+                        >
+                            <button
+                                class="btn btn-primary"
+                                type="button"
+                                (click)="ViewReport(link)"
+                                title="View report"
+                            >
+                                View Report
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

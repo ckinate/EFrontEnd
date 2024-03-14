@@ -1,0 +1,126 @@
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+           
+
+            <div class="modal-header">
+                <h4>
+     {{"Prepayment Schedule" | localize}}
+</h4>
+<a style="cursor: pointer"  title="download amortization" (click)="exportexcel()">
+    <i class="fa fa-download">Download Amortization</i>
+  </a>
+                <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                    <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8">                <h6>
+                    {{"Amount Amortizing: " | localize}} {{ amortizing | number:'1.2-2'}}  {{" |  Amortized Total: " | localize}} {{ amortizedTotal | number:'1.2-2'}} 
+           
+
+                </h6>
+            </div>
+<!-- <div class="col-md-4">
+                <label for="applyEdit"> {{"Edit values?   " | localize}}  </label>
+                <span>
+                       <p-inputSwitch (onChange)="SetEdit()" name="applyEdit" onLabel="yes" offLabel="no">
+                </p-inputSwitch> 
+                </span>
+            
+            </div> -->
+
+            </div>
+                   <div class="row align-items-center">
+                            <!--<Primeng-TurboTable-Start>-->
+                            <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+                                <table class="table table-hover table-light" id="excel-table">
+                                    <thead>
+                                        <tr class="uppercase">
+                                           
+                                            <th>
+                                                Period
+                                            </th>
+                                           
+                                            <th>
+                                                MISCode
+                                            </th>
+                                            <th>
+                                                Amount
+                                             </th>  
+                                            <th>
+                                              
+                                             </th>   
+                                                                                  
+                                        
+
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tr *ngFor="let m of pData; let i = index">
+
+                                     
+                                        <td>
+                                            {{m.transactionDate | date}}
+                                        </td>
+                                        <td>
+                                            {{m.reportCode}}
+                                        </td>
+                                        <td>                                            
+                                        
+                                            {{m.amount | number:'1.2-2'}}
+                                       
+                                     </td> 
+                                        <td>                                            
+                                        
+
+                                            <p-inputNumber min="0" max="9999999999999" maxlength="21"  maxlength="21" 
+                                            style="width:100%"  [minFractionDigits]="2" 
+                                            [maxFractionDigits]="2" name="m.{{i}}.amount" [(ngModel)]="m.amount"
+                                            (ngModelChange)="revalidate()"   mode="decimal"></p-inputNumber>
+                                                
+                                                <span class="cdk-visually-hidden" *ngIf="hidecolumn">{{m.amount | number:'1.2-2'}}</span>
+                                          
+                                        </td>    
+                                                
+                                        
+                                         
+                                  
+
+                                    </tr>
+
+
+                                </table>
+
+
+                              
+
+
+
+
+                            </div>
+
+                          
+
+                        </div>
+
+
+            </div>
+
+            
+           <div class="modal-footer">
+            <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+            <button type="button" class="btn btn-primary"
+                                (click)="saveSchedule()" [disabled]="isEdit" ><i
+                                    class="fa fa-save"></i>
+                                <span>{{"Save Schedule and Close" | localize}}</span></button>
+            <!-- <button type="submit" class="btn btn-primary" [disabled]="!roleuserForm.form.valid"  [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{"Save" | localize}}</span></button> -->
+
+        </div>
+        </div>
+    </div>

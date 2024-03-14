@@ -1,0 +1,248 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Other Beneficiaries' | localize" [description]="'Non-staff and Non-Vendor Beneficiaries' | localize">
+            <div role="actions" *ngIf="'Pages.OtherBeneficiarySetUp.Create'| permission">
+
+
+                <button (click)="createUser()"
+                    class="btn btn-primary"><i class="fa fa-plus"></i> {{"New Beneficiary" | localize}}</button>
+            </div>
+        </sub-header>
+        <div [class]="containerClass">
+            <div class="card card-custom gutter-b">
+                <div class="card-body">
+
+                    <br>
+                    <div class="col-md-12 mt-0 text-right">
+                        <div class="btn-group" >
+                            <button  type="button" class="btn btn-outline-secondary mr-1"
+                            style="border-color: green; border-width: 2px; color:green"
+                                  aria-expanded="false" (click)="frontEndExcelExport()">
+                                <i class="far fa-file-excel" style="color:green ;"></i> {{"ExportToExcel" | localize}}
+                            </button>
+
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row align-items-center">
+                        <!--<Primeng-TurboTable-Start>-->
+                        <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+                            <p-table #dataTable sortMode="multiple" (onLazyLoad)="getUsers()"
+                                [value]="primengTableHelper.records"
+                                rows="{{primengTableHelper.defaultRecordsCountPerPage}}"
+                                [lazy]="false" [scrollable]="true" scrollWidth="100%" scrollHeight="400px"
+                                [responsive]="primengTableHelper.isResponsive"
+                                [resizableColumns]="primengTableHelper.resizableColumns" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20]" id="excel-table">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 130px" *ngIf="('Pages.OtherBeneficiarySetUp.Edit'| permission) &&('Pages.OtherBeneficiarySetUp.Delete'| permission)">{{'Actions' | localize}}</th>
+
+                                        <th style="width: 250px" >{{'Bank Name' | localize}}</th>
+                                        <th style="width: 150px" >{{'Account Name' | localize}}</th>
+                                        <th style="width: 120px" >{{'Account Number' | localize}} </th>
+
+                                        <th style="width: 200px" pSortableColumn="emailAddress">
+                                            {{'EmailAddress' | localize}}
+                                            <p-sortIcon field="emailAddress"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 100px" >
+                                            {{'Active' | localize}}
+
+                                        </th>
+
+                                        <th style="width: 200px" >
+                                            {{'Category' | localize}}
+
+                                        </th>
+                                        <th style="width: 200px" >
+                                            {{'Created By' | localize}}
+                                        </th>
+                                        <th style="width: 200px" >
+                                            {{'Created' | localize}}
+                                        </th>
+                                        <th style="width: 200px" >
+                                            {{'Modified By' | localize}}
+                                        </th>
+                                        <th style="width: 200px" >
+                                            {{'Modified' | localize}}
+                                        </th>
+
+
+
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr>
+                                        <td style="width: 130px"
+                                            [hidden]="!(['Pages.Administration.Users.Impersonation', 'Pages.Administration.Users.Edit', 'Pages.Administration.Users.ChangePermissions', 'Pages.Administration.Users.Delete'] | permissionAny)">
+                                            <div class="btn-group dropdown" dropdown container="body">
+                                                <button dropdownToggle class="dropdown-toggle btn btn-sm btn-primary">
+                                                    <i class="fa fa-cog"></i><span class="caret"></span>
+                                                    {{"Actions" | localize}}
+                                                </button>
+
+                                                <ul class="dropdown-menu" *dropdownMenu>
+
+                                                    <li *ngIf="'Pages.OtherBeneficiarySetUp.Edit'| permission">
+                                                        <a href="javascript:;" class="dropdown-item"
+
+                                                            (click)="EditRecord(record)">{{'Edit' | localize}}</a>
+                                                    </li>
+                                                    <li *ngIf="'Pages.OtherBeneficiarySetUp.Delete'| permission">
+                                                        <a href="javascript:;" class="dropdown-item"
+                                                            *ngIf="!record.active"
+                                                        (click)="ActiveStatus(record, true )">{{'Activate' | localize}}</a>
+                                                    </li>
+                                                    <li *ngIf="'Pages.OtherBeneficiarySetUp.Delete'| permission">
+                                                        <a href="javascript:;" class="dropdown-item"
+                                                        *ngIf="record.active"
+                                                            (click)="ActiveStatus(record, false )">{{'Deactivate' | localize}}</a>
+                                                    </li>
+                                                </ul>
+
+                                            </div>
+                                        </td>
+
+                                        <td style="width: 200px">
+
+                                            {{record.bankName}}
+                                        </td>
+                                        <td style="width: 200px">
+
+                                            {{record.accountName}}
+                                        </td>
+                                        <td style="width: 120px">
+
+                                            {{record.accountNumber}}
+                                        </td>
+
+                                        <td style="width: 200px">
+
+                                            {{record.email}}
+                                        </td>
+
+                                        <td style="width: 100px">
+
+
+                                                <span  class="label label-success label-inline" *ngIf="record.active">{{'Yes'}}</span>
+                                                <span  class="label label-dark label-inline" *ngIf="!record.active">{{'No'}}</span>
+                                        </td>
+                                        <td style="width: 200px">
+
+                                                {{record.categoryName | localize}}
+                                        </td>
+                                        <td style="width: 200px">
+
+                                                {{record.createdBy | localize}}
+                                        </td>
+                                        <td style="width: 200px">
+
+                                                {{record.created |  luxonFormat:'yyyy-LL-dd HH:mm:ss' }}
+                                        </td>
+                                        <td style="width: 200px">
+
+                                                {{record.createdBy | localize}}
+                                        </td>
+                                        <td style="width: 200px">
+
+                                                {{record.modified |  luxonFormat:'yyyy-LL-dd HH:mm:ss' }}
+                                        </td>
+
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            <div class="primeng-no-data" *ngIf="primengTableHelper.totalRecordsCount == 0">
+                                {{'NoData' | localize}}
+                            </div>
+                            <div class="primeng-paging-container">
+                                <!-- <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage" #paginator
+                                    (onPageChange)="getUsers()"
+                                    [totalRecords]="primengTableHelper.totalRecordsCount"
+                                    [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+
+                                </p-paginator> -->
+                                <span class="total-records-count">
+                                    {{'TotalRecordsCount' | localize:primengTableHelper.totalRecordsCount}}
+                                </span>
+                            </div>
+                        </div>
+                        <!--<Primeng-TurboTable-End>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span *ngIf="isEdit">{{"Update Beneficiary  "}} {{item.accountName}}</span>
+                <span *ngIf="!isEdit">{{"Create Beneficiary"}}</span>
+
+                <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                    <span aria-hidden="true">Close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div  class="row">
+                    <div class="form-group col-md-6">
+                        <label for="benBank">{{l("Bank")}}</label>
+                        <select id="benBank" class="form-control" required [(ngModel)]="item.bankCode" name="benBank">
+                            <option value="0">Select Bank</option>
+                            <option *ngFor="let bankItem of bankList" [value]="bankItem.bankCode">{{bankItem.bankName}}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="benNumber">{{l("Account Number")}}</label>
+                        <input type="text" id="benNumber" required pattern="[a-zA-Z0-9 ]*" class="form-control" [(ngModel)]="item.accountNumber" placeholder="Account Number" name="benNumber" minlength="10" maxlength="10" (keypress)="keyPressNumbersDecimal($event)" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="benName">{{l("Account Name")}}</label>
+                        <input type="text" id="benName" required pattern="[a-zA-Z0-9 ]*" class="form-control" [(ngModel)]="item.accountName"  placeholder="Account Name" name="benName" minlength="1" maxlength="200" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="benEmail">{{l("Email")}}</label>
+                        <input type="text" id="benEmail" pattern="email" class="form-control" [(ngModel)]="item.email"  placeholder="Email(Optional)" name="benEmail" minlength="1" maxlength="100" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="benCategory">{{l("Category")}}</label>
+                        <select id="benCategory" class="form-control" required [(ngModel)]="item.categoryId" name="benCategory">
+                            <option value=0>Select Category</option>
+                            <option *ngFor="let catItem of catList" [value]="catItem.id">{{catItem.description}}</option>
+                        </select>
+                    </div>
+
+
+
+
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer text-right">
+                <div class="form-group col-md-6">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" (click)="saveBeneficiary()"
+                    [disabled]="!item.accountNumber||!item.accountName||!item.bankCode||!item.categoryId"
+                    [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
+                        <i class="fa fa-save"></i>
+                        <span>{{l("Save All")}}</span>
+                    </button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

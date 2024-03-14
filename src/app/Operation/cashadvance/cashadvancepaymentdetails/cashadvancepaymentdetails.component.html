@@ -1,0 +1,533 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Cash Advance Payment' | localize"> </sub-header>
+
+        <div [class]="containerClass">
+            <div
+                class="card card-custom"
+                [busyIf]="primengTableHelper.isLoading"
+            >
+                <div class="card-body" [busyIf]="saving">
+                    <div class="col-md-12">
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div
+                                        class="form-group m-form__group align-items-center"
+                                    >
+                                        <div class="input-group">
+                                            <input
+                                                name="filterText"
+                                                autoFocus
+                                                [(ngModel)]="filterText"
+                                                class="form-control m-input"
+                                                [placeholder]="
+                                                    l('SearchWithThreeDot')
+                                                "
+                                                type="text"
+                                                (ngModelChange)="
+                                                    filterText = ReloadpaymentGridView(
+                                                        $event
+                                                    )
+                                                "
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div
+                                        class="col-md-6 text-center display-4 text-bold"
+                                    >
+                                        {{ refNo }}
+                                    </div>
+
+                                    <div
+                                        class="col-md-6 text-center display-4 text-bold"
+                                    >
+                                        {{ paymentOptionNarration }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 list-group pl">
+                                <div class="card">
+                                    <!-- <div class="card-header">List of Requests</div> -->
+
+                                    <div
+                                        class="list-group"
+                                        style="height: 300px"
+                                    >
+                                        <a
+                                            href="javascript:void(0);"
+                                            class="list-group-item list-group-item-action flex-column align-items-start"
+                                            (click)="
+                                                getcapaymentGridView(
+                                                    item.payeeName,
+                                                    item.requestNumber
+                                                )
+                                            "
+                                            *ngFor="
+                                                let item of paymentTransactionUsers;
+                                                let i = index
+                                            "
+                                        >
+                                            <div
+                                                class="d-flex w-100 justify-content-between"
+                                            >
+                                                <h5 class="mb-1">
+                                                    {{ item.requestNumber }}
+                                                </h5>
+                                                <small>{{
+                                                    item.amount
+                                                        | number: "1.2-5"
+                                                }}</small>
+                                            </div>
+
+                                            <p class="mb-1">
+                                                {{ item.payeeName }}
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <hr />
+                                <form #capaymentForm="ngForm">
+                                    <div class="row align-items-center mb-2">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="SampleDatePicker">{{
+                                                    "Date" | localize
+                                                }}</label>
+
+                                                <div class="input-group">
+                                                    <input
+                                                        id="SampleDatePicker1"
+                                                        [(ngModel)]="startdate"
+                                                        type="text"
+                                                        required
+                                                        name="SampleDatePicker1"
+                                                        placeholder="Select Date"
+                                                        class="form-control rounded"
+                                                        bsDatepicker
+                                                        #ed="bsDatepicker"
+                                                        datePickerMomentModifier
+                                                        [(date)]="startdate"
+                                                        [minDate]="mindate"
+                                                        [bsConfig]="{
+                                                            adaptivePosition: true
+                                                        }"
+                                                        [bsValue]="startdate"
+                                                    />
+                                                    <div
+                                                        class="input-group-append"
+                                                    >
+                                                        <button
+                                                            class="input-group-append btn btn-outline-secondary"
+                                                            (click)="
+                                                                ed.toggle()
+                                                            "
+                                                            type="button"
+                                                        >
+                                                            <i
+                                                                class="fa fa-calendar"
+                                                            ></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="small mb-1"
+                                                    for="inputFirstName"
+                                                    >Payment Mode</label
+                                                >
+
+                                                <ng-select
+                                                    [(ngModel)]="
+                                                        capayment.pModeId
+                                                    "
+                                                    name="paymentmode"
+                                                    required
+                                                >
+                                                    <ng-option
+                                                        *ngFor="
+                                                            let itemxx of paymentmode
+                                                        "
+                                                        [value]="itemxx.id"
+                                                    >
+                                                        {{
+                                                            itemxx.description
+                                                        }}</ng-option
+                                                    >
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="small mb-1"
+                                                    for="inputFirstName"
+                                                    >Currency</label
+                                                >
+
+                                                <ng-select
+                                                    [(ngModel)]="
+                                                        capayment.currency
+                                                    "
+                                                    name="currencyCodeId"
+                                                    (change)="getCurrencyId()"
+                                                    required
+                                                    disabled
+                                                >
+                                                    <ng-option
+                                                        *ngFor="
+                                                            let itemvalue of currency
+                                                        "
+                                                        [value]="
+                                                            itemvalue.currencyCode
+                                                        "
+                                                    >
+                                                        {{
+                                                            itemvalue.currencyCode
+                                                        }}</ng-option
+                                                    >
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="col-md-6"
+                                            *ngIf="!isCardTransaction"
+                                        >
+                                            <div class="form-group">
+                                                <label
+                                                    class="small mb-1"
+                                                    for="inputFirstName"
+                                                    >Account to Debit</label
+                                                >
+                                                <ng-select
+                                                    [(ngModel)]="
+                                                        capayment.debitGL
+                                                    "
+                                                    name="debitGL"
+                                                    required
+                                                    (change)="
+                                                        checkDebitGLSelected()
+                                                    "
+                                                    [disabled]="
+                                                        isCardTransaction
+                                                    "
+                                                >
+                                                    <ng-option
+                                                        *ngFor="
+                                                            let itemdet of cashAdvanceList
+                                                        "
+                                                        [value]="
+                                                            itemdet.accountCode
+                                                        "
+                                                    >
+                                                        {{
+                                                            itemdet.accountName
+                                                        }}-
+                                                        {{
+                                                            itemdet.accountCode
+                                                        }}</ng-option
+                                                    >
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-md-6"
+                                            *ngIf="!isCardTransaction"
+                                        >
+                                            <div class="form-group">
+                                                <label
+                                                    class="small mb-1"
+                                                    for="inputFirstName"
+                                                    >Account to Credit</label
+                                                >
+                                                <ng-select
+                                                    [(ngModel)]="
+                                                        capayment.creditGL
+                                                    "
+                                                    name="creditGL"
+                                                    required
+                                                    (change)="
+                                                        checkCreditGLSelected()
+                                                    "
+                                                >
+                                                    <ng-option
+                                                        *ngFor="
+                                                            let itemchar of defchartOfAcct
+                                                        "
+                                                        [value]="
+                                                            itemchar.accountCode
+                                                        "
+                                                    >
+                                                        {{
+                                                            itemchar.accountName
+                                                        }}-
+                                                        {{
+                                                            itemchar.accountCode
+                                                        }}</ng-option
+                                                    >
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="small mb-1"
+                                                    >Amount</label
+                                                >
+                                                <br />
+                                                <p-inputNumber
+                                                    min="0"
+                                                    max="totalAmount"
+                                                    [minFractionDigits]="2"
+                                                    [maxFractionDigits]="2"
+                                                    name="amout"
+                                                    [(ngModel)]="totalAmount"
+                                                    mode="decimal"
+                                                    [disabled]="
+                                                        !isCardTransaction
+                                                    "
+                                                ></p-inputNumber>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="small mb-1"
+                                                    >Narration</label
+                                                >
+                                                <br />
+                                                {{ reqNarration }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group text-center">
+                                                <label class="small mb-1">Beneficiaries</label>
+                                                <br/>
+                                                <a href="javascript:;"   title="View beneficiaries" (click)="viewBeneficiary()">
+                                                    <i class="fas fa-info"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group text-center">
+                                                <label class="small mb-1"
+                                                    >Attached Document</label
+                                                >
+                                                <br />
+                                                <a
+                                                    href="javascript:;"
+                                                    title="View supporting documents"
+                                                    (click)="
+                                                        ShowAttachFileDocument(
+                                                            '',
+                                                            19
+                                                        )
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fa fa-download"
+                                                    ></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <div class="row form-group">
+                                    <div class="col-md-6">
+                                        <label>{{
+                                            "Ledger Remarks" | localize
+                                        }}</label>
+                                        <textarea
+                                            class="form-control rounded"
+                                            [(ngModel)]="capayment.ledgerRemark"
+                                            name="remark"
+                                            placeholder="{{
+                                                'Remarks' | localize
+                                            }}"
+                                            required
+                                            pattern="[a-zA-Z0-9 ]*"
+                                        ></textarea>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label>{{
+                                            "Beneficiary Remarks" | localize
+                                        }}</label>
+                                        <textarea
+                                            class="form-control rounded"
+                                            [(ngModel)]="BenRemark"
+                                            name="remarkbeneciary"
+                                            placeholder="{{
+                                                'Remarks' | localize
+                                            }}"
+                                            required
+                                            pattern="[a-zA-Z0-9 ]*"
+                                        >
+                                        </textarea>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-md-8">
+                                        <label>{{ "Remark" | localize }}</label>
+                                        <textarea
+                                            class="form-control rounded"
+                                            required
+                                            [(ngModel)]="capayment.remark"
+                                            name="remark"
+                                            pattern="[a-zA-Z0-9 ]*"
+                                            placeholder="{{
+                                                'Remarks' | localize
+                                            }}"
+                                        >
+                                        </textarea>
+                                    </div>
+                                    <!-- <div class="col-md-4 text-right">
+                                    <p></p>
+                                    <button type="submit" class="btn btn-primary" [disabled]="!capaymentForm.form.valid" (click)="save(capaymentForm);"
+                                    [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i>
+                                    <span>{{"Initiate Payment" | localize}}</span></button>
+                                </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-template #template>
+                        <div class="modal-header">
+                            <h4 class="modal-title pull-left">
+                                Reason for Decline
+                            </h4>
+                            <button
+                                type="button"
+                                class="close pull-right"
+                                aria-label="Close"
+                                (click)="modalRef.hide()"
+                            >
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-md-12">
+                                <textarea
+                                    class="form-control rounded"
+                                    name="reqNarration"
+                                    [(ngModel)]="DeclineComment"
+                                    placeholder="{{ 'Comments' | localize }}"
+                                    pattern="[a-zA-Z0-9 ]*"
+                                >
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-md-12 text-right">
+                                <button
+                                    type="submit"
+                                    [disabled]="DeclineComment == null"
+                                    flex="15"
+                                    class="btn btn-primary"
+                                    (click)="deleterequest()"
+
+                                >
+                                    {{ "Continue" | localize }}
+                                </button>
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <div class="modal-footer">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            (click)="createquery()"
+                            [buttonBusy]="saving"
+                            [disabled]="refNo == null"
+                            [busyText]="l('SavingWithThreeDot')"
+                            title="Query"
+                        >
+                            <span
+                                ><i class="fas fa-comments"></i
+                                >{{ "Query" | localize }}</span
+                            >
+                        </button>
+
+                        <!-- <button  type="submit" class="btn btn-decline" (click)="deleterequest()" [buttonBusy]="saving"
+                                [disabled]="refNo==null"
+                                [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i>
+                                <span>{{ "Decline" | localize }}</span></button> -->
+                        <button
+                            type="submit"
+                            class="btn btn-decline"
+                            (click)="openModal(template)"
+                            [buttonBusy]="saving"
+                            [disabled]="refNo == null"
+                            [busyText]="l('SavingWithThreeDot')"
+                            title="Decline"
+                        >
+                            <i class="fa fa-save"></i>
+                            <span>{{ "Decline" | localize }}</span>
+                        </button>
+                        <!-- <button *ngIf="refNo" type="submit" class="btn btn-primary"  (click)="declinersn();" >Decline?</button>
+                                    <textarea *ngIf="declinereason" class="form-control rounded" required [(ngModel)]="dReason"
+                                    name="remark" placeholder="{{'Reason for Decline' | localize}}" > </textarea>
+                                    <button *ngIf="declinereason" type="submit" class="btn btn-primary"  (click)="decline(capaymentForm);" >Decline</button>
+                                     -->
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            (click)="preview()"
+                            [buttonBusy]="saving"
+                            [disabled]="
+                                capayment.debitGL == null ||
+                                capayment.currency == null ||
+                                capayment.creditGL == null
+                            "
+                            [busyText]="l('SavingWithThreeDot')"
+                            title="Preview entry"
+                        >
+                            <i class="fa fa-save"></i>
+                            <span>{{ "Preview Entries" | localize }}</span>
+                        </button>
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            [disabled]="!capaymentForm.form.valid"
+                            (click)="save(capaymentForm)"
+                            [buttonBusy]="saving"
+                            [busyText]="l('SavingWithThreeDot')"
+
+                            title="Initiate payment"
+                            
+                        >
+                            <i class="fa fa-save"></i>
+                            <span>{{ "Initiate Payment" | localize }}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<cashadvanceWorkflowTrailModal
+    #cashadvanceWorkflowTrailModal
+></cashadvanceWorkflowTrailModal>
+<!-- <opexPaymentTaxModal #opexPaymentTaxModal></opexPaymentTaxModal> -->
+<postdetails #postdetails></postdetails>
+<Opexquerymodal #opexquerymodal></Opexquerymodal>
+<viewbeneficiarytransactionaccounts #viewbeneficiary></viewbeneficiarytransactionaccounts>
+<appfileupload #fileUpload></appfileupload>

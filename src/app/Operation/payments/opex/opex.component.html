@@ -1,0 +1,510 @@
+<div
+    bsModal    
+    #opexModal="bs-modal"
+    (onShown)="onShown()"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">OPEX Payment for {{refNo}}</h5>
+                <button
+                    type="button"
+                    class="close"
+                    (click)="close()"
+                    [attr.aria-label]="l('Close')"
+                >
+                    <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body"  [busyIf]="primengTableHelper.isLoading">            
+                <div  [busyIf]="processing">
+                            <div class="col-md-12">
+                                <div class="row align-items-center mb-2">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="SampleDatePicker">{{"Date" | localize}}</label>
+
+
+                                            <div class="input-group">
+                                                <input id="SampleDatePicker1" [(ngModel)]="startdate" type="text"
+                                                    required name="SampleDatePicker1" placeholder="Select Date"
+                                                    class="form-control rounded" bsDatepicker #ed="bsDatepicker"
+                                                    datePickerMomentModifier [(date)]="startdate" [minDate]="mindate"
+                                                    [bsConfig]="{ adaptivePosition: true }" />
+                                                <div class="input-group-append">
+                                                    <button class="input-group-append btn btn-outline-secondary"
+                                                        (click)="ed.toggle()" type="button">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="small mb-1" for="inputFirstName">Payment Mode</label>
+
+
+                                            <ng-select [(ngModel)]="opexpayment.pModeId" name="paymentmode" required
+                                                class=" rounded" placeholder="Select Payment Mode">
+
+                                                <!-- <ng-option [value]="0"> Select Payment Mode</ng-option> -->
+                                                <ng-option *ngFor="let itemxx of paymentmode" [value]="itemxx.id"
+                                                    required> {{itemxx.description}}</ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="small mb-1" for="inputFirstName">Transaction
+                                                Type</label>
+
+
+                                            <ng-select [(ngModel)]="opexpayment.transactiontypeGl"
+                                                name="transactionTypeId" required placeholder="Select Transaction Type"
+                                                class=" rounded" disabled>
+
+                                                <ng-option *ngFor="let item of chartOfAcctForExpense"
+                                                    [value]="item.accountCode" required>
+                                                    {{item.accountName}} - {{item.accountCode}}
+                                                </ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="small mb-1" for="taxableAmount">{{"Vatable Amount(VAT)" | localize}}</label>
+
+                                            <p-inputNumber min="0" max="9999999999999" style="width:100%"
+                                                [minFractionDigits]="2" [maxFractionDigits]="2" name="taxableAmount"
+                                                [(ngModel)]="taxableamount" (ngModelChange)="checkTax()"
+                                                mode="decimal"></p-inputNumber>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="small mb-1" for="VATRate">Select Rate(VAT)</label>
+
+                                            <ng-select name="VATRate" required class=" rounded" [(ngModel)]="vatID"
+                                                placeholder="Select VAT" (change)="getVAT()"  >
+                                                <ng-option [value]="0">{{"No VAT"}}</ng-option>
+                                                <ng-option *ngFor="let itemvalue of VATList" [value]="itemvalue.id"
+                                                    required>
+                                                    {{itemvalue.description}}{{" - "}} {{itemvalue.rate}}{{"%"}}</ng-option>
+                                            </ng-select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+
+                                            <label>{{"Who bears the WHT cost?" | localize}}</label>
+                                            <div class="row">
+                                                 <div class="col-md-3">
+                                                     <div class="form-check">
+                                                         <input class="form-check-input" type="radio"
+                                                             name="whtpayee" id="whtpayee1"
+                                                             [(ngModel)]="isWHTonPayee" [value]="false"   disabled>
+                                                         <label class="form-check-label" for="whtpayee1" >
+                                                             {{"Payer" | localize}}
+                                                         </label>
+                                                     </div>
+
+                                                 </div>
+                                                 <div class="col-md-3">
+                                                     <div class="form-check">
+                                                         <input class="form-check-input" type="radio"
+                                                             name="whtpayee" id="whtpayee2"
+                                                             [(ngModel)]="isWHTonPayee" [value]="true" disabled>
+                                                         <label class="form-check-label" for="whtpayee2">
+                                                             {{"Payee" | localize}}
+                                                         </label>
+                                                     </div>
+
+                                                 </div>
+                                             </div>
+                                             <div>
+                                             </div>
+
+                                        </div>
+
+
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="small mb-1" for="taxableAmountWHT">{{"Vatable Amount(WHT)" | localize}}</label>
+
+                                            <p-inputNumber min="0" max="9999999999999" style="width:100%"
+                                                [minFractionDigits]="2" [maxFractionDigits]="2" name="taxableAmountWHT"
+                                                [(ngModel)]="taxableamountWHT" (ngModelChange)="checkTax()"
+                                                mode="decimal"></p-inputNumber>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="small mb-1" for="WHTRate">Select Rate(WHT)</label>
+
+                                            <ng-select [(ngModel)]="whtID" placeholder="Select WHT Rate"
+                                                (change)="getWHTGL()" name="WHTRate" required class=" rounded"  >
+                                                <ng-option [value]="0">{{"No WHT"}}</ng-option>
+                                                <ng-option *ngFor="let itemvalue of WHTList" [value]="itemvalue.id"
+                                                    required>
+                                                    {{itemvalue.description}} {{" - "}} {{itemvalue.rate}}{{"%"}} </ng-option>
+                                            </ng-select>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="small mb-1" for="inputFirstName">WHTGL</label>
+                                            <ng-select [(ngModel)]="opexpayment.whtgl" name="whtgl" required disabled
+                                                class="rounded" placeholder="Select WithoutHolding GL">
+                                                <ng-option [value]="0">{{"Not Applicable"}}</ng-option>
+                                                <ng-option *ngFor="let itemchar of chartOfAcct"
+                                                    [value]="itemchar.accountCode" required>
+                                                    {{itemchar.accountName}}</ng-option>
+                                            </ng-select>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="small mb-1" for="inputFirstName">Currency</label>
+
+                                            <ng-select [(ngModel)]="opexpayment.currency" name="currencyCodeId" required
+                                                class=" rounded" (change)="getCurrencydetails()" placeholder="Currency">
+                                                <ng-option *ngFor="let itemvalue of currency"
+                                                    [value]="itemvalue.currencyCode" required>
+                                                    {{itemvalue.currencyCode}}</ng-option>
+                                            </ng-select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="exchangeRate">{{"Rate" | localize}}</label>
+                                          
+                                               
+                                                <p-inputNumber
+
+                                                [disabled]="!editExchangeRate"
+                                                min="0"
+                                                max="9999999999999"
+                                                [minFractionDigits]="2"
+                                                [maxFractionDigits]="2"
+                                                name="exchangeRate"                                                
+                                                [(ngModel)]="opexpayment.exchangeRate"
+                                                (ngModelChange)="exchangeRateValue(opexpayment.exchangeRate)">
+                                       
+                                                mode="decimal"
+                                            ></p-inputNumber>
+                                       
+                                       
+                                            </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="small mb-1" for="inputFirstName">Cash and Bank</label>
+
+
+                                            <ng-select [(ngModel)]="opexpayment.creditGL" name="creditGL" required
+                                                class=" rounded" placeholder="Select Credit GL" #cashandBank="ngModel">
+                                                <ng-option *ngFor="let itemchar of chartOfAcctForCashandBank"
+                                                    [value]="itemchar.accountCode">
+                                                    {{itemchar.accountName}}- {{itemchar.accountCode}}
+                                                </ng-option>
+                                            </ng-select>
+                                            <span class="help-block  text-danger"
+                                                *ngIf="cashandBank.errors?.required && cashandBank.touched">{{"Cash and
+                                                Bank Required"|localize}}</span>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="row form-group col-md-12 text-center">
+                                        <div class="col-md-3">
+                                            <p>{{'Approvals' | localize}}</p>
+                                            <button class="btn" title=" View approvals" (click)="add(1)"> <i class="fas fa-info"></i></button>
+                                        </div>
+
+
+                                        <div class="col-md-3">
+                                            <p>{{'Add Accrual' | localize}}</p>
+                                            <button class="btn" title="Add accrual"
+                                                (click)="addAccrual('0', LedgerremarkNarration, AmountPayable, refNo)">
+                                                <i class="fa fa-file-invoice"></i>
+                                            </button>
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p>{{'Beneficiaries' | localize}}</p>
+                                            <button class="btn" title="View beneficiaries" (click)="viewBeneficiary()">
+                                                <i class="fa fa-share-alt"></i>
+                                            </button>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <p>{{'Attachments' | localize}}</p>
+                                            <button class="btn"  title="View supporting documents" (click)="showDocument(1)">
+                                                <i class="fa fa-download"></i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row form-group col-md-12">
+                                        <div class="col-md-2">
+                                            {{'Amt. Initiated' | localize}}
+                                            <p>{{subtotal | number:'1.2-2'}}</p>
+
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{'VAT' | localize}}
+                                            <p>{{taxvalue | number:'1.2-2'}}</p>
+
+
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            {{'WHT' | localize}}
+
+
+
+                                            <p>{{whtvalue | number:'1.2-2'}}</p>
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            {{'Amt. Paying' | localize}}
+                                            <p> {{amountpaying | number:'1.2-2'}}</p>
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            {{'Amt. Expensing' | localize}}
+                                            <p>{{(AmountPayable) | number:'1.2-2'}}</p>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                      
+
+                    <hr />
+                    <div class="col-md-12">
+                        <label for="totalLine">Apply Prepayment?</label>
+                        <p-inputSwitch [(ngModel)]="isPrepayment" #applyPrepayment name="applyPrepayment"
+                            (click)="checkIsprepayment()" onLabel="Yes" offLabel="No">
+                        </p-inputSwitch>
+                        <div *ngIf="isPrepayment">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="EndDate">Payment Duration:&nbsp; Month(s)</label>
+                                        <input id="amortizationduration" type="number" min="1" max="12"
+                                            name="amortizationduration" placeholder="" class="form-control"
+                                            oninput="validity.valid||(value=value.replace(/\D+/g, ''))"
+                                            onKeyPress="if(this.value.length==1) return false;"
+                                            [(ngModel)]="amortizationduration" required  disabled
+                                           >
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="EndDate">Select period(Date range)</label>
+                                        <input name="SampleDateRangePicker" type="text" class="form-control"
+                                            id="SampleDateRangePicker" bsDaterangepicker dateRangePickerLuxonModifier
+                                            [(date)]="sampleDateRange" disabled />
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="EndDate">Payment Day</label>
+
+                                        <p-inputNumber disabled min="1" max="31" required [minFractionDigits]="0"
+                                            [maxFractionDigits]="0" name="amout" [(ngModel)]="paymentDay"
+                                            mode="decimal"></p-inputNumber>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="prepGl">Prepayment GL</label>
+
+                                        <ng-select [(ngModel)]="PrepaymentGL" name="prepGl" required class="rounded">
+
+                                            <ng-option *ngFor="let itemchar of chartOfAcct"
+                                                [value]="itemchar.accountCode">
+                                                {{itemchar.accountName}}- {{itemchar.accountCode}}
+                                            </ng-option>
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="pGL3">Amortization Amount(Min.Amount:
+                                            {{anniversayDate.minimumAmount | number:'1.2-2'}})</label>
+                                        <!-- <input   type="text" name="amortizationAmount" placeholder=""
+                                        class="form-control" required finCurrency
+                                        [ngModel]="amortizationAmount" (ngModelChange)="amortizationAmount=$event"> -->
+                                        <p-inputNumber min="0" max="9999999999999" style="width:100%"
+                                            [minFractionDigits]="2" [maxFractionDigits]="2" name="amortizationAmount"
+                                            [(ngModel)]="amortizationAmount" (ngModelChange)="amortizationAmount=$event"
+                                            mode="decimal"></p-inputNumber>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="small mb-1" for="pGL3">.</label>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <button type="button" class="btn btn-primary" (click)="savePrePayment()"
+                                                [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"
+                                                [disabled]="amortizationAmount>(amountpaying+taxvalue+whtvalue)"><i
+                                                    class="fa fa-save"></i>
+                                                <span>{{prepaymentButtonDescription | localize}}</span></button>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <button type="button" class="btn btn-primary" (click)="savePrePaymentView()"
+                                                [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')">
+
+                                                <span>{{"View Schedule" | localize}}</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                            <label>{{'Ledger Remarks' | localize}}</label>
+                            <textarea class="form-control rounded" [value]="LedgerremarkNarration"
+                                [(ngModel)]="LedgerremarkNarration" name="reqNarration"
+                                placeholder="{{'Remarks' | localize}}"
+                                appInputSanitzation
+                                (change)="getAdvancePostingDetails(opexpayment.grossAmt)"></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label>{{'Beneficiary Remarks' | localize}}</label>
+                            <textarea class="form-control rounded" [value]="RemarkNarration"
+                            appInputSanitzation
+                                [(ngModel)]="RemarkNarration" name="reqNarration"
+                                placeholder="{{'Remarks' | localize}}"> </textarea>
+                        </div>
+ <div class="col-md-4">
+                            <label>{{'Narration' | localize}}</label>
+                            <textarea class="form-control rounded" [value]="BeneficiaryNarration"
+                                [(ngModel)]="BeneficiaryNarration" name="reqNarration" appInputSanitzation
+                                placeholder="{{'Remarks' | localize}}"
+                                > </textarea>
+                        </div>
+                    </div>
+                 
+                    <ng-template #template>
+                        <div class="modal-header">
+                            <h4 class="modal-title pull-left">Reason for Decline</h4>
+                            <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                               <span aria-hidden="true">×</span>
+                            </button>
+                         </div>
+                         <div class="modal-body">
+                                <div class="col-md-12">
+                                    <textarea class="form-control rounded"
+                                        name="reqNarration"
+                                        [(ngModel)]="DeclineComment"
+                                        placeholder="{{'Comments' | localize}}"
+                                        appInputSanitzation > </textarea>
+                                </div>
+
+                         </div>
+                         <div class="modal-footer">
+                            <div class="col-md-12 text-right">
+                                    <button
+                                        type="submit"
+                                        [disabled]="DeclineComment==null"
+                                        flex="15"
+                                        class="btn btn-primary"
+                                        (click)="deleterequest()"
+                                    >
+                                        {{ "Continue" | localize }}
+                                    </button>
+                            </div>
+                         </div>
+                    </ng-template>
+
+                <div class="modal-footer">
+
+                            <button type="submit" class="btn btn-primary" (click)="createquery()" [buttonBusy]="saving"
+                            [disabled]="refNo==null"
+                            [busyText]="l('SavingWithThreeDot')">
+                            <span><i class="fas fa-comments"></i>{{"Query" | localize}}</span></button>
+                            <button *ngIf="showbutton1" type="submit" class="btn btn-decline" (click)="openModal(template)" [buttonBusy]="saving"
+                            [disabled]="refNo==null"
+                            [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i>
+                            <span>{{ "Decline" | localize }}</span></button>
+                        <button type="submit" class="btn btn-primary" (click)="preview()" [buttonBusy]="saving"
+                            [disabled]="opexpayment.transactiontypeGl==null ||opexpayment.currency==null||opexpayment.creditGL==null"
+                            [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i>
+                            <span>{{"Preview Entries" | localize}}</span></button>
+
+                        <button type="submit" class="btn btn-primary"
+                            [disabled]="opexpayment.transactiontypeGl==null ||opexpayment.currency==null||opexpayment.creditGL==null"
+                            (click)="save()" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i
+                                class="fa fa-save"></i>
+                            <span>{{"Initiate Payment" | localize}}</span></button>
+
+                    </div>
+
+                </div>
+
+        
+    
+
+    <opexWorkflowTrailModal #opexWorkflowTrailModal></opexWorkflowTrailModal>
+
+    <prepaymentdetail #prepaymentdetail></prepaymentdetail>
+    <postdetails #postdetails></postdetails>
+    <Opexquerymodal #opexquerymodal></Opexquerymodal>
+    <viewAccrualDetailsModal #viewAccrualDetailsModal></viewAccrualDetailsModal>
+
+    <opexAccrualModal #opexAccrualModal></opexAccrualModal>
+    <appdocuments #appdocuments></appdocuments>
+    <viewbeneficiarytransactionaccounts #viewbeneficiarytransactionaccounts></viewbeneficiarytransactionaccounts>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>

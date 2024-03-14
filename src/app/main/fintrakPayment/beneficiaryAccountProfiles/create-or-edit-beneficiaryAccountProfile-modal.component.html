@@ -1,0 +1,92 @@
+﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #beneficiaryAccountProfileForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="beneficiaryAccountProfile.id">{{l("Edit Beneficiary Account Profile")}}</span>
+                        <span *ngIf="!beneficiaryAccountProfile.id">{{l("Create New Beneficiary Account Profile")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+
+								<div class="form-group">
+									<label for="BeneficiaryAccountProfile_BeneficiaryType">{{l("Beneficiary Type")}}</label>
+									<select class="form-control" name="BeneficiaryType" id="BeneficiaryAccountProfile_BeneficiaryType" [(ngModel)]="beneficiaryAccountProfile.beneficiaryType"  >
+									<option value="1">{{l('Customer')}}</option>
+
+									<option value="2">{{l('Vendor')}}</option>
+
+									<option value="3">{{l('Staff')}}</option>
+									
+
+									<option value="4">{{l('Bank')}}</option>
+									
+									<option value="5">{{l('Card')}}</option>
+
+
+									<option value="6">{{l('GL')}}</option>
+
+									</select>
+								</div>
+					
+								
+								<div class="form-group">
+									<label for="BeneficiaryAccountProfile_BeneficiaryName">{{l("Beneficiary Name")}}</label>
+									<input type="text" id="BeneficiaryAccountProfile_BeneficiaryName" class="form-control" [(ngModel)]="beneficiaryAccountProfile.beneficiaryName" pattern="[a-zA-Z0-9 ]*" name="BeneficiaryName"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="BeneficiaryAccountProfile_BeneficiaryCode">{{l("Beneficiary Code")}}</label>
+									<input type="text" id="BeneficiaryAccountProfile_BeneficiaryCode" class="form-control" [(ngModel)]="beneficiaryAccountProfile.beneficiaryCode" pattern="[a-zA-Z0-9 ]*" name="BeneficiaryCode"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="BeneficiaryAccountProfile_BeneficiaryAccountNumber">{{l("Beneficiary Account Number")}}</label>
+									<input type="text" id="BeneficiaryAccountProfile_BeneficiaryAccountNumber" class="form-control" [(ngModel)]="beneficiaryAccountProfile.beneficiaryAccountNumber" pattern="[a-zA-Z0-9 ]*" name="BeneficiaryAccountNumber"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="BeneficiaryAccountProfile_BankCode">{{l("Bank Code")}}</label>
+									<input type="text" id="BeneficiaryAccountProfile_BankCode" class="form-control" [(ngModel)]="beneficiaryAccountProfile.bankCode" pattern="[a-zA-Z0-9 ]*" name="BankCode"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="BeneficiaryAccountProfile_BeneficiaryCurrencyCode">{{l("Beneficiary Currency Code")}}</label>
+									<input type="text" id="BeneficiaryAccountProfile_BeneficiaryCurrencyCode" class="form-control" [(ngModel)]="beneficiaryAccountProfile.beneficiaryCurrencyCode" pattern="[a-zA-Z0-9 ]*" name="BeneficiaryCurrencyCode"    />
+								</div>
+					
+					
+
+                </div>
+                <div class="modal-footer">
+                    <!-- <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Exit")}}</button>
+					 -->
+					 <app-erms-button 
+					 [title]="'Cancel' | localize"
+					 action="button"
+					 (click)="close()"
+					 type="cancel"
+				 ></app-erms-button>  
+				 
+                    <!-- <button type="submit" class="btn btn-primary blue" [disabled]="!beneficiaryAccountProfileForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button> -->
+               
+					<app-erms-button 
+                    [title]="'Save' | localize"
+                    [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"
+                    [disabled]="!beneficiaryAccountProfileForm.form.valid" (click)="save()"
+                    action="submit"
+                    type="others"
+                    icon="<i class='fa fa-plus'></i>"
+                ></app-erms-button> 
+				</div>
+            </form>
+        </div>
+    </div>
+
+</div>

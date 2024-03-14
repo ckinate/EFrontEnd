@@ -1,0 +1,391 @@
+<div
+    bsModal
+    bsModal
+    #modal="bs-modal"
+    (onShown)="onShown()"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <h5 class="modal-title"   >
+                  Map Staff with role: {{valueFromChild}}
+
+               </h5> -->
+                <button
+                    type="button"
+                    class="close"
+                    (click)="close()"
+                    [attr.aria-label]="l('Close')"
+                >
+                    <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!--Design input form for modal add chart of account-->
+                <form #accrualForm="ngForm">
+                    <div class="row align-items-center mb-2">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label class="small mb-1" for="inputFirstName"
+                                    >Select Reference No
+                                </label>
+                                <ng-select
+                                    [(ngModel)]="refno"
+                                    name="refno"
+                                    (change)="loadaccrualdetails(refno)"
+                                >
+                                    <ng-option
+                                        *ngFor="let item of accrualdetailList"
+                                        [value]="item.refNo"
+                                    >
+                                        {{ item.refNo  + ' ' + item.narration + ' ' + (item.amountAccrued - item.amountUtilized)}}</ng-option
+                                    >
+                                </ng-select>
+                            </div>
+                        </div>
+                        <!-- -{{item.narration}} -->
+                        <!--    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="small mb-1" for="inputFirstName">Select Reference No </label>
+                            <ng-select  [(ngModel)]="refno" name="refno" (change)="loadaccrualwithnarration(refno)" >
+                                <ng-option *ngFor="let item of accrualdetailList" [value]="item.refNo">
+                                    {{item.refNo}}</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="small mb-1" for="inputFirstName">Select Reference with Details </label>
+                            <ng-select  [(ngModel)]="Refno1" name="Refno1" (change)="loadaccrualdetails(refno)">
+                                <ng-option *ngFor="let item of accrualdetailList2" [value]="item.refNo">
+                                    {{item.refNo}}-{{item.narration}}</ng-option>
+                            </ng-select>
+                        </div>
+                    </div> -->
+                    </div>
+                </form>
+
+                <div
+                    *ngIf="isShow"
+                    class="table-scrollable table-scrollable-borderless"
+                    style="width: 100%"
+                >
+                <hr />
+                    <table class="table table-hover table-light">
+                        <thead>
+                            <tr class="uppercase">
+                                <th style="width: 100px">
+                                    {{ "MIS Accrued For" | localize }}
+                                </th>
+                                <th style="width: 100px">
+                                    {{ "Details" | localize }}
+                                </th>
+                                <th style="width: 100px">
+                                    {{ "Amount Accrued" | localize }}
+                                </th>
+                                <th style="width: 100px">
+                                    {{ "Amount Utilized" | localize }}
+                                </th>
+                                <th style="width: 100px">
+                                    {{ "Amount Outstanding" | localize }}
+                                </th>
+                                <th style="width: 100px">
+                                    {{ "Current Expense" | localize }}
+                                </th>
+
+                                <th style="width: 100px">
+                                    {{ "Benefiting MIS" | localize }}
+                                </th>
+                                <!--    <th style="width:100px"></th> -->
+                                <th style="width: 100px">
+                                    <!-- name="n.{{j}}.checked" [(ngModel)]="n.checked" -->
+                                    <input
+                                        type="checkbox"
+                                        name="checked"
+                                        [(ngModel)]="checked"
+                                        (change)="checkedall($event)"
+                                    />&nbsp;&nbsp;&nbsp;
+                                    <span> Validate All</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tr
+                            *ngFor="
+                                let n of accrualdetailsrecord;
+                                let j = index
+                            "
+                        >
+                            <td style="width: 100px">
+                                <span class="ui-column-title"> </span>
+                                {{ n.beneficiaryCostCode }}
+                            </td>
+                            <td style="width: 100px">
+                                <span class="ui-column-title"> </span>
+                                {{ n.narration }}
+                            </td>
+                            <td style="width: 100px">
+                                <span class="ui-column-title"> </span>
+                                {{ n.amountAccrued | number: "1.2-5" }}
+                            </td>
+                            <td style="width: 100px">
+                                <span class="ui-column-title"> </span>
+                                {{ n.amountUtilized | number: "1.2-5" }}
+                            </td>
+                            <td style="width: 100px">
+                                <span class="ui-column-title"> </span>
+                                {{n.amountAccrued - n.amountUtilized | number: "1.2-5" }}
+                            </td>
+                            <td style="width: 100px">
+                                <p-inputNumber
+                                    min="0"
+                                    [style]="{ width: '75%' }"
+                                    [inputStyle]="{ width: '75%' }"
+                                    class="p-autocomplete"
+                                    max="9999999999999"
+                                    [minFractionDigits]="2"
+                                    [maxFractionDigits]="2"
+                                    name="n.{{ j }}.amountUtilizing"
+                                    [(ngModel)]="n.amountUtilizing"
+                                    mode="decimal"
+                                ></p-inputNumber>
+                                <!-- <input  class="form-control"
+                            name="n.{{j}}.amountUtilizing"   value="{{amountUtilizing}}"  [(ngModel)]="n.amountUtilizing"
+                            placeholder="{{'amount utilizing' | localize}}"  usd-only> -->
+                            </td>
+                            <td style="width: 100px">
+                                <ng-select
+                                    [(ngModel)]="n.benefitingMIS"
+                                    name="benefitingMIS"
+                                >
+                                    <ng-option
+                                        *ngFor="
+                                            let itemchar of companystructureList
+                                        "
+                                        [value]="itemchar.customCode"
+                                    >
+                                        {{ itemchar.customCode + "-"  +  itemchar.displayName }}</ng-option
+                                    >
+                                </ng-select>
+                            </td>
+                            <td style="width: 100px">
+                                <input hidden
+                                    type="checkbox"
+                                    name="n.{{ j }}.checked"
+                                    [(ngModel)]="n.checked"
+                                    (change)="checkAdvanceTransaction($event)"
+                                />&nbsp;&nbsp;&nbsp;
+                                <!--  <span>Validate </span> -->
+                            </td>
+                            <!--  <td style="width: 100px">
+                           <span>Is Fully Utilized?  </span>
+                            <input class="round" type="checkbox" name="n.{{j}}.isFullyUtilized" [(ngModel)]="n.isFullyUtilized"
+
+                              >
+                        </td> -->
+                        </tr>
+                    </table>
+                    <div class="text-right">
+                     
+                        <app-erms-button
+                        type="save"
+                     
+                        (click)="save()"
+                        [buttonBusy]="saving"
+                        [busyText]="l('SavingWithThreeDot')"
+                           title="Save" >
+                           <i class="fa fa-save"></i>
+                        </app-erms-button>
+                    </div>
+
+                    <hr />
+                </div>
+                <br>
+                <br>
+                <div
+                    *ngIf="isShow"
+                    class="table-scrollable table-scrollable-borderless"
+                    style="width: 100%"
+                >
+                    <table class="table table-hover table-light">
+                        <thead>
+                            <tr class="uppercase">
+                                <th>MIS Accrued For</th>
+                                <th>Benefiting MIS</th>
+
+                                <th>Amount Accrued</th>
+
+                                <th>Current Expense</th>
+                                <!--  <th >
+                            Debit
+                        </th>
+                        <th >
+                            Credit
+                        </th> -->
+                                <!-- <th >
+                           Variance
+                        </th> -->
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tr *ngFor="let m of records; let i = index">
+                            <td>
+                                {{ m.misAccruedFor }}
+                            </td>
+
+                            <td>
+                                {{ m.benefitingMIS }}
+                            </td>
+
+                            <td>
+                                {{ m.amountAccrued | number: "1.2-2" }}
+                            </td>
+                            <td>
+                                {{ m.amountUtilizing | number: "1.2-2" }}
+                            </td>
+                            <!-- <td>
+                            {{m.debit | number:'1.2-2'}}
+                        </td>
+
+                        <td>
+                            {{m.credit | number:'1.2-2'}}
+
+                        </td> -->
+                            <!-- <td>
+                            {{m.variance | number:'1.2-2'}}
+
+                        </td> -->
+                            <td>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    (click)="deleteitem(m.id, m)"
+                                >
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <hr />
+                    <div class="row form-group">
+                        <div class="col-md-3">
+                            {{ "Opex Request Amount" | localize }}: &nbsp;
+                            {{ opextotalAmount | number: "1.2-2" }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ "Total Amount Accrued" | localize }} :&nbsp;
+                            &nbsp;
+                            {{
+                                totalutilizingamount.sumAmountAccrued
+                                    | number: "1.2-2"
+                            }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ "Total Current Expense" | localize }}:&nbsp;
+                            &nbsp;
+                            {{
+                                totalutilizingamount.sumAmountUtilized
+                                    | number: "1.2-2"
+                            }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ "Accrual Variance" | localize }}:&nbsp;
+                            &nbsp;
+                            {{
+                                totalutilizingamount.sumAmountUtilized - totalutilizingamount.sumAmountAccrued
+                                    | number: "1.2-2"
+                            }}
+                        </div>
+                    </div>
+
+                    <div class="row" style=" display: flex; align-items: baseline;">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            {{ "Opex Request Variance" | localize }}: &nbsp; &nbsp;
+                            {{
+                                opextotalAmount -
+                                    totalutilizingamount.sumAmountUtilized
+                                    | number: "1.2-2"
+                            }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="GroupName">{{
+                                    "Amount:  " | localize
+                                }}</label>
+                                &nbsp;&nbsp;
+                                <p-inputNumber
+                                    min="0"
+                                    [style]="{ width: '75%' }"
+                                    [inputStyle]="{ width: '75%' }"
+                                    class="p-autocomplete"
+                                    max="9999999999999"
+                                    [minFractionDigits]="2"
+                                    [maxFractionDigits]="2"
+                                    name="amout"
+                                    [(ngModel)]="amounttobeposted"
+                                    mode="decimal"
+                                ></p-inputNumber>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                               <!--  <label for="GroupName" >{{
+                                    "Benefiting MIS:  " | localize
+                                }}</label>
+                                &nbsp;&nbsp; -->
+                                <ng-select
+                                    [(ngModel)]="customCode"  placeholder="Select Benefiting MIS"
+                                    name="refno"
+                                >
+                                    <ng-option
+                                        *ngFor="
+                                            let item of companystructureList
+                                        "
+                                        [value]="item.customCode"
+                                    >
+                                    {{ item.customCode  + "-"  + item.displayName }}</ng-option
+                                    >
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            (click)="savevariance(opextotalAmount)"
+                            [buttonBusy]="saving"
+                            [busyText]="l('SavingWithThreeDot')"
+                        >
+                            <i class="fa fa-save"></i>
+                            <span>{{ "Save" | localize }}</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    (click)="close()"
+                >
+                    {{ "Cancel" | localize }}
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- {{records | json}} -->
+</div>
+
+<!-- {{accrualForm.value | json}} -->

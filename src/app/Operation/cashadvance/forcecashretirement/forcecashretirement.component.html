@@ -1,0 +1,134 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+        <sub-header [title]="'Force Retirement Requisition' | localize">
+        </sub-header>
+
+        <div [class]="containerClass" [busyIf]="primengTableHelper.isLoading">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <form
+                        #payftransForm="ngForm"
+                        (ngSubmit)="save(payftransForm)"
+                    >
+                        <div class="row align-items-center mb-2">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label
+                                        class="small mb-1"
+                                        for="inputFirstName"
+                                        >Initiator</label
+                                    >
+
+                                    <ng-select
+                                        [(ngModel)]="paytrans.payeeName"
+                                        name="payeeName"
+                                        (change)="getDetailswithIntFull()"
+                                    >
+                                        <ng-option
+                                            *ngFor="
+                                                let payeename of payeenamelist
+                                            "
+                                            [value]="payeename.username"
+                                            >{{ payeename.username }}</ng-option
+                                        >
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label
+                                        class="small mb-1"
+                                        for="inputFirstName"
+                                        >Advance Voucher No</label
+                                    >
+
+                                    <ng-select
+                                        [(ngModel)]="paytrans.requestNumber"
+                                        name="advName"
+                                        (change)="getDetailswithRef()"
+                                        class="d-flex w-100 justify-content-between"
+                                    >
+                                        <ng-option
+                                            *ngFor="let advname of cashadvlist"
+                                            [value]="advname.requestNumber"
+                                            >{{ advname.requestNumber }}
+                                            {{ advname.payeeName }}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="GroupName">{{"Amount" | localize}}</label>
+                                <input id="Amount" type="number" min="0" oninput="this.value = Math.abs(this.value)"  [(ngModel)]="paytrans.amount" name="Amount" placeholder="Enter  Amount" required
+                                    class="form-control">
+                            </div>
+                        </div> -->
+                            <div class="row form-group col-md-12">
+                                <div class="col-md-6">
+                                    {{ "Advance Amount" | localize }}:
+                                    {{ amtadvanced | number: "1.2-2" }}
+                                </div>
+                                <!-- <div class="col-md-6">
+                                {{'Beneficiary' | localize}}: {{benName | number:'1.2-2'}}
+                            </div>  -->
+                                <div>
+                                    <a
+                                        href="javascript:;"
+                                        (click)="fileDocument(attachId)"
+                                        title="Upload supporting documents"
+                                    >
+                                        <i class="fa fa-upload"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="GroupName">{{
+                                        "Narration" | localize
+                                    }}</label>
+
+                                    <textarea
+                                        id="narration"
+                                        pattern="[a-zA-Z0-9 ]*"
+                                        name="narration"
+                                        [(ngModel)]="paytrans.narration"
+                                        placeholder="Narration"
+                                        required
+                                        class="form-control"
+                                    >
+                                    </textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 mt-20 text-right">
+                                <div class="form-group">
+                                  <app-erms-button
+                                    type="save"
+                                    [buttonBusy]="saving"
+                                    [busyText]="l('SavingWithThreeDot')"
+                                    flex="15"
+                                    class="btn btn-primary mt-10"
+                                       title="Initiate Request" >
+                                    </app-erms-button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 
+<taxTransactionModal  #taxTransactionModal></taxTransactionModal> -->
+
+<!-- <splitCostModal #splitCostModal></splitCostModal>
+<cashadvanceWorkflowRouteModal  #cashadvanceWorkflowRouteModal></cashadvanceWorkflowRouteModal> -->
+
+<!-- <appdocuments #appdocuments></appdocuments>  -->
+
+<appfileupload #fileUpload></appfileupload>

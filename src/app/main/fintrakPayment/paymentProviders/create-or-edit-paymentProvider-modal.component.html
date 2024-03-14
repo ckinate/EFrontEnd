@@ -1,0 +1,61 @@
+﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form *ngIf="active" #paymentProviderForm="ngForm" novalidate (ngSubmit)="save()" autocomplete="off">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <span *ngIf="paymentProvider.id">{{l("EditPaymentProvider")}}</span>
+                        <span *ngIf="!paymentProvider.id">{{l("CreateNewPaymentProvider")}}</span>
+                    </h4>
+                    <button type="button" class="close" (click)="close()" aria-label="Close" [disabled]="saving">
+                        <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+
+
+								<div class="form-group">
+									<label for="PaymentProvider_ProviderName">{{l("ProviderName")}}</label>
+									<input type="text" id="PaymentProvider_ProviderName" class="form-control" [(ngModel)]="paymentProvider.providerName" name="ProviderName"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="PaymentProvider_postingkey">{{l("postingkey")}}</label>
+									<input type="text" id="PaymentProvider_postingkey" class="form-control" [(ngModel)]="paymentProvider.postingkey" name="postingkey"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="PaymentProvider_CommissionRates">{{l("CommissionRates")}}</label>
+									<input type="text" id="PaymentProvider_CommissionRates" class="form-control" [(ngModel)]="paymentProvider.commissionRates" name="CommissionRates"    />
+								</div>
+					
+								<div class="form-group">
+									<label for="PaymentProvider_PaymentRate">{{l("PaymentRate")}}</label>
+									<input type="text" id="PaymentProvider_PaymentRate" class="form-control" [(ngModel)]="paymentProvider.paymentRate" name="PaymentRate"    />
+								</div>
+					
+								<br/><div class="m-checkbox-list">
+									<label for="PaymentProvider_Default" class="kt-checkbox">
+										<input id="PaymentProvider_Default" type="checkbox" name="Default" [(ngModel)]="paymentProvider.default"> 
+										{{l("Default")}}
+										<span></span>
+									</label>
+								</div>
+					
+								<div class="form-group">
+									<label for="PaymentProvider_ImageUrl">{{l("ImageUrl")}}</label>
+									<input type="text" id="PaymentProvider_ImageUrl" class="form-control" [(ngModel)]="paymentProvider.imageUrl" name="ImageUrl"    />
+								</div>
+					
+
+                </div>
+                <div class="modal-footer">
+                    <button [disabled]="saving" type="button" class="btn btn-default" (click)="close()">{{l("Cancel")}}</button>
+                    <button type="submit" class="btn btn-primary blue" [disabled]="!paymentProviderForm.form.valid" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{l("Save")}}</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

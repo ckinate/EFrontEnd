@@ -1,0 +1,29 @@
+/* :host ::ng-deep p-listbox .ui-listbox-list{
+    width: 20rem;
+    border: black;
+} */
+.list-group-item {
+    border: red;
+
+    overflow: visible;
+}
+
+.pl {
+
+
+    overflow: auto;
+}
+
+.btn-decline{
+    color: #ffffff;
+    background-color: #F64E60;
+    border-color: #F64E60;
+}
+
+.btn.btn-decline:hover:not(.btn-text):not(:disabled):not(.disabled), .btn.btn-decline:focus:not(.btn-text), .btn.btn-primary.focus:not(.btn-text) {
+    color: #ffffff;
+    background-color: #EE2D41;
+    border-color: #EE2D41;
+}
+
+

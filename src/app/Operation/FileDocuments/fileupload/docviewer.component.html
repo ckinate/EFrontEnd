@@ -1,0 +1,73 @@
+<div
+    bsModal
+    #docModal="bs-modal"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    (onShown)="onShown()"
+    aria-labelledby="docModal"
+    aria-hidden="true"
+    [config]="{ backdrop: 'static' }"
+>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-sm-12 btn btn-primary">
+                    <div class="col-sm-10">
+                        {{ title }}
+                    </div>
+                    <div class="col-sm-2 text-right">
+                        <button
+                            type="button"
+                            class="close"
+                            (click)="CloseModal()"
+                            aria-label="Close"
+                        >
+                            <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                *ngIf="!loadDelay"
+                style="
+                    width: 100%;
+                    height: 100vh;
+                    justify-content: center;
+                    align-items: center;
+                "
+            >
+                <div
+                    class="loader"
+                    style="margin-top: 50%; margin-left: 50%"
+                ></div>
+            </div>
+
+            <div *ngIf="loadDelay">
+                <iframe
+                    *ngIf="NormalFile"
+                    style="width: 100%; height: 100vh"
+                    sandbox="allow-same-origin allow-scripts"
+                    frameBorder="0"
+                    [src]="DemoDoc"
+                ></iframe>
+
+                <object
+                    style="width: 100%; height: 100vh"
+                    *ngIf="DocumentFiles"
+                    [data]="DemoDoc"
+                    sandbox="allow-same-origin allow-scripts"
+                    [type]="DemoType"
+                >
+                    <embed
+                        style="width: 100%; height: 100vh"
+                        [src]="DemoDoc"
+                        sandbox="allow-same-origin allow-scripts"
+                        [type]="DemoType"
+                    />
+                </object>
+            </div>
+        </div>
+    </div>
+</div>

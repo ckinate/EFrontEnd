@@ -1,0 +1,327 @@
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+    aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Beneficiaries
+
+                </h5>
+                <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                    <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="!posting">
+
+                <tabset>
+                
+                    <tab heading="Department">
+
+                        <div class="row align-items-center">
+                            <!--<Primeng-TurboTable-Start>-->
+                            <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+                                <table class="table table-hover table-light" id="excel-table">
+                                    <thead>
+                                        <tr class="uppercase">
+                                           
+                                           
+                                           
+                                            <th>
+                                                MISCode
+                                            </th>
+                                            <th>
+                                                Amount
+                                             </th>  
+                                              
+                                                                                  
+                                        
+
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tr *ngFor="let m of misBeneficiary; let i = index">
+
+                                     
+                                     
+                                        <td>
+                                            {{m.department}} {{" - "}} {{m.departmentName}}
+                                        </td>
+                                        <td>                                            
+                                        
+                                            {{m.amount | number:'1.2-2'}}
+                                       
+                                     </td> 
+                                       
+                                        
+                                         
+                                  
+
+                                    </tr>
+
+
+                                </table>
+
+
+                             
+
+
+
+                            </div>
+
+                          
+
+                        </div>
+
+
+                    </tab>
+                    <tab heading="Account Details">
+                        
+                        <div class="row align-items-center">
+                            <!--<Primeng-TurboTable-Start>-->
+                            <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+                                <table class="table table-hover table-light" id="excel-table">
+                                    <thead>
+                                        <tr class="uppercase">
+                                           
+                                           
+                                           
+                                            <th>
+                                                Beneficiary Name
+                                            </th>
+                                            <th>
+                                                Bank
+                                            </th>
+                                            <th>
+                                                 Account Number
+                                             </th>  
+                                            
+                                             <th>
+                                                 Amount
+                                             </th>
+                                        </tr>
+                                    </thead>
+                                    <tr *ngFor="let m of bankBeneficiary; let i = index">
+
+                                     
+                                     
+                                        <td>
+                                            {{m.beneficiaryName}} 
+                                        </td>                                       
+                                        <td>
+                                            {{m.bankName}}
+                                        </td>
+                                        <td>
+                                            {{m.accountNumber}}
+                                        </td>
+                                        <td>                                         
+                                        
+                                            {{m.amount | number:'1.2-2'}}                                       
+                                     </td> 
+                                       
+                                        
+                                         
+                                  
+
+                                    </tr>
+
+
+                                </table>
+
+
+                             
+
+
+
+                            </div>
+
+                          
+
+                        </div>
+
+
+                    </tab>
+                </tabset>
+            </div>
+            <div *ngIf="posting">
+                <tabset>
+                    <tab heading="GL Entry">
+
+                        
+                        <div class="row align-items-center">
+                            <!--<Primeng-TurboTable-Start>-->
+                            <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+                                <table class="table table-hover table-light" id="excel-table">
+                                    <thead>
+                                        <tr class="uppercase">
+                                           
+                                           
+                                           
+                                            <th>
+                                                Transaction Date
+                                            </th>
+                                            <th>
+                                                Ref
+                                             </th> 
+                                             <th>
+Account
+                                             </th>
+                                             <th>
+                                                Narration
+                                             </th>
+                                             <th>
+                                                Debit Amount
+                                             </th>
+                                             <th>
+                                                Credit Amount
+                                             </th>
+                                             <th>
+                                                MISCode
+                                             </th>
+                                        </tr>
+                                    </thead>
+                                    <tr *ngFor="let m of itemLedgerPosting; let i = index">
+
+                                     
+                                     
+                                        <td>
+                                            {{m.transactionDate | date}} 
+                                        </td>
+                                        <td>
+                                            {{m.ref}}
+                                        </td>
+                                        <td>
+                                            {{ m.accountCode}}
+                                        </td>
+                                        <td>
+                                            {{ m.narration}}
+                                        </td>
+                                        <td>
+                                            {{m.debitAmount | number:'1.2-2'}}
+                                        </td>
+                                        <td>
+                                            {{m.creditAmount | number:'1.2-2'}}
+                                        </td>
+                                        <td>{{m.reportCode}}</td>
+                                        <td>                                            
+                                        
+                                            
+                                       
+                                     </td> 
+                                       
+                                        
+                                         
+                                  
+
+                                    </tr>
+
+
+                                </table>
+
+
+                             
+
+
+
+                            </div>
+
+                          
+
+                        </div>
+
+                    </tab>
+ <tab heading="Bank Posting Details">
+    <div class="row align-items-center">
+        <!--<Primeng-TurboTable-Start>-->
+        <div class="table-scrollable table-scrollable-borderless" style="width: 100%;">
+            <table class="table table-hover table-light" id="excel-table">
+                <thead>
+                    <tr class="uppercase">
+                       
+                       
+                       
+                        <th>
+                            Beneficiary Name
+                        </th>
+                        <th>
+                            Beneficiary Account
+                         </th> 
+                         <th>
+Bank
+                         </th>
+                         <th>
+                            Amount
+                         </th>
+                         <th>
+                            Status
+                         </th>
+                         <th></th>
+                        
+                    </tr>
+                </thead>
+                <tr *ngFor="let m of itemBankPosting; let i = index">
+
+                 
+                 
+                    <td>
+                        {{m.beneficiaryName}} 
+                    </td>
+                    <td>
+                        {{m.accountNumber}}
+                    </td>
+                    <td>
+                        {{ m.bankName}}
+                    </td>
+                    <td>
+                        {{m.amount | number:'1.2-2'}}
+                    </td>
+                    <td>
+                        {{ m.posted}}
+                    </td>                 
+                    <td>
+                        <button class="btn" title="View advice"  (click)="viewAdvice(m.refNo, m.accountNumber)">
+                            <i class="fa fa-info"></i>
+                        </button>
+                    </td>
+                     
+              
+
+                </tr>
+
+
+            </table>
+
+
+         
+
+
+
+        </div>
+
+      
+
+    </div>
+
+
+ </tab>
+                </tabset>
+
+            </div>
+            </div>
+
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">{{"Cancel" | localize}}</button>
+
+                
+
+            </div>
+
+        </div>
+    </div>
+</div>

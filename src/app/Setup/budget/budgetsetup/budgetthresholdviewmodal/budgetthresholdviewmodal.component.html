@@ -1,0 +1,96 @@
+
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog" 
+aria-hidden="true" [config]="{backdrop: 'static'}">
+<div class="modal-dialog modal-xl">
+
+   <div class="modal-content">
+
+      
+
+           <div class="modal-header">
+               <!-- <h5 class="modal-title"   >
+                  Map Staff with role: {{valueFromChild}}
+                 
+               </h5> -->
+               <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                   <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+               </button>
+           </div>
+
+           <div class="modal-body">
+             
+
+
+
+          
+
+
+               <!--table goes here-->
+
+               <div class="row align-items-center"> 
+                   <!--<Primeng-TurboTable-Start>-->
+                 <div        class="primeng-datatable-container"            [busyIf]="primengTableHelper.isLoading">
+                     
+                   
+
+                     
+                <div class="table-scrollable table-scrollable-borderless border border-primary">
+                    <table class="table table-hover table-light">
+                        <thead>
+                            
+                            <th >
+                                {{'Thresh Hold Percentage(%)' | localize}}
+                            </th>
+                            <th>
+                                {{'Emails' | localize}}
+                            </th>
+                            <th>
+                                
+                            </th>
+                        </thead>
+                        <tr *ngFor="let record of primengTableHelper.records; let index = index">
+                            <td >
+                                {{record.thresholdPercentage}}
+                            </td>
+                            <td >
+                                {{record.email  }}
+                            </td>
+                            <!-- <td >
+                                <button type="button" class="btn" (click)="DeleteItem(record.id)" ><i class="fas fa-trash"></i></button>
+                            </td> -->
+                        </tr>
+                    </table>
+                </div>
+                    
+                     <!-- <div class="primeng-paging-container">
+                        <p-paginator [rows]="primengTableHelper.defaultRecordsCountPerPage"
+                            #paginatorAuditLogs 
+                            [totalRecords]="primengTableHelper.totalRecordsCount"
+                            [rowsPerPageOptions]="primengTableHelper.predefinedRecordsCountPerPage">
+                        </p-paginator>
+                        
+                    </div> -->
+                 </div>
+                   <!--<Primeng-TurboTable-End>-->
+                     
+               </div>
+
+              
+       
+           </div>
+
+
+           <div class="modal-footer">
+               <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+             
+               <!-- <button type="submit" class="btn btn-primary" [disabled]="!roleuserForm.form.valid"  [busyText]="l('SavingWithThreeDot')"><i class="fa fa-save"></i> <span>{{"Save" | localize}}</span></button> -->
+
+           </div>
+       
+
+   </div>
+</div>
+</div>
+
+
+

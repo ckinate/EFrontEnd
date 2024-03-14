@@ -1,0 +1,166 @@
+<div [@routerTransition]>
+    <div class="content d-flex flex-column flex-column-fluid">
+
+        <sub-header [title]="'Payment Log' | localize">
+
+        </sub-header>
+        <div [class]="containerClass " [busyIf]="primengTableHelper.isLoading">
+            <div class="card card-custom">
+                <div class="card-body">
+
+                    <form #currencyForm="ngForm" (ngSubmit)="search()">
+                        <div class="row align-items-center mb-2">
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="DefaultCode">{{"Search" | localize}}</label>
+
+                                    <input id="Search" type="text" name="Search"
+                                        [(ngModel)]="searchText"
+                                        placeholder="Search anything on the list" pattern="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" class="form-control rounded">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12  text-right">
+                                <span class="form-group">
+                                    <app-erms-button
+                                        [title]="'Clear' | localize" action="submit"
+                                        (click)="clear()"
+                                        style="font-size: 10px;padding-right: 10px;padding-left: 10px;"
+                                        type="delete"></app-erms-button>
+                                </span>
+                                <span class="form-group">
+                                    <app-erms-button
+                                        [title]="'Search' | localize" action="submit"
+                                        (click)="search()"
+                                        style="font-size: 10px;padding-right: 10px;padding-left: 10px;"
+                                        type="search"></app-erms-button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="row align-items-center">
+                        <!--<Primeng-TurboTable-Start>-->
+                        <div class="primeng-datatable-container" [busyIf]="primengTableHelper.isLoading">
+        
+                            <p-table #dataTable
+                            [value]="primengTableHelper.records"
+                            rows="{{primengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20,30,40,50,60,70,80,100,1000]" [lazy]="false" [rowHover]="true" sortMode="multiple" [scrollable]="true"
+                            ScrollWidth="100%" [responsive]="primengTableHelper.isResponsive" [resizableColumns]="primengTableHelper.resizableColumns">
+
+        
+        
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <!-- <th style="width:75px"></th> -->
+                                        <th style="width: 100px">
+                                            {{'View' | localize}}
+                                        </th>
+                                        <th style="width: 40px">
+                                            {{'Id' | localize}}
+                                        </th>
+                                        <th style="width: 100px">
+                                            {{'Request Number' | localize}}
+                                        </th>
+                                        <th style="width: 100px">
+                                            {{'Post Response' | localize}}
+                                        </th>
+        
+                                        <th style="width: 100px">
+                                            {{'Posting Type' | localize}}
+                                        </th>
+        
+                                        <th style="width: 100px">
+                                            {{'Tracking Id' | localize}}
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-record="$implicit">
+                                    <tr style="font-size: 10px;">
+                                        <td style="width: 100px">
+                                            <app-erms-button
+                                            [title]="'View' | localize" action="submit"
+                                            (click)="openDetails(record)"
+                                            style="font-size: 10px;padding-right: 10px;padding-left: 10px;"
+                                            type="others"></app-erms-button>
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                            {{record.id}}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                            {{record.requestNo}}
+                                        </td>
+                                        
+                                        <td style="width: 100px; font-weight: 400;">
+                                            <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                            {{record.postResponse || 'NONE'}}
+                                        </td>
+                                        <td style="width: 100px; font-weight: 400;">
+                                            <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                            {{record.postingType || 'NONE'}}
+                                        </td>
+                                        <td style="width: 100px">
+                                            <span class="ui-column-title"> {{'Level Name' | localize}}</span>
+                                            {{record.trackingId || 'NONE'}}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+        
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+        
+        <div appBsModal   #modal="bs-modal" (onShown)="onShown()"  class="modal fade" tabindex="-1" role="dialog" 
+        aria-hidden="true" [config]="{backdrop: 'static'}">
+        <div class="modal-dialog modal-xl">
+        <div class="modal-content">    
+            <div>
+                
+                    <div class="modal-header modal-header-vic">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                        <i aria-hidden="true" class="ki ki-close" style="color: #000;"></i>
+                    </button>
+                    </div>
+
+                    <div *ngIf="payload != null || payload != undefined" class="modal-body" style="padding:0%; margin: 0%; padding: 2%;">
+                        <tabset id="tablet" class="card-header-vic" style="box-shadow: 0 0 5px #ccc;">
+                            <tab *ngFor="let item of payload"
+                                [heading]="item.title"
+                                [active]="item.active || item.isTable"
+                                (selectTab)="item.active = true"
+                                (deselect)="item.active = false"
+                                [disabled]="item.disabled"
+                                >
+                            <div style="margin-top: 30px;">
+                                <div *ngIf="item.isTable" style="margin-top: 0%; padding-top: 0%;">
+                                    <tabledatadisplay *ngIf="item.isTable" [items]="item.requestItem" [title]="item.title"></tabledatadisplay>
+                                </div>
+                                <div *ngIf="!item.isTable" style="margin-top: 0%; padding-top: 0%;">
+                                    <notabledatadisplay *ngIf="!item.isTable" [items]="item.requestItem" [title]="item.title"></notabledatadisplay>
+                                </div>
+                            </div>
+                            </tab>
+                        </tabset>
+                    </div>
+                    <div class="modal-footer modal-header-vic">
+                        <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+                    
+                    </div>
+
+            </div>
+        </div>
+        </div>
+        </div>
+
+
+
+    </div>
+</div>

@@ -1,0 +1,248 @@
+
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+aria-hidden="true" [config]="{backdrop: 'static'}">
+<div class="modal-dialog modal-xl">
+
+   <div class="modal-content">
+
+
+
+           <div class="modal-header">
+               <h5 class="modal-title"   >
+                  Split Cost   <span> -  Amount to be shared {{ totalAmount | number:'1.2-2'}} </span>
+
+               </h5>
+               <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                   <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+               </button>
+           </div>
+
+           <div class="modal-body">
+
+            <!--UPLOAD START HERE-->
+
+            <tabset>
+                <tab heading="Single">
+                    <hr/>
+                    <div class="form-group">
+               <form #splitcostForm="ngForm"  (ngSubmit)="save(splitcostForm)">
+                <div class="row align-items-center mb-2">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="GroupName">{{"MIS" | localize}}</label>
+
+                            <ng-select   name="department"  placeholder="Search or Select Report Code" [(ngModel)] = "bensplitcost.department"  (change) = "selectDepartment($event)" required  #StoreLoc = "ngModel">
+
+                                <ng-option *ngFor="let d of departList" [value]="d.customCode">{{d.customCode}}-{{d.displayName}} </ng-option>
+                             </ng-select>
+
+                            <!-- <input id="Discription" type="text" name="department"  placeholder="Enter  Name" required
+                                class="form-control" [(ngModel)]="bensplitcost.department"> -->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="GroupName">{{"Percentage(%)" | localize}}</label>
+                            <!-- <input type="number" name="percentaageAmount" placeholder="Enter  Amount in %" required  min="1" max="100"  onkeyup="if(parseInt(this.value)>100){ this.value =100; return false; }"
+                                class="form-control" [(ngModel)]="percentaageAmount" oninput="this.value = Math.abs(this.value)" (change)="getAmount(percentaageAmount,totalAmount)">
+                         -->
+                         <br/>
+                                <p-inputNumber min="1" max="100"  (ngModelChange)="getAmount($event)" [minFractionDigits]="2" [maxFractionDigits]="2" name="percentaageAmount" [(ngModel)]="percentaageAmount"  mode="decimal"></p-inputNumber>
+                            </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="GroupName">{{"Amount" | localize}}</label>
+                            <!-- <input type="number" name="amount" placeholder="Enter  Amount" required
+                                class="form-control" [(ngModel)]="bensplitcost.amount" finCurrency (change)="getPercentage($event)" > -->
+                                <br/>
+                                <p-inputNumber min="1" max="9999999999999"  (ngModelChange)="getPercentage($event)" [minFractionDigits]="2" [maxFractionDigits]="2" name="amount" [(ngModel)]="bensplitcost.amount"  mode="decimal"></p-inputNumber>
+
+                            </div>
+                    </div>
+
+
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                            {{'Total Budget' | localize}}: {{calculatebuget.budgetTotalAmount | number:'1.2-2'}}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                            {{'Budget In Use' | localize}}: {{calculatebuget.budgetInUse| number:'1.2-2'}}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                            {{'Used Budget' | localize}}: {{calculatebuget.budgetUsedAmount | number:'1.2-2'}}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+
+                            {{'Available Budget' | localize}}: {{calculatebuget.availableBudgetAmount | number:'1.2-2'}}
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                    <div class="col-md-12 mt-2 text-right">
+                        <div class="form-group">
+                            <button type="submit" [disabled]="!splitcostForm.form.valid" flex="15" class="btn btn-primary "  [buttonBusy]="saving"
+                            >
+                            {{ "Save" | localize }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+                    </div>
+                </tab>
+                <tab heading="Bulk">
+                    <hr/>
+                    <div class="form-group">
+                    <form   #splitcostUploadForm = "ngForm" (ngSubmit) = "uploadedFile(splitcostUploadForm)">
+
+
+                        <div class="row form-group">
+                            <div class="col-md-8">
+
+                                <input
+                                    type="file"
+                                    #uploadItem
+                                    class="form-control"
+                                    placeholder="Upload file"
+                                    name="SplitUploadItem"
+                                    [(ngModel)] = "splitCostuploaded"
+
+                                    accept=".xlsx"
+                                    required
+                                />
+                            </div>
+
+                            <div class="col-md-2">
+                                <a
+
+                                    target="_blank"
+                                    href="{{
+                                        templateUrl
+                                    }}"
+                                >
+                                    {{ "View Template" | localize }}
+                                </a>
+                            </div>
+                            <div class="col-md-2">
+                                <div *ngIf="!saving">
+                                    <button type="submit" class="btn btn-primary rounded"
+                                      [disabled]="!splitCostuploaded ||splitCostuploaded.length == 0 && !splitcostUploadForm.form.valid ">
+                                        <i class="fa fa-upload"></i>
+                                        <span>{{"Upload"|localize}}</span>
+                                    </button>
+                                </div>
+                                <div *ngIf = "saving">
+                                    <button type="button"
+                                    class="btn btn-primary rounded"  [disabled]="true" >
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    {{l('SavingWithThreeDot')}}
+                                    </button>
+                                    
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+                </tab>
+            </tabset>
+
+
+
+          <hr/>
+
+
+               <!--table goes here-->
+               <div class="row align-items-center">
+                <!--<Primeng-TurboTable-Start>-->
+              <div class="primeng-datatable-container"
+                  [busyIf]="splitcostprimengTableHelper.isLoading">
+
+                  <p-table #dataTable
+                  [value]="splitcostprimengTableHelper.records"
+
+rows="{{splitcostprimengTableHelper.defaultRecordsCountPerPage}}" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,15,20]" [lazy]="false" [rowHover]="true" sortMode="multiple" [scrollable]="true"
+scrollWidth="100%" scrollHeight="400px" [responsive]="splitcostprimengTableHelper.isResponsive" [resizableColumns]="splitcostprimengTableHelper.resizableColumns"
+[globalFilterFields]="['department','amount']">
+                    <ng-template pTemplate="caption">
+                    <div style="text-align: right">
+                    <i class="pi pi-search" style="margin:4px 4px 0 0"></i>
+                    <input type="text" pInputText size="30" placeholder="Search Keyword" style="width:auto" (input)="dataTable.filterGlobal($event.target.value, 'contains')">
+                    </div>
+                     </ng-template>
+
+
+                      <ng-template pTemplate="header">
+                          <tr>
+                              <!-- <th style="width:75px"></th> -->
+                              <th style="width: 100px" pSortableColumn="department"> {{'MIS' | localize}} <p-sortIcon field="department"></p-sortIcon></th>
+                            <th style="width: 100px" pSortableColumn="amount"> {{'Amount' | localize}} <p-sortIcon field="amount"></p-sortIcon></th>
+
+
+
+                            <th style="width: 100px">
+                                {{'Delete' | localize}}
+                            </th>
+
+                          </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-record="$implicit">
+                        <tr >
+
+                            <td style="width: 100px" >
+                                {{record.department}}-{{record.departmentName}}
+                            </td>
+                            <td style="width: 100px">
+                                {{record.amount  | number:'1.2-5'}}
+                            </td>
+                            <td style="width: 100px">
+                                <button type="button" title="Delete" class="btn" (click)="DeleteItem(record.id)" ><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+
+
+
+                      </ng-template>
+                  </p-table>
+
+
+              </div>
+                <!--<Primeng-TurboTable-End>-->
+
+            </div>
+
+
+
+
+
+           </div>
+
+
+           <div class="modal-footer">
+               <button  type="button" class="btn btn-light-primary font-weight-bold" (click)="close()">{{"Cancel" | localize}}</button>
+
+
+           </div>
+
+
+   </div>
+</div>
+</div>
+
+<!-- {{departList | json}} -->
+

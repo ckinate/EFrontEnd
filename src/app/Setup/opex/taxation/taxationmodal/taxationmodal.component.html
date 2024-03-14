@@ -1,0 +1,127 @@
+<div bsModal bsModal #modal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog"
+aria-hidden="true" [config]="{backdrop: 'static'}">
+<div class="modal-dialog modal-xl">
+
+
+
+
+    <div class="modal-content">
+
+
+
+        <div class="modal-header">
+            <h5 class="modal-title"   >
+              Taxation  Setup
+
+            </h5>
+            <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')">
+                <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <!--Design input form for modal add chart of account-->
+            <form #taxationForm="ngForm"  (ngSubmit)="save(taxationForm)">
+                <div class="row align-items-center mb-2">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="GroupName">{{" Tax Description" | localize}}</label>
+                            <input id="Discription" type="text" name="description" [(ngModel)]="taxation.description" placeholder="Enter  Name" required pattern="^[^\*\=\<\>]+$"
+                                class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="GroupName">{{"Rate" | localize}}</label>
+                           <!--  <input id="Discription" type="number" oninput="this.value = Math.abs(this.value)" name="rate" [(ngModel)]="taxation.rate" placeholder="rate" required pattern="^[^\*\=\<\>]+$"
+                                class="form-control"> -->
+                                <input id="Discription" type="number"   class="form-control" name="rate" [(ngModel)]="taxation.rate" placeholder="rate" required pattern="^\d*(\.\d{0,2})?$" />
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="small mb-1" for="inputFirstName">Account Name</label>
+
+
+                            <ng-select   [(ngModel)]="taxation.chartOfAccountId" name="debitGL" required >
+                                <ng-option *ngFor="let acc of chartOfAcct"  [value]="acc.id">
+                                    {{acc.accountName}}- {{acc.accountCode}}</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <!-- <div class="custom-control custom-checkbox form-group">
+                            <input type="checkbox" class="custom-control-input" id="customCheck9" [(ngModel)]="taxation.witholding" name="withholding">
+                            <label class="custom-control-label" for="customCheck9">{{"Check if tax type is a withholding tax" | localize}}</label>
+                          </div> -->
+
+
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" [(ngModel)]="taxation.witholding"  [value]="false">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                            {{"VAT" | localize}}
+                            </label>
+                          </div>
+
+                    </div>
+                    <div class="col-md-1">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" [(ngModel)]="taxation.witholding" [value]="true">
+                            <label class="form-check-label" for="flexRadioDefault2">
+                                {{"WHT" | localize}}
+                            </label>
+                          </div>
+
+                    </div>
+                    <!-- <div class="col-md-2">
+                        <div class="custom-control custom-checkbox form-group mt-6" *ngIf="!taxation.witholding">
+
+                            <input type="checkbox" class="custom-control-input" id="customCheck9" [(ngModel)]="taxation.isDefault" name="isDefault">
+                            <label class="custom-control-label" for="customCheck9">{{"Set as Default" | localize}}</label>
+
+                        </div>
+                    </div> -->
+
+                </div>
+            </form>
+
+
+        </div>
+
+
+        <div class="modal-footer">
+
+             <div class="form-group">
+                 <button type="submit" [buttonBusy]="saving" [busyText]="l('SavingWithThreeDot')"  flex="15" class="btn btn-primary "
+                 [disabled]="  !taxationForm.form.valid" (click)="save(taxationForm)"
+                 >
+                 {{ "Save" | localize }}
+                 </button>
+             </div>
+
+            <button  type="button" class="btn btn-default" (click)="close()">{{"Cancel" | localize}}</button>
+
+
+        </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+

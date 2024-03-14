@@ -1,0 +1,108 @@
+<div bsModal #createOrEditModal1="bs-modal" class="modal fade" tabindex="-1" role="dialog" (onShown)="onShown()"
+    aria-labelledby="createOrEditModal1" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+ <h4 class="modal-title">
+                    <span >Ledger Entries(Preview)</span>
+
+                </h4>                                  
+
+                    <button type="button" class="close " (click)="close()" [attr.aria-label]="('close')">
+                        <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                   </button>
+
+            </div>
+
+            <div class="table-scrollable table-scrollable-borderless">
+                <table class="table table-hover table-light">
+                    <thead>
+                        <tr class="uppercase">
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                              Ref
+                            </th>
+                            <th>
+                                Account
+                            </th>
+                            <th>
+                               Description
+                            </th>
+                            <th>
+                               Debit
+                            </th>
+                            <th>
+                               Credit
+                            </th>
+                            <th>
+                                MIS
+                             </th>
+
+                        </tr>
+                    </thead>
+                    <tr *ngFor="let m of postingList.postItem; let i = index">
+
+
+                        <td>
+                            {{postingList.valueDate | date: 'dd/MM/yyyy'}}
+                        </td>
+                        <td>
+                            {{transRef}}
+                        </td>
+                        <td>
+                           {{m.accountName}}{{' '}} {{m.accountCode}} 
+
+                        </td>
+
+                        <td>
+                            {{m.narration}}
+                        </td>
+                        <td>
+                            {{m.debitAmount | number:'1.2-5'}}
+                        </td>
+                        <td>
+                            {{m.creditAmount | number:'1.2-5'}}
+                        </td>
+
+                        <td>
+                            {{m.reportCode}}{{" - "}}{{m.reportCodeDescription}}
+                        </td>
+                    </tr>
+                </table>
+                <table class="table table-hover table-light">
+                    <thead>
+                        <tr class="uppercase">
+                            <th>
+                            </th>
+                            <th>
+                            </th>
+                            <th>
+                            </th>
+                            <th>
+                            </th>
+                            <th>
+                            </th>
+                            <th>
+                                Total Debit: {{totalDebit | number:'1.2-5'}}
+                            </th>
+                            <th>
+                                Total Credit: {{totalCredit | number:'1.2-5'}}
+                            </th>
+
+                        </tr>
+                    </thead>
+                    </table>
+<!-- <div class="col-md-3">
+{{totalDebit | number:'1.2-5'}}
+</div>
+<div class="col-md-3">
+    {{totalCredit | number:'1.2-5'}}
+    </div> -->
+            </div>
+
+        </div>
+    </div>
+</div>

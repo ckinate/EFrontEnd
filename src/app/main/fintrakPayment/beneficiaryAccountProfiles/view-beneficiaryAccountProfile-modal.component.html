@@ -1,0 +1,58 @@
+﻿<div bsModal #createOrEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal" aria-hidden="true" [config]="{backdrop: 'static'}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>{{l("Details")}}</span>
+                </h4>
+                <button type="button" class="close" (click)="close()" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close icon-2x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Beneficiary Type")}} :</h6>
+                        {{l( typeOfBeneficiary[item.beneficiaryAccountProfile.beneficiaryType])}}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Beneficiary Name")}} :</h6>
+                        {{ item.beneficiaryAccountProfile.beneficiaryName }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Beneficiary Code")}} :</h6>
+                        {{ item.beneficiaryAccountProfile.beneficiaryCode }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Beneficiary Account Number")}} :</h6>
+                        {{ item.beneficiaryAccountProfile.beneficiaryAccountNumber }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Bank Code")}} :</h6>
+                        {{ item.beneficiaryAccountProfile.bankCode }}
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h6>{{l("Beneficiary Currency Code")}} :</h6>
+                        {{ item.beneficiaryAccountProfile.beneficiaryCurrencyCode }}
+                    </div>
+
+                   
+
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <!-- <button [disabled]="saving" type="button" class="btn btn-primary blue" (click)="close()">{{l("Close")}}</button> -->
+                <app-erms-button 
+                [title]="'Cancel' | localize"
+                action="button"
+                (click)="close()"
+                type="cancel"
+            ></app-erms-button>  
+            </div>
+        </div>
+    </div>
+
+</div>

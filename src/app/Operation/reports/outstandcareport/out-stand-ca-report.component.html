@@ -1,0 +1,31 @@
+<div [@routerTransition]>
+  <div class="content d-flex flex-column flex-column-fluid">
+    <sub-header [title]="'Accrual Report' | localize"></sub-header>
+    <div [class]="containerClass">
+      <div class="card card-custom">
+        <div class="card-body">
+          <div class="form-group">
+          </div>
+           <div class="form-group row">
+            <label for="SampleDateRangePicker" class="col-md-12">Select Date Range</label>
+            <div class="col-lg-4 col-md-4 col-sm-4 input-group">
+              <input class="form-control" type="text" id="sampleDateTimePicker" name="sampleDateTimePicker"
+                #drp="bsDaterangepicker" readonly="readonly" bsDaterangepicker dateRangePickerLuxonModifier
+                [(date)]="dateRange" />
+              <div class="input-group-append">
+                <button class="input-group-append btn btn-outline-secondary" (click)="drp.toggle()" type="button">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-4">
+              <button class="btn btn-primary" type="button"  title="View report"  (click)="ViewReport(link)">View Report</button>
+            </div>
+          </div>
+          <!-- <iframe width="100%" height="600" [src]="link | finsafe">
+          </iframe> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
